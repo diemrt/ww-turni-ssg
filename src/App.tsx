@@ -36,8 +36,8 @@ function App() {
 
   // Get unique member names from available team members
   const memberNames = useMemo(() => {
-    if (!data) return [];
-    return data.availableTeamMembers.map(m => m.memberName).sort();
+    if (!data || !data.availableTeamMembers) return [];
+    return data.availableTeamMembers.map(m => m.name).sort();
   }, [data]);
 
   // Filter shifts based on selected name
