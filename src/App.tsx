@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo } from "react";
 import Header from "@/components/Header";
 import ShiftCard from "@/components/ShiftCard";
 import QuickFilter from "@/components/QuickFilter";
-import DateNavigation from "@/components/DateNavigation";
 import EmptyState from "@/components/EmptyState";
 import turniData from "@/data/turni.json";
 import type { TurniData } from "@/types";
@@ -22,7 +21,7 @@ function App() {
 
   // Get unique member names from available team members
   const memberNames = useMemo(() => {
-    return data.availableTeamMembers.map(m => m.name).sort();
+    return data.availableTeamMembers.map(m => m.memberName).sort();
   }, [data.availableTeamMembers]);
 
   // Filter shifts based on selected name
@@ -32,13 +31,6 @@ function App() {
       shift.team?.some(member => member.memberName === filterName)
     );
   }, [sortedShifts, filterName]);
-
-  // Count upcoming shifts
-  const upcomingCount = useMemo(() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return filteredShifts.filter(shift => new Date(shift.date) >= today).length;
-  }, [filteredShifts]);
 
   return (
     <div className="min-h-screen bg-zinc-50">
@@ -53,11 +45,6 @@ function App() {
         </a>
         
         <div id="main-content">
-          <DateNavigation 
-            shiftsCount={filteredShifts.length}
-            upcomingCount={upcomingCount}
-          />
-
           {filterName && (
             <div className="mb-6 p-4 bg-slate-100 rounded-lg border border-slate-200 animate-fade-in" role="status" aria-live="polite">
               <div className="flex items-center gap-2">
