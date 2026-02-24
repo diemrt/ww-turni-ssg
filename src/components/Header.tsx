@@ -1,12 +1,48 @@
+import { Music } from "lucide-react";
+import { useEffect, useState } from "react";
+
 interface HeaderProps {
   title: string;
 }
 
 export default function Header({ title }: HeaderProps) {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Extract month from title (e.g., "Turni di Marzo 2026" -> "Marzo 2026")
+  const monthInfo = title.replace("Turni di ", "");
+
   return (
-    <header className="bg-gradient-to-r from-slate-800 to-slate-700 text-white py-6 px-4 shadow-lg">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center">{title}</h1>
+    <header 
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? "bg-slate-800/95 backdrop-blur-md shadow-lg shadow-slate-900/10" 
+          : "bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg"
+      }`}
+    >
+      <div className="max-w-4xl mx-auto px-4 py-6">
+        <div className="flex items-center justify-center gap-3">
+          <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
+            <Music className="w-6 h-6 text-white" />
+          </div>
+          <div className="text-center">
+            <h1 className="font-display text-display text-white tracking-tight">
+              {title}
+            </h1>
+            {isScrolled && (
+              <span className="inline-block mt-1 px-3 py-1 text-xs font-medium text-white/90 bg-white/10 rounded-full backdrop-blur-sm">
+                {monthInfo}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </header>
   );

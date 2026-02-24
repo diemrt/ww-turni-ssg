@@ -9,6 +9,18 @@ export const roleIconMap = {
   vocals: Mic,
 };
 
+export const roleLabels: Record<Role, string> = {
+  guitar: "Chitarra",
+  bass: "Basso",
+  keyboard: "Tastiera",
+  drums: "Batteria",
+  vocals: "Voce",
+};
+
 export const getRoleIcon = (role: Role) => {
   return roleIconMap[role];
+};
+
+export const getRoleLabel = (role: Role) => {
+  return roleLabels[role];
 };
