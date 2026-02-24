@@ -8,6 +8,7 @@
     - Shift entries for all valid days of the week in that month
     - Empty team arrays (to be filled manually later)
     - Preserves existing availableRoles and validDayOfWeek configuration
+    - Creates timestamped backups in public/backups folder
 
 .PARAMETER Month
     The month number (1-12). 1=January, 2=February, etc.
@@ -24,7 +25,8 @@
     Generates shifts for December 2025.
 
 .NOTES
-    - Creates a timestamped backup before modifying turni.json
+    - Creates a timestamped backup in public/backups before modifying turni.json
+    - turni.json is located in public/turni.json
     - Only generates shifts for days specified in validDayOfWeek
     - All team arrays are left empty
 #>
@@ -55,8 +57,15 @@ $italianMonths = @{
     12 = "Dicembre"
 }
 
-# Path to turni.json
-$turniPath = Join-Path $PSScriptRoot "turni.json"
+# Path to turni.json in public folder
+$turniPath = Join-Path $PSScriptRoot "public\turni.json"
+$backupsDir = Join-Path $PSScriptRoot "public\backups"
+
+# Create backups directory if it doesn't exist
+if (-not (Test-Path $backupsDir)) {
+    New-Item -Path $backupsDir -ItemType Directory -Force | Out-Null
+    Write-Host "Created backups directory: $backupsDir" -ForegroundColor Yellow
+}
 
 # Check if turni.json exists
 if (-not (Test-Path $turniPath)) {
@@ -81,9 +90,10 @@ if ($null -eq $availableRoles -or $null -eq $validDayOfWeek -or $null -eq $avail
     exit 1
 }
 
-# Create backup with timestamp
+# Create backup with timestamp in backups folder
 $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
-$backupPath = "$turniPath.bak.$timestamp"
+$backupFileName = "turni.json.bak.$timestamp"
+$backupPath = Join-Path $backupsDir $backupFileName
 try {
     Copy-Item $turniPath $backupPath -Force
     Write-Host "Backup created: $backupPath" -ForegroundColor Green

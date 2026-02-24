@@ -1,7 +1,7 @@
 export type Role = "guitar" | "bass" | "drums" | "vocals" | "keyboard";
 
 export interface TeamMember {
-  name: string;
+  memberName: string;
   roles: Role[];
   color: string;
 }

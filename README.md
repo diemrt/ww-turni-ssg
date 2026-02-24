@@ -48,7 +48,7 @@ npm run preview
 
 ## Data Structure
 
-The application reads shift data from `src/data/turni.json`. The structure is:
+The application reads shift data from `public/turni.json`. The structure is:
 
 ```json
 {
@@ -81,11 +81,32 @@ The application reads shift data from `src/data/turni.json`. The structure is:
 
 ## Updating Shifts
 
-To update the shift schedule:
+### Using the PowerShell Script (Recommended)
 
-1. Edit `src/data/turni.json` with new shift data
+To generate a new month's schedule:
+
+```powershell
+.\generate-turni.ps1 -Month 4 -Year 2026
+```
+
+This will:
+- Create a timestamped backup in `public/backups/`
+- Update `public/turni.json` with empty shifts for the specified month
+- Preserve all team member and role configurations
+
+### Manual Update
+
+To update the shift schedule manually:
+
+1. Edit `public/turni.json` with new shift data
 2. Rebuild the application: `npm run build`
 3. Deploy the `dist/` folder to your hosting service
+
+**Important Notes:**
+- Each team member in a shift has a **single role** (not an array of roles)
+- Each team member entry includes: `memberName`, `role`, and `color`
+- The `availableTeamMembers` array defines all possible team members with their potential roles (array) and assigned colors
+- For each shift/date, a person can only have one role on stage
 
 ## Deployment
 
@@ -112,9 +133,11 @@ src/
 │   ├── ui/          # shadcn/ui components
 │   ├── Header.tsx
 │   ├── ShiftCard.tsx
-│   └── TeamMemberCard.tsx
-├── data/
-│   └── turni.json   # Shift schedule data
+│   ├── TeamMemberCard.tsx
+│   ├── TeamSummary.tsx
+│   ├── QuickFilter.tsx
+│   ├── EmptyState.tsx
+│   └── LoadingState.tsx
 ├── types/
 │   └── index.ts     # TypeScript type definitions
 ├── utils/
@@ -122,6 +145,9 @@ src/
 │   └── iconMapper.ts
 ├── App.tsx
 └── main.tsx
+public/
+├── turni.json       # Shift schedule data (fetched at runtime)
+└── backups/         # Timestamped backups created by generate-turni.ps1
 ```
 
 ## Color Scheme

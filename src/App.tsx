@@ -3,26 +3,42 @@ import Header from "@/components/Header";
 import ShiftCard from "@/components/ShiftCard";
 import QuickFilter from "@/components/QuickFilter";
 import EmptyState from "@/components/EmptyState";
-import turniData from "@/data/turni.json";
 import type { TurniData } from "@/types";
 
 function App() {
-  const [data] = useState<TurniData>(turniData as TurniData);
-  const [sortedShifts, setSortedShifts] = useState(data.shifts);
+  const [data, setData] = useState<TurniData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [sortedShifts, setSortedShifts] = useState<TurniData['shifts']>([]);
   const [filterName, setFilterName] = useState("");
 
+  // Fetch turni.json from public folder
   useEffect(() => {
+    fetch('/turni.json')
+      .then(res => res.json())
+      .then((json: TurniData) => {
+        setData(json);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load turni.json:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!data) return;
     // Sort shifts by date
     const sorted = [...data.shifts].sort((a, b) => {
       return new Date(a.date).getTime() - new Date(b.date).getTime();
     });
     setSortedShifts(sorted);
-  }, [data.shifts]);
+  }, [data]);
 
   // Get unique member names from available team members
   const memberNames = useMemo(() => {
+    if (!data) return [];
     return data.availableTeamMembers.map(m => m.memberName).sort();
-  }, [data.availableTeamMembers]);
+  }, [data]);
 
   // Filter shifts based on selected name
   const filteredShifts = useMemo(() => {
@@ -31,6 +47,28 @@ function App() {
       shift.team?.some(member => member.memberName === filterName)
     );
   }, [sortedShifts, filterName]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block w-8 h-8 border-4 border-slate-700 border-t-transparent rounded-full animate-spin mb-4" />
+          <p className="text-zinc-600">Caricamento...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
+        <EmptyState 
+          title="Errore nel caricamento"
+          message="Impossibile caricare i dati dei turni"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-zinc-50">
