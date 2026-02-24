@@ -1,4 +1,3 @@
-import { Music } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface HeaderProps {
@@ -29,9 +28,6 @@ export default function Header({ title }: HeaderProps) {
     >
       <div className="max-w-4xl mx-auto px-4 py-6">
         <div className="flex items-center justify-center gap-3">
-          <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
-            <Music className="w-6 h-6 text-white" />
-          </div>
           <div className="text-center">
             <h1 className="font-display text-display text-white tracking-tight">
               {title}
