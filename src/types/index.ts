@@ -1,7 +1,7 @@
 export type Role = "guitar" | "bass" | "drums" | "vocals" | "keyboard";
 
 export interface TeamMember {
-  memberName: string;
+  name: string;
   roles: Role[];
   color: string;
 }
@@ -9,9 +9,9 @@ export interface TeamMember {
 export interface Shift {
   date: string;
   team: {
-    memberName: string;
+    name: string;
     role: Role;
-    color: string;
+    color?: string;
   }[];
 }
 

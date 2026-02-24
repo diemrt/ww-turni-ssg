@@ -44,7 +44,7 @@ function App() {
   const filteredShifts = useMemo(() => {
     if (!filterName) return sortedShifts;
     return sortedShifts.filter(shift => 
-      shift.team?.some(member => member.memberName === filterName)
+      shift.team?.some(member => member.name === filterName)
     );
   }, [sortedShifts, filterName]);
 
@@ -104,7 +104,7 @@ function App() {
                 data-date={shift.date}
                 role="listitem"
               >
-                <ShiftCard shift={shift} highlightName={filterName} />
+                <ShiftCard shift={shift} highlightName={filterName} availableTeamMembers={data.availableTeamMembers} />
               </div>
             ))}
           </div>

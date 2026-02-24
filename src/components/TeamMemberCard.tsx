@@ -4,7 +4,7 @@ import type { Role } from "@/types";
 interface TeamMemberCardProps {
   memberName: string;
   role: Role;
-  color: string;
+  color?: string;
   isHighlighted?: boolean;
 }
 
@@ -71,10 +71,10 @@ const colorMap: Record<string, { bg: string; bgGradient: string; text: string; b
   },
 };
 
-export default function TeamMemberCard({ memberName, role, color, isHighlighted = false }: TeamMemberCardProps) {
+export default function TeamMemberCard({ memberName, role, color = 'gray', isHighlighted = false }: TeamMemberCardProps) {
   const Icon = getRoleIcon(role);
   const roleLabel = getRoleLabel(role);
-  const colors = colorMap[color] || { 
+  const colors = colorMap[color] || {
     bg: "bg-zinc-500/90", 
     bgGradient: "from-zinc-400/80 to-zinc-500/90",
     text: "text-white", 

@@ -3,7 +3,7 @@ import type { Role } from "@/types";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 
 interface TeamSummaryProps {
-  team: Array<{ memberName: string; role: Role; color: string }>;
+  team: Array<{ name: string; role: Role; color?: string }>;
 }
 
 // Perfect team composition: 1 drums + 1 keyboard + 2 guitars + 1 bass + 3 vocals = 8 total
@@ -102,7 +102,7 @@ export default function TeamSummary({ team }: TeamSummaryProps) {
           <div className="flex items-center gap-1.5 text-amber-600">
             <AlertCircle className="w-4 h-4" />
             <span className="text-xs font-medium">
-              {hasOverflow ? 'Overflow' : 'Incompleto'}
+              {hasOverflow ? 'Sforato' : 'Incompleto'}
             </span>
           </div>
         )}

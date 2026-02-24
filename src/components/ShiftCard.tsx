@@ -2,16 +2,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TeamMemberCard from "@/components/TeamMemberCard";
 import TeamSummary from "@/components/TeamSummary";
 import { formatDate } from "@/utils/dateFormatter";
-import type { Shift } from "@/types";
+import type { Shift, TeamMember } from "@/types";
 import { Calendar } from "lucide-react";
 
 interface ShiftCardProps {
   shift: Shift;
   highlightName?: string;
+  availableTeamMembers?: TeamMember[];
 }
 
-export default function ShiftCard({ shift, highlightName }: ShiftCardProps) {
+export default function ShiftCard({ shift, highlightName, availableTeamMembers = [] }: ShiftCardProps) {
   const { dayName, dayNumber } = formatDate(shift.date);
+  
+  // Helper function to get color from availableTeamMembers
+  const getMemberColor = (memberName: string, providedColor?: string): string => {
+    // If color is already provided in the shift data, use it
+    if (providedColor) return providedColor;
+    
+    // Otherwise, lookup from availableTeamMembers
+    const teamMember = availableTeamMembers.find(m => m.name === memberName);
+    return teamMember?.color || 'gray';
+  };
   
   // Check if this is today
   const isToday = new Date(shift.date).toDateString() === new Date().toDateString();
@@ -81,15 +92,15 @@ export default function ShiftCard({ shift, highlightName }: ShiftCardProps) {
         {shift.team.map((member, idx) => {
           return (
             <div 
-              key={`${member.memberName}-${member.role}-${idx}`}
+              key={`${member.name}-${member.role}-${idx}`}
               className="animate-slide-in"
               style={{ animationDelay: `${idx * 50}ms` }}
             >
               <TeamMemberCard
-                memberName={member.memberName}
+                memberName={member.name}
                 role={member.role}
-                color={member.color}
-                isHighlighted={highlightName === member.memberName}
+                color={getMemberColor(member.name, member.color)}
+                isHighlighted={highlightName === member.name}
               />
             </div>
           );
