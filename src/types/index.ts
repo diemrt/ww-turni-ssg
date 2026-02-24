@@ -11,6 +11,7 @@ export interface Shift {
   team: {
     memberName: string;
     role: Role;
+    color: string;
   }[];
 }
 

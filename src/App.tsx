@@ -26,7 +26,6 @@ function App() {
             <ShiftCard
               key={`${shift.date}-${idx}`}
               shift={shift}
-              availableMembers={data.availableTeamMembers}
             />
           ))}
         </div>

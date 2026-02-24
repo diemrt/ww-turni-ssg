@@ -57,8 +57,8 @@ The application reads shift data from `src/data/turni.json`. The structure is:
     {
       "date": "2026-03-01",
       "team": [
-        { "memberName": "Diego", "role": "guitar" },
-        { "memberName": "Samu", "role": "keyboard" }
+        { "memberName": "Diego", "role": "guitar", "color": "yellow" },
+        { "memberName": "Samu", "role": "keyboard", "color": "blue" }
       ]
     }
   ],
@@ -72,6 +72,12 @@ The application reads shift data from `src/data/turni.json`. The structure is:
   "availableRoles": ["guitar", "bass", "drums", "vocals", "keyboard"]
 }
 ```
+
+**Important Notes:**
+- Each team member in a shift has a **single role** (not an array of roles)
+- Each team member entry includes: `memberName`, `role`, and `color`
+- The `availableTeamMembers` array defines all possible team members with their potential roles (array) and assigned colors
+- For each shift/date, a person can only have one role on stage
 
 ## Updating Shifts
 

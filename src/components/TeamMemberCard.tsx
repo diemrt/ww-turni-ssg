@@ -1,10 +1,10 @@
 import { getRoleIcon } from "@/utils/iconMapper";
-import type { Role, TeamMember } from "@/types";
+import type { Role } from "@/types";
 
 interface TeamMemberCardProps {
   memberName: string;
   role: Role;
-  teamMember: TeamMember;
+  color: string;
 }
 
 const colorMap: Record<string, string> = {
@@ -20,9 +20,9 @@ const colorMap: Record<string, string> = {
   gray: "bg-team-gray text-white",
 };
 
-export default function TeamMemberCard({ memberName, role, teamMember }: TeamMemberCardProps) {
+export default function TeamMemberCard({ memberName, role, color }: TeamMemberCardProps) {
   const Icon = getRoleIcon(role);
-  const colorClass = colorMap[teamMember.color] || "bg-gray-500 text-white";
+  const colorClass = colorMap[color] || "bg-gray-500 text-white";
 
   return (
     <div

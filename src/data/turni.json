@@ -2,44 +2,168 @@
   "shifts": [
     {
       "date": "2026-03-01",
-      "team": []
+      "team": [
+        {
+          "memberName": "Diego",
+          "role": "guitar",
+          "color": "yellow"
+        },
+        {
+          "memberName": "Samu",
+          "role": "keyboard",
+          "color": "blue"
+        },
+        {
+          "memberName": "Daniele",
+          "role": "drums",
+          "color": "green"
+        }
+      ]
     },
     {
       "date": "2026-03-06",
-      "team": []
+      "team": [
+        {
+          "memberName": "Beppe",
+          "role": "bass",
+          "color": "red"
+        },
+        {
+          "memberName": "Alberto",
+          "role": "guitar",
+          "color": "orange"
+        },
+        {
+          "memberName": "Chiara",
+          "role": "vocals",
+          "color": "pink"
+        }
+      ]
     },
     {
       "date": "2026-03-08",
-      "team": []
+      "team": [
+        {
+          "memberName": "Manu",
+          "role": "vocals",
+          "color": "purple"
+        },
+        {
+          "memberName": "Natalia",
+          "role": "vocals",
+          "color": "cyan"
+        },
+        {
+          "memberName": "Magdy",
+          "role": "vocals",
+          "color": "brown"
+        }
+      ]
     },
     {
       "date": "2026-03-13",
-      "team": []
+      "team": [
+        {
+          "memberName": "David",
+          "role": "vocals",
+          "color": "gray"
+        }
+      ]
     },
     {
       "date": "2026-03-15",
-      "team": []
+      "team": [
+        {
+          "memberName": "Diego",
+          "role": "guitar",
+          "color": "yellow"
+        },
+        {
+          "memberName": "Samu",
+          "role": "keyboard",
+          "color": "blue"
+        },
+        {
+          "memberName": "Daniele",
+          "role": "drums",
+          "color": "green"
+        }
+      ]
     },
     {
       "date": "2026-03-20",
-      "team": []
+      "team": [
+        {
+          "memberName": "Beppe",
+          "role": "bass",
+          "color": "red"
+        },
+        {
+          "memberName": "Alberto",
+          "role": "guitar",
+          "color": "orange"
+        },
+        {
+          "memberName": "Chiara",
+          "role": "vocals",
+          "color": "pink"
+        }
+      ]
     },
     {
       "date": "2026-03-22",
-      "team": []
+      "team": [
+        {
+          "memberName": "Manu",
+          "role": "vocals",
+          "color": "purple"
+        },
+        {
+          "memberName": "Natalia",
+          "role": "vocals",
+          "color": "cyan"
+        },
+        {
+          "memberName": "Magdy",
+          "role": "vocals",
+          "color": "brown"
+        }
+      ]
     },
     {
       "date": "2026-03-27",
-      "team": []
+      "team": [
+        {
+          "memberName": "David",
+          "role": "vocals",
+          "color": "gray"
+        }
+      ]
     },
     {
       "date": "2026-03-29",
-      "team": []
+      "team": [
+        {
+          "memberName": "Diego",
+          "role": "guitar",
+          "color": "yellow"
+        },
+        {
+          "memberName": "Samu",
+          "role": "keyboard",
+          "color": "blue"
+        },
+        {
+          "memberName": "Daniele",
+          "role": "drums",
+          "color": "green"
+        }
+      ]
     }
   ],
   "availableTeamMembers": [
     {
-      "name": "Diego",
+      "memberName": "Diego",
       "roles": [
         "guitar",
         "vocals"
@@ -47,7 +171,7 @@
       "color": "yellow"
     },
     {
-      "name": "Samu",
+      "memberName": "Samu",
       "roles": [
         "keyboard",
         "vocals"
@@ -55,21 +179,21 @@
       "color": "blue"
     },
     {
-      "name": "Daniele",
+      "memberName": "Daniele",
       "roles": [
         "drums"
       ],
       "color": "green"
     },
     {
-      "name": "Beppe",
+      "memberName": "Beppe",
       "roles": [
         "bass"
       ],
       "color": "red"
     },
     {
-      "name": "Alberto",
+      "memberName": "Alberto",
       "roles": [
         "guitar",
         "drums"
@@ -77,35 +201,35 @@
       "color": "orange"
     },
     {
-      "name": "Chiara",
+      "memberName": "Chiara",
       "roles": [
         "vocals"
       ],
       "color": "pink"
     },
     {
-      "name": "Manu",
+      "memberName": "Manu",
       "roles": [
         "vocals"
       ],
       "color": "purple"
     },
     {
-      "name": "Natalia",
+      "memberName": "Natalia",
       "roles": [
         "vocals"
       ],
       "color": "cyan"
     },
     {
-      "name": "Magdy",
+      "memberName": "Magdy",
       "roles": [
         "vocals"
       ],
       "color": "brown"
     },
     {
-      "name": "David",
+      "memberName": "David",
       "roles": [
         "vocals"
       ],
@@ -125,3 +249,4 @@
     "keyboard"
   ]
 }
+
