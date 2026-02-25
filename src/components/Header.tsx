@@ -15,9 +15,6 @@ export default function Header({ title }: HeaderProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Extract month from title (e.g., "Turni di Marzo 2026" -> "Marzo 2026")
-  const monthInfo = title.replace("Turni di ", "");
-
   return (
     <header 
       className={`sticky top-0 z-50 transition-all duration-300 ${
@@ -32,11 +29,6 @@ export default function Header({ title }: HeaderProps) {
             <h1 className="font-display text-display text-white tracking-tight">
               {title}
             </h1>
-            {isScrolled && (
-              <span className="inline-block mt-1 px-3 py-1 text-xs font-medium text-white/90 bg-white/10 rounded-full backdrop-blur-sm">
-                {monthInfo}
-              </span>
-            )}
           </div>
         </div>
       </div>
