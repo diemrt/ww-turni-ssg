@@ -87,8 +87,9 @@
       "date": "2026-03-27",
       "team": [
         { "name": "Diego", "role": "guitar" },
+        { "name": "Alberto", "role": "guitar" },
         { "name": "Samu", "role": "keyboard" },
-        { "name": "Alberto", "role": "drums" },
+        { "name": "Daniele", "role": "drums" },
         { "name": "Chiara", "role": "vocals" },
         { "name": "Manu", "role": "vocals" },
         { "name": "Natalia", "role": "vocals" },
