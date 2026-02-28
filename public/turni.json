@@ -35,8 +35,7 @@
         { "name": "Alberto", "role": "drums" },
         { "name": "Beppe", "role": "bass" },
         { "name": "Chiara", "role": "vocals" },
-        { "name": "Magdy", "role": "vocals" },
-        { "name": "David", "role": "vocals" }
+        { "name": "Magdy", "role": "vocals" }
       ]
     },
     {
