@@ -33,7 +33,6 @@
         { "name": "Diego", "role": "guitar" },
         { "name": "Samu", "role": "keyboard" },
         { "name": "Alberto", "role": "drums" },
-        { "name": "Beppe", "role": "bass" },
         { "name": "Chiara", "role": "vocals" },
         { "name": "Magdy", "role": "vocals" }
       ]
@@ -66,7 +65,6 @@
       "team": [
         { "name": "Diego", "role": "guitar" },
         { "name": "Daniele", "role": "drums" },
-        { "name": "Beppe", "role": "bass" },
         { "name": "Magdy", "role": "vocals" },
         { "name": "Natalia", "role": "vocals" },
         { "name": "David", "role": "vocals" }
@@ -77,7 +75,6 @@
       "team": [
         { "name": "Diego", "role": "guitar" },
         { "name": "Daniele", "role": "drums" },
-        { "name": "Beppe", "role": "bass" },
         { "name": "Chiara", "role": "vocals" },
         { "name": "Natalia", "role": "vocals" }
       ]
