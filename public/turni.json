@@ -82,25 +82,13 @@
     {
       "date": "2026-03-27",
       "team": [
-        { "name": "Diego", "role": "guitar" },
-        { "name": "Alberto", "role": "guitar" },
-        { "name": "Samu", "role": "keyboard" },
-        { "name": "Daniele", "role": "drums" },
-        { "name": "Chiara", "role": "vocals" },
-        { "name": "Manu", "role": "vocals" },
-        { "name": "Natalia", "role": "vocals" },
-        { "name": "David", "role": "vocals" }
       ]
     },
     {
       "date": "2026-03-29",
       "team": [
-        { "name": "Alberto", "role": "guitar" },
-        { "name": "Daniele", "role": "drums" },
-        { "name": "Beppe", "role": "bass" },
-        { "name": "Manu", "role": "vocals" },
-        { "name": "Magdy", "role": "vocals" },
-        { "name": "Diego", "role": "vocals" }
+        { "name": "Diego", "role": "guitar" },
+        { "name": "Manu", "role": "vocals" }
       ]
     }
   ],
