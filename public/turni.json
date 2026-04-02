@@ -48,6 +48,7 @@
       "date": "2026-04-17",
       "team": [
         { "name": "Alberto", "role": "guitar" },
+        { "name": "Daniele", "role": "drums" },
         { "name": "Samu", "role": "keyboard" },
         { "name": "Diego", "role": "vocals" },
         { "name": "David", "role": "vocals" }
