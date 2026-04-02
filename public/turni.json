@@ -9,8 +9,6 @@
       "date": "2026-04-03",
       "team": [
         { "name": "Diego", "role": "guitar" },
-        { "name": "Samu", "role": "keyboard" },
-        { "name": "Daniele", "role": "drums" },
         { "name": "Magdy", "role": "vocals" }
       ]
     },
@@ -29,9 +27,12 @@
     {
       "date": "2026-04-10",
       "team": [
-        { "name": "Alberto", "role": "guitar" },
+        { "name": "Diego", "role": "guitar" },
+        { "name": "Alberto", "role": "drums" },
         { "name": "Samu", "role": "keyboard" },
-        { "name": "Natalia", "role": "vocals" }
+        { "name": "Natalia", "role": "vocals" },
+        { "name": "Manu", "role": "vocals" },
+        { "name": "Magdy", "role": "vocals" }
       ]
     },
     {
