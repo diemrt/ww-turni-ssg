@@ -76,7 +76,6 @@
       "team": [
         { "name": "Diego", "role": "guitar" },
         { "name": "Alberto", "role": "drums" },
-        { "name": "Beppe", "role": "bass" },
         { "name": "Manu", "role": "vocals" },
         { "name": "Natalia", "role": "vocals" }
       ]
