@@ -70,7 +70,6 @@
       "date": "2026-04-24",
       "team": [
         { "name": "Diego", "role": "guitar" },
-        { "name": "Daniele", "role": "drums" },
         { "name": "Magdy", "role": "vocals" },
         { "name": "David", "role": "vocals" }
       ]
@@ -79,6 +78,7 @@
       "date": "2026-04-26",
       "team": [
         { "name": "Diego", "role": "guitar" },
+        { "name": "Samu", "role": "keyboard" },
         { "name": "Alberto", "role": "drums" },
         { "name": "Natalia", "role": "vocals" },
         { "name": "David", "role": "vocals" }
