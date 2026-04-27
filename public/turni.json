@@ -30,7 +30,6 @@
       "date": "2026-05-08",
       "team": [
         { "name": "Diego", "role": "guitar" },
-        { "name": "Alberto", "role": "drums" },
         { "name": "Natalia", "role": "vocals" }
       ]
     },
