@@ -3,98 +3,116 @@
     "Friday",
     "Sunday"
   ],
-  "title": "Turni di Aprile 2026",
+  "title": "Turni di Maggio 2026",
   "shifts": [
     {
-      "date": "2026-04-03",
+      "date": "2026-05-01",
       "team": [
-        { "name": "Diego", "role": "guitar" },
-        { "name": "Magdy", "role": "vocals" }
-      ]
-    },
-    {
-      "date": "2026-04-05",
-      "team": [
-        { "name": "Diego", "role": "guitar" },
-        { "name": "Samu", "role": "keyboard" },
-        { "name": "Alberto", "role": "drums" },
-        { "name": "Manu", "role": "vocals" },
-        { "name": "Magdy", "role": "vocals" },
-        { "name": "Natalia", "role": "vocals" },
-        { "name": "David", "role": "vocals" }
-      ]
-    },
-    {
-      "date": "2026-04-10",
-      "team": [
-        { "name": "Diego", "role": "guitar" },
-        { "name": "Alberto", "role": "drums" },
-        { "name": "Samu", "role": "keyboard" },
-        { "name": "Natalia", "role": "vocals" },
-        { "name": "Manu", "role": "vocals" },
-        { "name": "Magdy", "role": "vocals" }
-      ]
-    },
-    {
-      "date": "2026-04-12",
-      "team": [
-        { "name": "Samu", "role": "keyboard" },
-        { "name": "Daniele", "role": "drums" },
+        { "name": "Samuele", "role": "keyboard" },
         { "name": "Beppe", "role": "bass" },
-        { "name": "Manu", "role": "vocals" }
+        { "name": "Manuela", "role": "vocals" },
+        { "name": "Magdy", "role": "vocals" }
       ]
     },
     {
-      "date": "2026-04-17",
+      "date": "2026-05-03",
       "team": [
         { "name": "Alberto", "role": "guitar" },
+        { "name": "Samuele", "role": "keyboard" },
         { "name": "Daniele", "role": "drums" },
-        { "name": "Samu", "role": "keyboard" },
-        { "name": "Diego", "role": "vocals" },
+        { "name": "Beppe", "role": "bass" },
+        { "name": "Manuela", "role": "vocals" },
+        { "name": "Natalia", "role": "vocals" },
         { "name": "David", "role": "vocals" }
       ]
     },
     {
-      "date": "2026-04-19",
+      "date": "2026-05-08",
       "team": [
         { "name": "Diego", "role": "guitar" },
-        { "name": "Samu", "role": "keyboard" },
+        { "name": "Alberto", "role": "drums" },
+        { "name": "Natalia", "role": "vocals" }
+      ]
+    },
+    {
+      "date": "2026-05-10",
+      "team": [
+        { "name": "Diego", "role": "guitar" },
         { "name": "Daniele", "role": "drums" },
         { "name": "Beppe", "role": "bass" },
         { "name": "Natalia", "role": "vocals" },
+        { "name": "David", "role": "vocals" }
+      ]
+    },
+    {
+      "date": "2026-05-15",
+      "team": [
+        { "name": "Alberto", "role": "guitar" },
+        { "name": "Samuele", "role": "keyboard" },
+        { "name": "Daniele", "role": "drums" },
         { "name": "Magdy", "role": "vocals" },
         { "name": "David", "role": "vocals" }
       ]
     },
     {
-      "date": "2026-04-24",
+      "date": "2026-05-17",
       "team": [
         { "name": "Diego", "role": "guitar" },
-        { "name": "Magdy", "role": "vocals" },
-        { "name": "David", "role": "vocals" }
-      ]
-    },
-    {
-      "date": "2026-04-26",
-      "team": [
-        { "name": "Diego", "role": "guitar" },
-        { "name": "Samu", "role": "keyboard" },
+        { "name": "Samuele", "role": "keyboard" },
         { "name": "Alberto", "role": "drums" },
-        { "name": "Natalia", "role": "vocals" },
+        { "name": "Beppe", "role": "bass" },
+        { "name": "Magdy", "role": "vocals" },
+        { "name": "Natalia", "role": "vocals" }
+      ]
+    },
+    {
+      "date": "2026-05-22",
+      "team": [
+        { "name": "Diego", "role": "guitar" },
+        { "name": "Alberto", "role": "drums" },
+        { "name": "Natalia", "role": "vocals" }
+      ]
+    },
+    {
+      "date": "2026-05-24",
+      "team": [
+        { "name": "Diego", "role": "guitar" },
+        { "name": "Samuele", "role": "keyboard" },
+        { "name": "Daniele", "role": "drums" },
+        { "name": "Beppe", "role": "bass" },
+        { "name": "Magdy", "role": "vocals" },
         { "name": "David", "role": "vocals" }
+      ]
+    },
+    {
+      "date": "2026-05-29",
+      "team": [
+        { "name": "Diego", "role": "guitar" },
+        { "name": "Samuele", "role": "keyboard" },
+        { "name": "Magdy", "role": "vocals" },
+        { "name": "David", "role": "vocals" }
+      ]
+    },
+    {
+      "date": "2026-05-31",
+      "team": [
+        { "name": "Diego", "role": "guitar" },
+        { "name": "Samuele", "role": "keyboard" },
+        { "name": "Alberto", "role": "drums" },
+        { "name": "Beppe", "role": "bass" },
+        { "name": "Natalia", "role": "vocals" }
       ]
     }
   ],
   "availableTeamMembers": [
-    { "name": "Diego", "roles": ["guitar", "vocals"], "color": "yellow" },
-    { "name": "Samu", "roles": ["keyboard", "vocals"], "color": "blue" },
+    { "name": "Diego", "roles": ["guitar"], "color": "yellow" },
+    { "name": "Samuele", "roles": ["keyboard"], "color": "blue" },
     { "name": "Daniele", "roles": ["drums"], "color": "green" },
-    { "name": "Beppe", "roles": ["bass"], "color": "red" },
-    { "name": "Alberto", "roles": ["guitar", "drums"], "color": "orange" },
-    { "name": "Chiara", "roles": ["vocals"], "color": "pink" },
-    { "name": "Manu", "roles": ["vocals"], "color": "purple" },
+    { "name": "Beppe", "roles": ["bass"], "color": "orange" },
+    { "name": "Alberto", "roles": ["guitar", "drums"], "color": "brown" },
+    { "name": "Manuela", "roles": ["vocals"], "color": "purple" },
     { "name": "Natalia", "roles": ["vocals"], "color": "cyan" },
-    { "name": "Magdy", "roles": ["vocals"], "color": "brown" },
+    { "name": "Magdy", "roles": ["vocals"], "color": "pink" },
     { "name": "David", "roles": ["vocals"], "color": "gray" }
   ],
   "availableRoles": [
