@@ -77,6 +77,7 @@
       "team": [
         { "name": "Diego", "role": "guitar" },
         { "name": "Samuele", "role": "keyboard" },
+        { "name": "Alberto", "role": "drums" },
         { "name": "Magdy", "role": "vocals" }
       ]
     }
