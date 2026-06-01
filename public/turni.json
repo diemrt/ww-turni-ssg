@@ -3,49 +3,51 @@
     "Friday",
     "Sunday"
   ],
-  "title": "Turni di Maggio 2026",
+  "title": "Turni di Giugno 2026",
   "shifts": [
     {
-      "date": "2026-05-01",
+      "date": "2026-06-05",
       "team": [
+        { "name": "Diego", "role": "guitar" },
         { "name": "Samuele", "role": "keyboard" },
-        { "name": "Beppe", "role": "bass" },
-        { "name": "Manuela", "role": "vocals" },
-        { "name": "Magdy", "role": "vocals" }
-      ]
-    },
-    {
-      "date": "2026-05-03",
-      "team": [
-        { "name": "Alberto", "role": "guitar" },
-        { "name": "Samuele", "role": "keyboard" },
-        { "name": "Daniele", "role": "drums" },
-        { "name": "Beppe", "role": "bass" },
+        { "name": "Alberto", "role": "drums" },
         { "name": "Manuela", "role": "vocals" },
         { "name": "Natalia", "role": "vocals" },
         { "name": "David", "role": "vocals" }
       ]
     },
     {
-      "date": "2026-05-08",
+      "date": "2026-06-07",
       "team": [
         { "name": "Diego", "role": "guitar" },
+        { "name": "Samuele", "role": "keyboard" },
+        { "name": "Alberto", "role": "drums" },
+        { "name": "Manuela", "role": "vocals" },
         { "name": "Natalia", "role": "vocals" }
       ]
     },
     {
-      "date": "2026-05-10",
+      "date": "2026-06-12",
       "team": [
         { "name": "Diego", "role": "guitar" },
         { "name": "Daniele", "role": "drums" },
-        { "name": "Beppe", "role": "bass" },
+        { "name": "Manuela", "role": "vocals" },
         { "name": "Natalia", "role": "vocals" }
       ]
     },
     {
-      "date": "2026-05-15",
+      "date": "2026-06-14",
       "team": [
-        { "name": "Alberto", "role": "guitar" },
+        { "name": "Diego", "role": "guitar" },
+        { "name": "Daniele", "role": "drums" },
+        { "name": "Magdy", "role": "vocals" },
+        { "name": "Natalia", "role": "vocals" },
+        { "name": "David", "role": "vocals" }
+      ]
+    },
+    {
+      "date": "2026-06-19",
+      "team": [
         { "name": "Samuele", "role": "keyboard" },
         { "name": "Daniele", "role": "drums" },
         { "name": "Magdy", "role": "vocals" },
@@ -53,53 +55,29 @@
       ]
     },
     {
-      "date": "2026-05-17",
-      "team": [
-        { "name": "Diego", "role": "guitar" },
-        { "name": "Samuele", "role": "keyboard" },
-        { "name": "Alberto", "role": "drums" },
-        { "name": "Beppe", "role": "bass" },
-        { "name": "Magdy", "role": "vocals" },
-        { "name": "Natalia", "role": "vocals" }
-      ]
-    },
-    {
-      "date": "2026-05-22",
-      "team": [
-        { "name": "Diego", "role": "guitar" },
-        { "name": "Alberto", "role": "drums" },
-        { "name": "Natalia", "role": "vocals" }
-      ]
-    },
-    {
-      "date": "2026-05-24",
+      "date": "2026-06-21",
       "team": [
         { "name": "Diego", "role": "guitar" },
         { "name": "Samuele", "role": "keyboard" },
         { "name": "Daniele", "role": "drums" },
-        { "name": "Beppe", "role": "bass" },
-        { "name": "Magdy", "role": "vocals" },
+        { "name": "Magdy", "role": "vocals" }
+      ]
+    },
+    {
+      "date": "2026-06-26",
+      "team": [
+        { "name": "Samuele", "role": "keyboard" },
+        { "name": "Alberto", "role": "drums" },
+        { "name": "Manuela", "role": "vocals" },
         { "name": "David", "role": "vocals" }
       ]
     },
     {
-      "date": "2026-05-29",
-      "team": [
-        { "name": "Diego", "role": "guitar" },
-        { "name": "Alberto", "role": "drums" },
-        { "name": "Samuele", "role": "keyboard" },
-        { "name": "Magdy", "role": "vocals" },
-        { "name": "David", "role": "vocals" }
-      ]
-    },
-    {
-      "date": "2026-05-31",
+      "date": "2026-06-28",
       "team": [
         { "name": "Diego", "role": "guitar" },
         { "name": "Samuele", "role": "keyboard" },
-        { "name": "Alberto", "role": "drums" },
-        { "name": "Beppe", "role": "bass" },
-        { "name": "Natalia", "role": "vocals" }
+        { "name": "Magdy", "role": "vocals" }
       ]
     }
   ],
