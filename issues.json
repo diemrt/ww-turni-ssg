@@ -1,6 +1,6 @@
 {
-  "project": "",
-  "last_updated": "2026-06-24T12:51:29Z",
+  "project": "MyProject",
+  "last_updated": "2026-07-02T17:28:59Z",
   "rules": {
     "single_active_issue": false
   },
@@ -17,5 +17,174 @@
     "documentation",
     "testing"
   ],
-  "issues": []
+  "issues": [
+    {
+      "id": "00a46836-8296-4759-a612-61e70dc03856",
+      "title": "chore: add Vitest test runner",
+      "description": "Aggiungere Vitest per testare la logica pura (nessun runner installato oggi). Installare vitest come devDependency, aggiungere config Vitest, aggiungere script npm 'test'. Includere un test smoke che passa. Non introdurre test UI. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 8). Dipendenze: nessuna. Base per le issue con test successive.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "vitest presente in package.json devDependencies; 'npm test' esegue e passa almeno 1 test smoke; init.ps1 build passa (type-check+build ok).",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "e9df2a1c-0a22-4e81-a67e-d06ab5d2a1c7",
+      "title": "feat: split data model (config + turni.json migration + types)",
+      "description": "Separare config stabile dai dati del mese. 1) Creare public config.json con validDayOfWeek, availableRoles, roleSlots {guitar:1,keyboard:1,drums:1,bass:1,vocals:5}, availableTeamMembers (name/roles/color) presi dall'attuale turni.json. 2) Migrare public turni.json al nuovo schema: rimuovere config e il campo color dagli elementi team; aggiungere month (YYYY-MM, es. 2026-06) e absences ({} vuoto); mantenere title e shifts. 3) Aggiornare src/types/index.ts con AppConfig, MonthData, ShiftAssignment, Shift, TeamMember, Role. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 3). Dipendenze: nessuna. La vista pubblica sara' adeguata in issue successiva; qui solo dati+tipi.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "public config.json valido con roleSlots e availableTeamMembers; public turni.json nuovo schema (no color, con month+absences); src/types espone AppConfig e MonthData; init.ps1 build passa.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "414f18fd-9fc9-46d9-8ec5-a1f63922b0fc",
+      "title": "feat: util mergeConfig (color per nome) + test",
+      "description": "Creare src/utils/mergeConfig.ts: dato AppConfig e MonthData, per ogni assegnazione risolve il color cercando name in config.availableTeamMembers, restituendo strutture pronte per la vista. Gestire nome assente in config (fallback colore neutro, nessun crash). Test Vitest: colore risolto correttamente; nome mancante gestito. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 5, 3.3). Dipendenze: Vitest, split modello dati.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "mergeConfig risolve color per name; caso nome mancante non lancia e usa fallback; test dedicati passano con npm test.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "64161f71-5159-4256-8460-8c8ed45c1976",
+      "title": "feat: util monthDates (date valide del mese) + test",
+      "description": "Creare src/utils/monthDates.ts: dato month (YYYY-MM) e validDayOfWeek (es. Friday,Sunday), genera l'elenco ordinato delle date del mese che cadono in quei giorni (formato YYYY-MM-DD). Gestire i bordi mese. Fornire util per generare title italiano da month (es. Turni di Giugno 2026). Test Vitest: Giugno 2026 + Friday,Sunday => 05,07,12,14,19,21,26,28. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.1). Dipendenze: Vitest, tipi.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "monthDates 2026-06 con Friday,Sunday restituisce le 8 date attese in ordine; util title produce nome mese italiano; test passano.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "c3240f3d-5fbe-4475-8ea0-84da20e79eda",
+      "title": "feat: util shiftStats (conteggi + warning) + test",
+      "description": "Creare src/utils/shiftStats.ts: 1) conteggio turni per persona nel mese (derivato). 2) warning non bloccanti: slot vuoti per ruolo/data, stessa persona assegnata due volte nello stesso giorno, persona assente (in absences) ma assegnata. Ritorna strutture usabili dai pannelli. Test Vitest per ciascun tipo di warning e per i conteggi. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.4, 6.5). Dipendenze: Vitest, tipi, roleSlots da config.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "conteggi corretti su dataset di prova; ogni tipo di warning (slot vuoto, doppione stesso giorno, assente assegnato) rilevato; test passano.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "bad6ae36-35dc-4b32-be22-6b7e29d4c1b0",
+      "title": "feat: util persistence (draft localStorage + export/import) + test",
+      "description": "Creare src/utils/draftStorage.ts (load/save/clear bozza MonthData in localStorage con chiave per mese, es. ww-turni-draft-2026-06) e src/utils/exportImport.ts (serializza MonthData e scarica turni.json via Blob/anchor; parse+valida un turni.json importato ripopolando shifts+absences). Test Vitest: round-trip serialize->parse identita'; draft save->load identita' (mock localStorage). Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.6). Dipendenze: Vitest, tipi.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "draft save/load/clear funziona (test con mock storage); export produce JSON conforme a MonthData; import fa parse e valida; round-trip test passano.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "0446acad-5a1c-4b53-88ae-26624226841b",
+      "title": "feat: hash routing minimale + dispatch route + admin shell",
+      "description": "Aggiungere src/hooks/useHashRoute.ts che legge window.location.hash e reagisce a hashchange. In App.tsx: hash root o vuoto => vista pubblica; hash admin => editor. Creare src/components/admin/AdminEditor.tsx come shell placeholder (riempita nelle issue successive). Nessuna libreria di routing. Admin non linkato dalla vista pubblica, nessuna protezione (scelta consapevole). Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 4). Dipendenze: tipi.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "navigando all'hash admin si vede la shell admin; alla root la vista pubblica; nessuna lib di routing aggiunta; init.ps1 build passa.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "7cf1e909-9fb6-41b9-87fa-366612f55160",
+      "title": "feat: public view refactor (fetch config+turni, merge, render)",
+      "description": "Aggiornare App/vista pubblica: fetch parallelo di config.json e turni.json, unione tramite util mergeConfig (colore per nome), poi render invariato di ShiftCard/TeamMemberCard/TeamSummary. Ordinamento turni per data invariato. Gestire errore se manca uno dei due file (stato d'errore/EmptyState). QuickFilter e stati Loading/Empty invariati. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 5). Dipendenze: split modello dati, mergeConfig, routing.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "la vista pubblica mostra i turni di Giugno con i colori corretti risolti da config; errore gestito se un file manca; init.ps1 build passa.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "abe6aeb9-6c50-41a1-98c1-fac9021403ec",
+      "title": "feat: admin MonthPicker + colonne date (con rimozione data)",
+      "description": "In AdminEditor: selettore mese+anno che imposta month (YYYY-MM) e title (via util). Generare le colonne-date con monthDates dai validDayOfWeek di config. Ogni colonna ha controllo per rimuovere quella data dalla pianificazione del mese. Desktop-first, scroll orizzontale. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.1). Dipendenze: monthDates, routing/shell, config fetch.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "scelto Giugno 2026 compaiono le colonne 05..28; rimozione di una data la toglie dalla griglia; title generato in italiano.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "49263272-f166-485d-bf87-aeb601cc211c",
+      "title": "feat: admin ShiftGrid + ShiftCell (slot, dropdown filtrato, colore, assenti disabilitati)",
+      "description": "Griglia: righe = per ogni ruolo in availableRoles, roleSlots[role] righe (es. Voce 1..5) con etichette italiane; colonne = date. ShiftCell = dropdown con le persone che hanno quel ruolo (availableTeamMembers.roles include role) + opzione vuoto; sfondo/segno cella col colore persona. Persone assenti nella data (da absences) disabilitate/grigie. Lo stato della griglia costruisce le shifts di MonthData. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.2). Dipendenze: MonthPicker/date, config, tipi.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "righe rispettano roleSlots; dropdown mostra solo persone col ruolo giusto; assenti disabilitati; selezione aggiorna shifts; colore cella corretto.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "3d517fc4-1cfd-4adc-88e6-95012bdf5c0e",
+      "title": "feat: admin AbsencePanel (assenze per data -> absences)",
+      "description": "Pannello assenze: per ogni data del mese, multi-select delle persone assenti; aggiorna absences (mappa date->nomi) in MonthData. Le assenze alimentano il guardrail dei dropdown della griglia e vengono salvate/esportate. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.3). Dipendenze: date generate, ShiftGrid (guardrail condiviso), tipi.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "segnando un assente per una data, appare in absences e il dropdown della griglia lo disabilita in quel giorno; absences persiste nel modello.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "618525a8-27fb-4b1d-a172-425b0c4a9a9e",
+      "title": "feat: admin StatsPanel + WarningsPanel (conteggi live + warning)",
+      "description": "StatsPanel: lista persone con numero turni assegnati nel mese, ricalcolo live (util shiftStats). WarningsPanel: elenco warning non bloccanti (slot vuoti, doppione stesso giorno, assente assegnato) da shiftStats; non impediscono l'export. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.4, 6.5). Dipendenze: shiftStats, ShiftGrid, AbsencePanel.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "i conteggi si aggiornano assegnando/rimuovendo; i tre tipi di warning compaiono quando previsto; i warning non bloccano azioni.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "d649588c-dadd-412f-9a6b-02138a7af5e7",
+      "title": "feat: AdminEditor wiring (autosave bozza, export, import)",
+      "description": "Collegare i pezzi in AdminEditor: autosave della bozza MonthData in localStorage per mese (util draftStorage); all'apertura, se esiste bozza, proporre Riprendi/Scarta. Bottone Esporta => scarica turni.json (util exportImport). Bottone Importa turni.json => carica file dal disco e ripopola shifts+absences. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.6). Dipendenze: draftStorage/exportImport, ShiftGrid, AbsencePanel, MonthPicker.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "modifiche autosalvate in localStorage e riprendibili; Esporta scarica un turni.json conforme; Importa ripopola griglia+assenze; init.ps1 build passa.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    },
+    {
+      "id": "7646605c-d01b-4a39-99bc-557834f8651a",
+      "title": "docs: update ARCHITECTURE.md and AGENTS.md for new model + admin",
+      "description": "Aggiornare documentazione: ARCHITECTURE.md (split config/turni, rotta admin hash, componenti admin, flusso fetch+merge, Vitest); AGENTS.md se cambia lo stack (Vitest, script test). Documentare la scelta della rotta admin non protetta. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md. Dipendenze: ultima, dopo comportamento stabile.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "ARCHITECTURE.md riflette split dati, routing admin e testing; AGENTS.md coerente; nessun riferimento obsoleto al vecchio schema turni.json.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-02T17:28:59Z",
+      "updated_at": "2026-07-02T17:28:59Z"
+    }
+  ]
 }
