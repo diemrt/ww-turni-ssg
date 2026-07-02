@@ -32,6 +32,22 @@ A mobile-first static website to display worship team shift schedules built with
 
 3. Open your browser to `http://localhost:5173`
 
+### Environment Check (PowerShell)
+
+Use `init.ps1` to verify the toolchain works:
+
+```powershell
+.\init.ps1 setup   # verify Node.js (>=18) and npm, then npm install
+.\init.ps1 build   # run npm run build (tsc -b && vite build) into dist/
+```
+
+### Documentation / Developer Guide
+
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — Architecture, tech stack, main flow and code structure.
+- [AGENTS.md](AGENTS.md) — Session workflow (clock-in/clock-out), 1-WIP rule, independent subagent verification and the `init.ps1` guide.
+- [docs/GIT.md](docs/GIT.md) — Version control guidelines.
+- [docs/ISSUES.md](docs/ISSUES.md) — How issues are tracked with `issue-manager.ps1`.
+
 ### Build for Production
 
 ```bash
