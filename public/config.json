@@ -1,0 +1,16 @@
+{
+  "validDayOfWeek": ["Friday", "Sunday"],
+  "availableRoles": ["guitar", "bass", "drums", "vocals", "keyboard"],
+  "roleSlots": { "guitar": 1, "keyboard": 1, "drums": 1, "bass": 1, "vocals": 5 },
+  "availableTeamMembers": [
+    { "name": "Diego", "roles": ["guitar"], "color": "yellow" },
+    { "name": "Samuele", "roles": ["keyboard"], "color": "blue" },
+    { "name": "Daniele", "roles": ["drums"], "color": "green" },
+    { "name": "Beppe", "roles": ["bass"], "color": "orange" },
+    { "name": "Alberto", "roles": ["guitar", "drums"], "color": "brown" },
+    { "name": "Manuela", "roles": ["vocals"], "color": "purple" },
+    { "name": "Natalia", "roles": ["vocals"], "color": "cyan" },
+    { "name": "Magdy", "roles": ["vocals"], "color": "pink" },
+    { "name": "David", "roles": ["vocals"], "color": "gray" }
+  ]
+}

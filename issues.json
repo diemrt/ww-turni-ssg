@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-02T17:28:59Z",
+  "last_updated": "2026-07-02T17:56:25Z",
   "rules": {
     "single_active_issue": false
   },
@@ -22,85 +22,85 @@
       "id": "00a46836-8296-4759-a612-61e70dc03856",
       "title": "chore: add Vitest test runner",
       "description": "Aggiungere Vitest per testare la logica pura (nessun runner installato oggi). Installare vitest come devDependency, aggiungere config Vitest, aggiungere script npm 'test'. Includere un test smoke che passa. Non introdurre test UI. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 8). Dipendenze: nessuna. Base per le issue con test successive.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "vitest presente in package.json devDependencies; 'npm test' esegue e passa almeno 1 test smoke; init.ps1 build passa (type-check+build ok).",
-        "state": "unknown"
+        "criteria": "Verified: vitest ^4.1.9 in package.json devDependencies; npm test (vitest run) -> 1 test file, 1 test passed (src/utils/__tests__/smoke.test.ts); .\\init.ps1 build -> tsc -b && vite build succeeded, dist/ generated.",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-02T17:38:16Z"
     },
     {
       "id": "e9df2a1c-0a22-4e81-a67e-d06ab5d2a1c7",
       "title": "feat: split data model (config + turni.json migration + types)",
       "description": "Separare config stabile dai dati del mese. 1) Creare public config.json con validDayOfWeek, availableRoles, roleSlots {guitar:1,keyboard:1,drums:1,bass:1,vocals:5}, availableTeamMembers (name/roles/color) presi dall'attuale turni.json. 2) Migrare public turni.json al nuovo schema: rimuovere config e il campo color dagli elementi team; aggiungere month (YYYY-MM, es. 2026-06) e absences ({} vuoto); mantenere title e shifts. 3) Aggiornare src/types/index.ts con AppConfig, MonthData, ShiftAssignment, Shift, TeamMember, Role. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 3). Dipendenze: nessuna. La vista pubblica sara' adeguata in issue successiva; qui solo dati+tipi.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "public config.json valido con roleSlots e availableTeamMembers; public turni.json nuovo schema (no color, con month+absences); src/types espone AppConfig e MonthData; init.ps1 build passa.",
-        "state": "unknown"
+        "criteria": "config.json valido con roleSlots(guitar/keyboard/drums/bass/vocals) e 9 availableTeamMembers; turni.json nuovo schema con month=2026-06, absences={}, team senza color, nessun availableTeamMembers/validDayOfWeek/availableRoles residuo; src/types/index.ts esporta AppConfig e MonthData (+ShiftAssignment/Shift/Role/TeamMember); init.ps1 build OK (tsc -b + vite build succeeded).",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-02T17:42:10Z"
     },
     {
       "id": "414f18fd-9fc9-46d9-8ec5-a1f63922b0fc",
       "title": "feat: util mergeConfig (color per nome) + test",
       "description": "Creare src/utils/mergeConfig.ts: dato AppConfig e MonthData, per ogni assegnazione risolve il color cercando name in config.availableTeamMembers, restituendo strutture pronte per la vista. Gestire nome assente in config (fallback colore neutro, nessun crash). Test Vitest: colore risolto correttamente; nome mancante gestito. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 5, 3.3). Dipendenze: Vitest, split modello dati.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "mergeConfig risolve color per name; caso nome mancante non lancia e usa fallback; test dedicati passano con npm test.",
-        "state": "unknown"
+        "criteria": "mergeConfig.ts resolves color via availableTeamMembers Map lookup with ?? FALLBACK_COLOR fallback (no throw) for missing names; mergeConfig.test.ts has 3 tests covering resolved color, missing-name fallback (asserts no-throw + FALLBACK_COLOR), and passthrough of title/month/absences; npm test: 10/10 passed (3 files); init.ps1 build: tsc -b + vite build succeeded.",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-02T17:47:19Z"
     },
     {
       "id": "64161f71-5159-4256-8460-8c8ed45c1976",
       "title": "feat: util monthDates (date valide del mese) + test",
       "description": "Creare src/utils/monthDates.ts: dato month (YYYY-MM) e validDayOfWeek (es. Friday,Sunday), genera l'elenco ordinato delle date del mese che cadono in quei giorni (formato YYYY-MM-DD). Gestire i bordi mese. Fornire util per generare title italiano da month (es. Turni di Giugno 2026). Test Vitest: Giugno 2026 + Friday,Sunday => 05,07,12,14,19,21,26,28. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.1). Dipendenze: Vitest, tipi.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "monthDates 2026-06 con Friday,Sunday restituisce le 8 date attese in ordine; util title produce nome mese italiano; test passano.",
-        "state": "unknown"
+        "criteria": "Verified: monthDates(\"2026-06\",[\"Friday\",\"Sunday\"]) returns exactly the 8 expected dates in order (test asserts this); monthTitle(\"2026-06\") returns \"Turni di Giugno 2026\"; also covers May boundary, Feb short month, empty array cases. npm test: 2 files, 7/7 passed. init.ps1 build: tsc -b && vite build succeeded, dist/ generated.",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-02T17:45:06Z"
     },
     {
       "id": "c3240f3d-5fbe-4475-8ea0-84da20e79eda",
       "title": "feat: util shiftStats (conteggi + warning) + test",
       "description": "Creare src/utils/shiftStats.ts: 1) conteggio turni per persona nel mese (derivato). 2) warning non bloccanti: slot vuoti per ruolo/data, stessa persona assegnata due volte nello stesso giorno, persona assente (in absences) ma assegnata. Ritorna strutture usabili dai pannelli. Test Vitest per ciascun tipo di warning e per i conteggi. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.4, 6.5). Dipendenze: Vitest, tipi, roleSlots da config.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "conteggi corretti su dataset di prova; ogni tipo di warning (slot vuoto, doppione stesso giorno, assente assegnato) rilevato; test passano.",
-        "state": "unknown"
+        "criteria": "shiftCounts sums per-person across shifts (verified 2-shift dataset -> Diego=2, plus empty-month case); shiftWarnings detects EMPTY_SLOT (vocals under-filled vs roleSlots), DUPLICATE_SAME_DAY (same name twice same date), and ABSENT_ASSIGNED (name in absences[date] also assigned), plus a clean-dataset negative test. npm test: 4 files, 16 tests passed. .\\init.ps1 build: tsc + vite build succeeded.",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-02T17:49:52Z"
     },
     {
       "id": "bad6ae36-35dc-4b32-be22-6b7e29d4c1b0",
       "title": "feat: util persistence (draft localStorage + export/import) + test",
       "description": "Creare src/utils/draftStorage.ts (load/save/clear bozza MonthData in localStorage con chiave per mese, es. ww-turni-draft-2026-06) e src/utils/exportImport.ts (serializza MonthData e scarica turni.json via Blob/anchor; parse+valida un turni.json importato ripopolando shifts+absences). Test Vitest: round-trip serialize->parse identita'; draft save->load identita' (mock localStorage). Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.6). Dipendenze: Vitest, tipi.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "draft save/load/clear funziona (test con mock storage); export produce JSON conforme a MonthData; import fa parse e valida; round-trip test passano.",
-        "state": "unknown"
+        "criteria": "draftStorage.ts: save/load/clear per-month key ww-turni-draft-<month>, silent no-op on missing/corrupt localStorage; exportImport.ts: serializeMonthData (pure JSON.stringify), parseMonthData validates title/month/shifts/absences shape and throws clear Errors on malformed input, exportMonthData does Blob+anchor download. Tests: draftStorage.test.ts (5 tests, mock MemoryStorage, round-trip+corrupt+clear) and exportImport.test.ts (9 tests, serialize->parse round-trip, invalid JSON/missing fields/array throw). npm test: 6 files, 30/30 passed. init.ps1 build: tsc -b + vite build succeeded.",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-02T17:53:07Z"
     },
     {
       "id": "0446acad-5a1c-4b53-88ae-26624226841b",
       "title": "feat: hash routing minimale + dispatch route + admin shell",
       "description": "Aggiungere src/hooks/useHashRoute.ts che legge window.location.hash e reagisce a hashchange. In App.tsx: hash root o vuoto => vista pubblica; hash admin => editor. Creare src/components/admin/AdminEditor.tsx come shell placeholder (riempita nelle issue successive). Nessuna libreria di routing. Admin non linkato dalla vista pubblica, nessuna protezione (scelta consapevole). Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 4). Dipendenze: tipi.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "navigando all'hash admin si vede la shell admin; alla root la vista pubblica; nessuna lib di routing aggiunta; init.ps1 build passa.",
-        "state": "unknown"
+        "criteria": "useHashRoute.ts reads window.location.hash + hashchange listener (verified); App.tsx dispatches #/admin -> AdminEditor, root/empty/other -> PublicView (verified); AdminEditor.tsx is a placeholder shell (verified); package.json has no routing lib (react-router/wouter/etc absent); init.ps1 build passed (tsc -b && vite build, dist generated); npm test passed (6 files, 30 tests).",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-02T17:56:25Z"
     },
     {
       "id": "7cf1e909-9fb6-41b9-87fa-366612f55160",

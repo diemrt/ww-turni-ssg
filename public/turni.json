@@ -1,9 +1,6 @@
 {
-  "validDayOfWeek": [
-    "Friday",
-    "Sunday"
-  ],
   "title": "Turni di Giugno 2026",
+  "month": "2026-06",
   "shifts": [
     {
       "date": "2026-06-05",
@@ -82,22 +79,5 @@
       ]
     }
   ],
-  "availableTeamMembers": [
-    { "name": "Diego", "roles": ["guitar"], "color": "yellow" },
-    { "name": "Samuele", "roles": ["keyboard"], "color": "blue" },
-    { "name": "Daniele", "roles": ["drums"], "color": "green" },
-    { "name": "Beppe", "roles": ["bass"], "color": "orange" },
-    { "name": "Alberto", "roles": ["guitar", "drums"], "color": "brown" },
-    { "name": "Manuela", "roles": ["vocals"], "color": "purple" },
-    { "name": "Natalia", "roles": ["vocals"], "color": "cyan" },
-    { "name": "Magdy", "roles": ["vocals"], "color": "pink" },
-    { "name": "David", "roles": ["vocals"], "color": "gray" }
-  ],
-  "availableRoles": [
-    "guitar",
-    "bass",
-    "drums",
-    "vocals",
-    "keyboard"
-  ]
+  "absences": {}
 }
