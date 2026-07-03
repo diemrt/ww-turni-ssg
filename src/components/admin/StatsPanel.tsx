@@ -1,3 +1,6 @@
+import { Panel } from "@/components/ui/Panel";
+import { Meter } from "@/components/ui/Meter";
+import { personColor } from "@/utils/personColor";
 import type { ShiftCount } from "@/utils/shiftStats";
 import type { TeamMember } from "@/types";
 
@@ -13,38 +16,46 @@ interface StatsPanelProps {
  * d'insieme" the Excel sheet had, so the admin can spot who is over/under
  * assigned. Purely derived — the caller recomputes `counts` via
  * shiftStats.shiftCounts on every grid change, so this panel is always live.
+ *
+ * Presentation only: renders as a small distribution-bar list (one row per
+ * roster member, sorted by count desc) instead of a flat chip row, so the
+ * relative load between people reads as a mini bar chart. Each row's bar
+ * width is proportional to that person's count against the month's max
+ * count (via the `Meter` primitive); the raw count still shows in
+ * `font-mono` at the end, same as before.
  */
 function StatsPanel({ counts, availableTeamMembers }: StatsPanelProps) {
   const countByName = new Map(counts.map((c) => [c.name, c.count]));
 
   const rows = availableTeamMembers
-    .map((member) => ({ name: member.name, count: countByName.get(member.name) ?? 0 }))
+    .map((member) => ({ name: member.name, color: member.color, count: countByName.get(member.name) ?? 0 }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 
+  const maxCount = rows.reduce((max, row) => Math.max(max, row.count), 0);
+
   return (
-    <div className="mt-8">
-      <h2 className="text-lg font-semibold text-zinc-900">Conteggio turni</h2>
-      <p className="mt-1 text-sm text-zinc-500">
-        Numero di turni assegnati a ciascuna persona nel mese corrente (si aggiorna in tempo reale).
-      </p>
-
-      <div className="mt-4 flex flex-wrap gap-2" role="list" aria-label="Conteggio turni per persona">
-        {rows.map((row) => (
-          <div
-            key={row.name}
-            role="listitem"
-            className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 shadow-sm"
-          >
-            <span className="text-sm font-medium text-zinc-700">{row.name}</span>
-            <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-semibold text-zinc-600">
-              {row.count}
-            </span>
-          </div>
-        ))}
-
-        {rows.length === 0 && <p className="text-sm text-zinc-500">Nessuna persona configurata.</p>}
-      </div>
-    </div>
+    <Panel
+      className="mt-8"
+      title="Conteggio turni"
+      description="Numero di turni assegnati a ciascuna persona nel mese corrente (si aggiorna in tempo reale)."
+    >
+      {rows.length === 0 ? (
+        <p className="text-sm text-ink-600">Nessuna persona configurata.</p>
+      ) : (
+        <div className="flex flex-col gap-2" role="list" aria-label="Conteggio turni per persona">
+          {rows.map((row) => {
+            const swatch = personColor(row.color);
+            return (
+              <div key={row.name} role="listitem" className="flex items-center gap-3">
+                <span className={`h-2 w-2 shrink-0 rounded-full ${swatch.dot}`} aria-hidden="true" />
+                <span className="w-28 flex-shrink-0 truncate text-sm text-ink-800">{row.name}</span>
+                <Meter value={row.count} max={maxCount} label={String(row.count)} className="flex-1" />
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </Panel>
   );
 }
 

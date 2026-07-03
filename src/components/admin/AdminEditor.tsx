@@ -5,6 +5,7 @@ import ShiftGrid, { shiftsFromSelections, selectionsFromShifts, buildGridRows } 
 import AbsencePanel from "@/components/admin/AbsencePanel";
 import StatsPanel from "@/components/admin/StatsPanel";
 import WarningsPanel from "@/components/admin/WarningsPanel";
+import { Button } from "@/components/ui/Button";
 import { monthDates, monthTitle } from "@/utils/monthDates";
 import { formatDate } from "@/utils/dateFormatter";
 import { shiftStats } from "@/utils/shiftStats";
@@ -252,63 +253,51 @@ function AdminEditor() {
 
   if (error || !config) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-paper">
         <div className="text-center px-4">
-          <h1 className="text-xl font-semibold text-zinc-900">Errore nel caricamento</h1>
-          <p className="mt-2 text-zinc-600">Impossibile caricare config.json</p>
+          <h1 className="font-display text-heading text-ink-950">Errore nel caricamento</h1>
+          <p className="mt-2 text-ink-600">Impossibile caricare config.json</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 px-4 py-8">
-      <h1 className="text-2xl font-semibold text-zinc-900">Editor turni (admin)</h1>
-      <p className="mt-1 text-zinc-600">{title}</p>
+    <div className="min-h-screen bg-paper px-6 py-8 text-ink-800">
+      <h1 className="font-display text-heading text-ink-950">Editor turni (admin)</h1>
+      <p className="mt-1 text-sm text-ink-600">{title}</p>
 
       <div className="mt-6 flex flex-wrap items-end gap-3">
         <MonthPicker value={month} onChange={handleMonthChange} />
 
-        <button
-          type="button"
-          onClick={handleExport}
-          className="rounded-md bg-slate-700 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-slate-800"
-        >
+        <Button type="button" variant="primary" size="md" onClick={handleExport}>
           Esporta turni.json
-        </button>
+        </Button>
 
-        <label className="cursor-pointer rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 shadow-sm hover:bg-zinc-50">
+        <label className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-md2 bg-transparent px-4 text-sm font-medium text-ink-800 transition-colors hover:bg-ink-800/5 focus-within:ring-2 focus-within:ring-brand-600 focus-within:ring-offset-2">
           Importa turni.json
           <input type="file" accept=".json,application/json" onChange={handleImportFile} className="hidden" />
         </label>
       </div>
 
       {importError && (
-        <p className="mt-2 text-sm text-red-600" role="alert">
+        <p className="mt-2 text-sm text-attention" role="alert">
           {importError}
         </p>
       )}
 
       {pendingDraft && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-md border border-amber-300 bg-amber-50 px-4 py-3">
-          <p className="text-sm text-amber-900">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-md2 border border-live/30 bg-live-50 px-4 py-3">
+          <p className="text-sm text-ink-800">
             Trovata una bozza salvata per {title}. Vuoi riprenderla o scartarla?
           </p>
           <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={handleResumeDraft}
-              className="rounded-md bg-amber-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-amber-700"
-            >
+            <Button type="button" variant="primary" size="sm" onClick={handleResumeDraft}>
               Riprendi
-            </button>
-            <button
-              type="button"
-              onClick={handleDiscardDraft}
-              className="rounded-md border border-amber-300 bg-white px-3 py-1.5 text-sm font-medium text-amber-900 shadow-sm hover:bg-amber-100"
-            >
+            </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={handleDiscardDraft}>
               Scarta
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -321,25 +310,25 @@ function AdminEditor() {
               <div
                 key={date}
                 role="listitem"
-                className="flex w-28 flex-shrink-0 flex-col items-center rounded-lg border border-zinc-200 bg-white px-2 py-3 shadow-sm"
+                className="flex w-28 flex-shrink-0 flex-col items-center rounded-md2 border border-line bg-surface px-2 py-3 shadow-card"
               >
                 <button
                   type="button"
                   onClick={() => handleRemoveDate(date)}
                   aria-label={`Rimuovi ${date} dal mese`}
                   title="Rimuovi questa data"
-                  className="self-end text-sm leading-none text-zinc-400 hover:text-red-600"
+                  className="self-end text-sm leading-none text-ink-400 hover:text-attention"
                 >
                   ×
                 </button>
-                <span className="text-xs uppercase tracking-wide text-zinc-500">{dayName}</span>
-                <span className="text-lg font-semibold text-zinc-900">{dayNumber}</span>
+                <span className="font-display text-caption uppercase tracking-wide text-ink-600">{dayName}</span>
+                <span className="font-mono text-lg text-ink-950">{dayNumber}</span>
               </div>
             );
           })}
 
           {dateColumns.length === 0 && (
-            <p className="text-sm text-zinc-500">Nessuna data disponibile per questo mese.</p>
+            <p className="text-sm text-ink-600">Nessuna data disponibile per questo mese.</p>
           )}
         </div>
       </div>

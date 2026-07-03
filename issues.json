@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T15:59:14Z",
+  "last_updated": "2026-07-03T16:06:56Z",
   "rules": {
     "single_active_issue": false
   },
@@ -298,13 +298,13 @@
       "id": "e675f4fb-1b35-43e9-a925-29cd3e7784fb",
       "title": "feat(admin): restyle assenze + stats + toolbar",
       "description": "Ridisegnare AbsencePanel (chip toggle compatte al posto della griglia di checkbox nativi), StatsPanel (barra con distribuzione conteggi per persona), MonthPicker e toolbar esporta/importa coerenti coi primitivi (Button/Select/Panel). Logica invariata. Dipende da: primitivi, restyle griglia.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "Assenze come chip toggle; StatsPanel a barra/distribuzione leggibile su desktop; MonthPicker + toolbar usano i primitivi Button/Select; esporta/importa ancora funzionanti; build verde; npm test verde.",
-        "state": "unknown"
+        "state": "pass",
+        "criteria": "VERIFIED independently: (1) AbsencePanel.tsx L65-87: real <button type=button aria-pressed={isAbsent}> chips per member/date, onClick={() => onToggle(date, member.name)} - same onToggle(date,name) contract, min-h-32px, focus-visible ring, person dot via personColor + Check icon when pressed. (2) StatsPanel.tsx L30-55: rows sorted desc by count (localeCompare tiebreak), one row per roster member using Meter primitive (bar width prop. to max count via aria-valuenow/valuemax), count shown via Meter's own font-mono label. (3) MonthPicker.tsx L62-68: month select uses Select primitive from ui/Select; year input hand-styled (plain number input, no Select equivalent needed). Toolbar in AdminEditor.tsx: Esporta uses <Button variant=primary>, Riprendi/Scarta use <Button variant=primary/ghost>; Importa is a <label> wrapping the hidden file input (must stay a label to trigger native file picker) hand-styled to visually match Button ghost/md (does not literally import buttonVariants but mirrors its classes) - minor stylistic deviation, non-blocking. (4) CRITICAL: git diff main -- AdminEditor.tsx confirms handleExport (calls exportMonthData(monthData), unchanged) and handleImportFile (FileReader/reader.onload/onerror, importMonthData, unchanged) bodies untouched by this diff - only JSX/className churn. Hidden <input type=file accept=.json,application/json onChange={handleImportFile}> preserved. (5) No raw amber/zinc/gray/slate found in AbsencePanel/StatsPanel/MonthPicker/AdminEditor (grep confirmed); tokens used: attention (absent chip), positive/brand-600 (Meter fill), live (draft banner), ink-*/line/surface/paper throughout; person dots via personColor(member.color) in both AbsencePanel and StatsPanel. (6) Build: '.\\init.ps1 build' -> 'Build succeeded. Static output generated in dist/.' (tsc -b && vite build, 1762 modules, no errors). Tests: 'npm test' -> vitest run: Test Files 7 passed (7), Tests 34 passed (34)."
       },
       "created_at": "2026-07-03T14:45:26Z",
-      "updated_at": "2026-07-03T14:45:26Z"
+      "updated_at": "2026-07-03T16:06:56Z"
     },
     {
       "id": "f0338027-3524-471c-986a-2ac9b6e2086d",

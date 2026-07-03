@@ -1,4 +1,5 @@
 import type { ChangeEvent } from "react";
+import { Select } from "@/components/ui/Select";
 
 const ITALIAN_MONTHS = [
   "Gennaio",
@@ -34,6 +35,11 @@ interface MonthPickerProps {
  * string via onChange; it does not know about monthDates/monthTitle —
  * AdminEditor derives those from the value it receives (see
  * docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md sez. 6.1).
+ *
+ * Presentation only: the month dropdown is the design system's `Select`
+ * primitive, and the year `<input>` is hand-styled to match it
+ * (border-line/rounded-md2/bg-surface/focus ring in brand-600) — same
+ * value/onChange contract as before.
  */
 function MonthPicker({ value, onChange }: MonthPickerProps) {
   const { year, monthIndex } = parseValue(value);
@@ -51,26 +57,22 @@ function MonthPicker({ value, onChange }: MonthPickerProps) {
 
   return (
     <div className="flex items-end gap-3">
-      <label className="flex flex-col text-sm text-zinc-700">
+      <label className="flex flex-col gap-1 text-sm text-ink-600">
         Mese
-        <select
-          className="mt-1 rounded-md border border-zinc-300 bg-white px-3 py-2 text-zinc-900 shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
-          value={monthIndex}
-          onChange={handleMonthChange}
-        >
+        <Select value={monthIndex} onChange={handleMonthChange} className="w-40">
           {ITALIAN_MONTHS.map((name, idx) => (
             <option key={name} value={idx}>
               {name}
             </option>
           ))}
-        </select>
+        </Select>
       </label>
 
-      <label className="flex flex-col text-sm text-zinc-700">
+      <label className="flex flex-col gap-1 text-sm text-ink-600">
         Anno
         <input
           type="number"
-          className="mt-1 w-24 rounded-md border border-zinc-300 bg-white px-3 py-2 text-zinc-900 shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+          className="h-10 w-24 rounded-md2 border border-line bg-surface px-3 py-2 text-sm text-ink-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
           value={year}
           onChange={handleYearChange}
         />
