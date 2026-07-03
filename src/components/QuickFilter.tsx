@@ -162,7 +162,7 @@ export default function QuickFilter({ onFilterChange, members }: QuickFilterProp
                     onClick={() => handleSearch(member.name)}
                     role="option"
                     aria-selected={searchTerm === member.name}
-                    className="flex min-h-[44px] w-full items-center gap-2.5 rounded-md2 px-3 py-2.5 text-left text-sm font-medium text-ink-800 transition-colors hover:bg-ink-800/5"
+                    className="flex min-h-[44px] w-full items-center gap-2.5 rounded-md2 px-3 py-2.5 text-left text-sm font-medium text-ink-800 transition-colors hover:bg-ink-800/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                   >
                     <span
                       className={`h-2.5 w-2.5 shrink-0 rounded-full ${swatch.dot}`}

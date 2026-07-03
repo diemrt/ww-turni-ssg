@@ -87,11 +87,11 @@ export default function ShiftCard({ shift, highlightName, availableTeamMembers =
           </span>
         )}
         <div className="flex items-center gap-2">
-          <span className="font-display text-caption uppercase tracking-wide text-ink-400">
+          <span className="font-display text-caption uppercase tracking-wide text-ink-600">
             {dayName}
           </span>
           {isToday && (
-            <span className="inline-flex items-center gap-1 rounded-pill bg-live-50 px-2 py-0.5 font-display text-caption uppercase tracking-wide text-live">
+            <span className="inline-flex items-center gap-1 rounded-pill bg-live-50 px-2 py-0.5 font-display text-caption uppercase tracking-wide text-ink-800">
               <span className="h-1.5 w-1.5 rounded-full bg-live" aria-hidden="true" />
               Oggi
             </span>
@@ -100,7 +100,7 @@ export default function ShiftCard({ shift, highlightName, availableTeamMembers =
         <span className={`font-mono text-ink-950 ${isHero ? "text-4xl sm:text-5xl" : "text-mono-num"}`}>{dayNumber}</span>
       </div>
 
-      <span className="pt-1 text-caption text-ink-400">
+      <span className="pt-1 text-caption text-ink-600">
         {shift.team.length} {shift.team.length === 1 ? "membro" : "membri"}
       </span>
     </CardHeader>
@@ -113,7 +113,7 @@ export default function ShiftCard({ shift, highlightName, availableTeamMembers =
         {ribbon}
         {header}
         <CardContent className="p-5 pt-4">
-          <p className="text-sm italic text-ink-400">Nessun turno assegnato</p>
+          <p className="text-sm italic text-ink-600">Nessun turno assegnato</p>
         </CardContent>
       </Card>
     );

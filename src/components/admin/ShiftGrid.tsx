@@ -125,7 +125,7 @@ function ShiftGrid({ config, dateColumns, selections, absences, onSelectionChang
   }, [config]);
 
   if (dateColumns.length === 0) {
-    return <p className="text-sm text-ink-400">Nessuna data disponibile per questo mese.</p>;
+    return <p className="text-sm text-ink-600">Nessuna data disponibile per questo mese.</p>;
   }
 
   return (

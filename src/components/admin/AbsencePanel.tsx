@@ -71,7 +71,7 @@ function AbsencePanel({ dateColumns, availableTeamMembers, absences, onToggle }:
                           "flex min-h-[32px] items-center gap-1.5 rounded-md2 border px-2 py-1 text-left text-sm transition-colors",
                           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1",
                           isAbsent
-                            ? "border-attention/30 bg-attention-50 text-attention"
+                            ? "border-attention/30 bg-attention-50 text-ink-800"
                             : "border-line bg-surface text-ink-600 hover:bg-ink-800/5",
                         )}
                       >
@@ -81,7 +81,7 @@ function AbsencePanel({ dateColumns, availableTeamMembers, absences, onToggle }:
                         />
                         <span className="flex-1 truncate">{member.name}</span>
                         {isAbsent && (
-                          <Check className="h-3.5 w-3.5 flex-shrink-0" aria-hidden="true" />
+                          <Check className="h-3.5 w-3.5 flex-shrink-0 text-attention" aria-hidden="true" />
                         )}
                       </button>
                     );

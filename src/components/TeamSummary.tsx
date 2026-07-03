@@ -58,13 +58,15 @@ export default function TeamSummary({ team, roleSlots }: TeamSummaryProps) {
             return (
               <span
                 key={role}
-                className={`inline-flex items-center gap-1.5 rounded-md2 px-2 py-1 text-caption ${
-                  status === 'perfect'
-                    ? 'bg-positive-50 text-positive'
-                    : 'bg-attention-50 text-attention'
+                className={`inline-flex items-center gap-1.5 rounded-md2 px-2 py-1 text-caption text-ink-800 ${
+                  status === 'perfect' ? 'bg-positive-50' : 'bg-attention-50'
                 }`}
               >
-                <Icon className="h-3.5 w-3.5 flex-shrink-0" strokeWidth={2.5} aria-hidden="true" />
+                <Icon
+                  className={`h-3.5 w-3.5 flex-shrink-0 ${status === 'perfect' ? 'text-positive' : 'text-attention'}`}
+                  strokeWidth={2.5}
+                  aria-hidden="true"
+                />
                 <span className="font-mono">{current}/{required}</span>
                 <span className="font-display">{label}</span>
               </span>
@@ -73,14 +75,14 @@ export default function TeamSummary({ team, roleSlots }: TeamSummaryProps) {
         </div>
 
         {isComplete && !hasOverflow ? (
-          <div className="flex items-center gap-1.5 text-positive">
-            <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-            <span className="text-caption font-display">Completo</span>
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-4 w-4 text-positive" aria-hidden="true" />
+            <span className="text-caption font-display text-ink-800">Completo</span>
           </div>
         ) : (
-          <div className="flex items-center gap-1.5 text-attention">
-            <AlertCircle className="h-4 w-4" aria-hidden="true" />
-            <span className="text-caption font-display">
+          <div className="flex items-center gap-1.5">
+            <AlertCircle className="h-4 w-4 text-attention" aria-hidden="true" />
+            <span className="text-caption font-display text-ink-800">
               {hasOverflow ? 'Sforato' : 'Incompleto'}
             </span>
           </div>

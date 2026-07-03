@@ -61,8 +61,8 @@ function WarningsPanel({ warnings }: WarningsPanelProps) {
       description="Segnalazioni informative: non bloccano l'esportazione, decide l'admin."
     >
       {warnings.length === 0 ? (
-        <div className="flex items-center gap-2 rounded-md2 bg-positive-50 px-3 py-2 text-sm text-positive">
-          <CheckCircle2 className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+        <div className="flex items-center gap-2 rounded-md2 bg-positive-50 px-3 py-2 text-sm text-ink-800">
+          <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-positive" aria-hidden="true" />
           Nessun warning
         </div>
       ) : (
@@ -73,7 +73,7 @@ function WarningsPanel({ warnings }: WarningsPanelProps) {
               <Chip
                 key={group.type}
                 role="listitem"
-                className="bg-attention-50 text-attention"
+                className="bg-attention-50 text-ink-800"
                 label={`${group.label}: ${group.items.length}`}
               />
             ))}
@@ -91,7 +91,7 @@ function WarningsPanel({ warnings }: WarningsPanelProps) {
                   <div key={group.type} className="rounded-md2 border border-line bg-surface">
                     <button
                       type="button"
-                      className="flex w-full items-center gap-2 rounded-md2 px-3 py-2 text-left text-sm text-ink-800 hover:bg-ink-800/5"
+                      className="flex w-full items-center gap-2 rounded-md2 px-3 py-2 text-left text-sm text-ink-800 hover:bg-ink-800/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1"
                       aria-expanded={isExpanded}
                       aria-controls={panelId}
                       onClick={() => toggleGroup(group.type)}
@@ -103,7 +103,7 @@ function WarningsPanel({ warnings }: WarningsPanelProps) {
                       )}
                       <AlertTriangle className="w-4 h-4 flex-shrink-0 text-attention" aria-hidden="true" />
                       <span className="font-medium">{group.label}</span>
-                      <span className="rounded-pill bg-attention-50 px-2 py-0.5 text-caption font-semibold text-attention">
+                      <span className="rounded-pill bg-attention-50 px-2 py-0.5 text-caption font-semibold text-ink-800">
                         {group.items.length}
                       </span>
                     </button>

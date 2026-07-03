@@ -115,7 +115,7 @@ function PublicView() {
       <main className="max-w-2xl md:max-w-4xl xl:max-w-6xl mx-auto px-4 py-8 pb-24" role="main">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-20 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-slate-700 focus:text-white focus:rounded-lg"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-20 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-ink-950 focus:px-4 focus:py-2 focus:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
         >
           Salta al contenuto principale
         </a>
@@ -163,7 +163,7 @@ function PublicView() {
           )}
 
           {!heroShift && sortedShifts.length > 0 && (
-            <p className="mb-6 text-sm italic text-ink-400">
+            <p className="mb-6 text-sm italic text-ink-600">
               Nessun servizio in programma
             </p>
           )}

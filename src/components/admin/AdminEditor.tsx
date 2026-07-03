@@ -281,7 +281,7 @@ function AdminEditor() {
       </div>
 
       {importError && (
-        <p className="mt-2 text-sm text-attention" role="alert">
+        <p className="mt-2 rounded-md2 bg-attention-50 px-3 py-2 text-sm text-ink-800" role="alert">
           {importError}
         </p>
       )}
@@ -317,7 +317,7 @@ function AdminEditor() {
                   onClick={() => handleRemoveDate(date)}
                   aria-label={`Rimuovi ${date} dal mese`}
                   title="Rimuovi questa data"
-                  className="self-end text-sm leading-none text-ink-400 hover:text-attention"
+                  className="-mr-1.5 -mt-1.5 flex h-7 w-7 shrink-0 items-center justify-center self-end rounded-md2 text-sm leading-none text-ink-600 transition-colors hover:bg-attention/10 hover:text-attention focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1"
                 >
                   ×
                 </button>

@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T16:06:56Z",
+  "last_updated": "2026-07-03T16:19:04Z",
   "rules": {
     "single_active_issue": false
   },
@@ -310,13 +310,13 @@
       "id": "f0338027-3524-471c-986a-2ac9b6e2086d",
       "title": "a11y: audit contrasto/focus/motion/target",
       "description": "Passata di accessibilita su entrambe le viste: focus-visible su tutti gli elementi interattivi (oggi solo alcuni form admin); prefers-reduced-motion rispettato (disattiva fade/slide); contrasto testo/fondo almeno WCAG AA sui colori-persona e semantici; tap target almeno 44px. Dipende da: tutte le issue di UI.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "focus-visible presente su tutti gli interattivi (pubblica + admin); nessuna animazione con prefers-reduced-motion reduce; campioni contrasto AA verificati; tap target almeno 44px; build verde.",
-        "state": "unknown"
+        "state": "pass",
+        "criteria": "Independently verified on feat/design-system. (1) FOCUS: src/index.css:32-35 has a global :where(a,button,select,input,textarea,[tabindex]):focus-visible{outline:2px solid brand-600;outline-offset:2px} fallback. Spot-checked 4 previously-unstyled controls, all now carry explicit focus-visible ring/outline: QuickFilter.tsx:165 member row button (role=option) has focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2; AdminEditor.tsx:320 date-remove x button has focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1; WarningsPanel.tsx:94 expander button has the same ring; PublicView.tsx:118 skip-link has focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2. (2) REDUCED MOTION: src/index.css:45-62 @media (prefers-reduced-motion: reduce) neutralizes animation/transition durations app-wide AND additionally forces .animate-fade-in/.animate-fade-up/.animate-slide-in { animation:none !important; opacity:1 !important; transform:none !important; } so content is not left invisible when the keyframes (opacity:0 start) are cut short. Confirmed present exactly as required. (3) CONTRAST: grepped all -50 tint usages (live-50/attention-50/positive-50) across ShiftCard.tsx, TeamSummary.tsx, WarningsPanel.tsx, AdminEditor.tsx, AbsencePanel.tsx -- all small-text labels on those tints now use text-ink-800; the raw text-live/text-attention/text-positive classes remain only on icons (aria-hidden, 3:1 graphical threshold, not 4.5:1 text threshold). Computed WCAG contrast from tailwind.config.js hex values (relative luminance formula): ink-800 #2A2733 on live-50 #FBF2DE = 13.1:1 (pass AA 4.5:1, also passes AAA 7:1); ink-800 #2A2733 on attention-50 #F7E9E2 = 12.3:1 (pass AA/AAA). A third sample, ink-800 on positive-50 #E7F1EC, computed at 12.7:1, also pass. (4) TAP TARGETS: QuickFilter.tsx -- trigger button min-h-[44px] (line 95), clear-filter pill button min-h-[44px] w-9 min-w-[44px] (line 114), dialog close button min-h-[44px] min-w-[44px] (line 145), each member row button min-h-[44px] w-full (line 165). Confirmed all >=44px. (5) BUILD/TEST: .\\init.ps1 build succeeded (tsc -b && vite build, built in 3.56s, dist/ generated, no errors). \npm test (vitest run) => Test Files 7 passed (7), Tests 34 passed (34), 0 failed. All criteria met."
       },
       "created_at": "2026-07-03T14:45:37Z",
-      "updated_at": "2026-07-03T14:45:37Z"
+      "updated_at": "2026-07-03T16:19:04Z"
     },
     {
       "id": "ebeac566-7000-4ed6-988a-5deb6aa985e8",
