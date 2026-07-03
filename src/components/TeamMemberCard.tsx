@@ -1,40 +1,30 @@
-import { getRoleIcon, getRoleLabel } from "@/utils/iconMapper";
-import { personColor } from "@/utils/personColor";
-import type { Role } from "@/types";
+import { Chip } from "@/components/ui";
+import { isPersonColorName } from "@/utils/personColor";
 
 interface TeamMemberCardProps {
   memberName: string;
-  role: Role;
   color?: string;
+  /** True when this member matches the active QuickFilter selection. */
   isHighlighted?: boolean;
 }
 
-export default function TeamMemberCard({ memberName, role, color = 'gray', isHighlighted = false }: TeamMemberCardProps) {
-  const Icon = getRoleIcon(role);
-  const roleLabel = getRoleLabel(role);
-  const colors = personColor(color);
+/**
+ * Renders a single team member as a "Call Sheet" chip: color dot + tinted
+ * background carrying dark ink text (never a saturated fill with white
+ * text). The role is intentionally NOT shown here — ShiftCard groups chips
+ * under a single instrument label per role, so repeating it per person
+ * would duplicate information.
+ */
+export default function TeamMemberCard({ memberName, color = 'gray', isHighlighted = false }: TeamMemberCardProps) {
+  const personColorName = isPersonColorName(color) ? color : 'gray';
 
   return (
-    <div
-      className={`group relative flex items-center justify-between gap-3 p-3.5 rounded-xl ${colors.tint} shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] overflow-hidden ${
-        isHighlighted ? "ring-4 ring-slate-700 ring-offset-2 scale-105" : ""
-      }`}
+    <Chip
+      color={personColorName}
+      label={memberName}
       role="listitem"
-      aria-label={`${memberName} - ${roleLabel}`}
-    >
-      {/* Subtle shine effect on hover */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-      <div className="flex items-center gap-3 relative z-10">
-        <div className={`p-2 ${colors.dot} text-white rounded-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`}>
-          <Icon className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} />
-        </div>
-        <span className={`font-medium text-sm ${colors.text}`}>{memberName}</span>
-      </div>
-
-      <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${colors.dot} text-white relative z-10`}>
-        {roleLabel}
-      </span>
-    </div>
+      aria-label={memberName}
+      className={isHighlighted ? "ring-2 ring-brand-600 ring-offset-1" : ""}
+    />
   );
 }

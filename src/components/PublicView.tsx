@@ -117,7 +117,12 @@ function PublicView() {
                 data-date={shift.date}
                 role="listitem"
               >
-                <ShiftCard shift={shift} highlightName={filterName} availableTeamMembers={config.availableTeamMembers} />
+                <ShiftCard
+                  shift={shift}
+                  highlightName={filterName}
+                  availableTeamMembers={config.availableTeamMembers}
+                  roleSlots={config.roleSlots}
+                />
               </div>
             ))}
           </div>

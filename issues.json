@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T15:09:46Z",
+  "last_updated": "2026-07-03T15:18:24Z",
   "rules": {
     "single_active_issue": false
   },
@@ -226,13 +226,13 @@
       "id": "044a5bbe-cfb4-46f9-9828-273b4476b9f2",
       "title": "feat(public): ticket servizio ridisegnato",
       "description": "Ridisegnare ShiftCard/TeamMemberCard/TeamSummary secondo il design Call Sheet: colori-persona addomesticati (pallino+tinta, testo ink scuro, mai fill full-bleed con testo bianco), lineup raggruppata per strumento (Chitarra/Basso/Batteria/Voce/Tastiera) con Chip, numero-giorno mono, meter di completezza (assegnati su totali) discreto. Usa i primitivi (Card/Chip/Meter) e personColor. Mobile-first. Dipende da: primitivi, dead-code cleanup.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "state": "unknown",
-        "criteria": "Contrasto testo/fondo dei colori-persona >= WCAG AA (campione verificato); ruolo non piu duplicato come badge su ogni pill; nessun fill full-bleed con testo bianco; lineup raggruppata per strumento; meter completezza presente; build verde."
+        "criteria": "VERIFIED PASS (independent, feat/design-system, uncommitted working tree):\n1) Lineup grouped by instrument: ShiftCard.tsx L81-83 builds groupedByRole via ROLE_ORDER.map(role => ({role, members: shift.team.filter(m => m.role === role)})).filter(...); L91-111 renders one role label (Icon + roleLabels[role]) per group, members mapped as chips underneath - role text rendered ONCE per group, not per person.\n2) Role not duplicated per person: TeamMemberCard.tsx renders only <Chip color={personColorName} label={memberName} .../> (dot + name), no role text/badge anywhere in the component (confirmed by full read + grep).\n3) No full-bleed white-on-saturated fill: grep 'bg-team-|text-white' over ShiftCard.tsx/TeamMemberCard.tsx/TeamSummary.tsx = 0 matches. Chip.tsx applies swatch.tint (person-*-50) as bg + fixed text-ink-800, dot is a small 2x2 circle (swatch.dot, person-*-500) - never a full-bleed saturated fill with white text.\n4) Contrast AA: ink-800 = #2A2733 (tailwind.config.js L23-24) on person-*-50 tints (L54-63). Computed WCAG relative-luminance contrast ratios: text-ink-800 on bg-person-yellow-50 (#FDF8EF) = 13.8:1; on bg-person-gray-50 (#F3F4F5) = 13.3:1; on bg-person-cyan-50 (#EDF8FA) = 13.5:1 (spot-checked lightest/mid/darkest-looking tints). All far exceed AA 4.5:1 (and clear AAA 7:1) since all person tints are the very light *-50 shade.\n5) Completeness meter present: ShiftCard.tsx L116-120 renders <Meter value={shift.team.length} max={totalExpected} />, totalExpected = sum(config.roleSlots) (L39-41), gated on totalExpected>0.\n6) Data flow intact: PublicView.tsx unchanged in essentials - fetches config.json/turni.json, mergeConfig, sortedShifts/filteredShifts via useMemo, passes shift/highlightName/availableTeamMembers/roleSlots to ShiftCard (L120-125); QuickFilter/filter logic untouched.\n7) Build: '.\\init.ps1 build' -> 'Build succeeded. Static output generated in dist/.' (tsc -b && vite build, 1762 modules, built in 3.56s). Tests: 'npm test' (vitest run) -> 7 test files passed, 34 tests passed, 0 failed.\nAll 6 functional criteria + build/test gate verified independently by direct file reads and command runs. VERDICT: PASS.",
+        "state": "pass"
       },
       "created_at": "2026-07-03T14:43:14Z",
-      "updated_at": "2026-07-03T14:43:14Z"
+      "updated_at": "2026-07-03T15:18:24Z"
     },
     {
       "id": "8861536b-d691-4259-a9ab-3dbc23e0269e",

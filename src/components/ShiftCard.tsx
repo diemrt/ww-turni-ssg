@@ -1,112 +1,123 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, Meter } from "@/components/ui";
 import TeamMemberCard from "@/components/TeamMemberCard";
 import TeamSummary from "@/components/TeamSummary";
 import { formatDate } from "@/utils/dateFormatter";
-import type { Shift, TeamMember } from "@/types";
-import { Calendar } from "lucide-react";
+import { getRoleIcon, roleLabels } from "@/utils/iconMapper";
+import type { Role, Shift, TeamMember } from "@/types";
 
 interface ShiftCardProps {
   shift: Shift;
   highlightName?: string;
   availableTeamMembers?: TeamMember[];
+  /** Expected slot count per role (config.roleSlots) — drives the completeness meter. */
+  roleSlots?: Record<Role, number>;
 }
 
-export default function ShiftCard({ shift, highlightName, availableTeamMembers = [] }: ShiftCardProps) {
+// Instrument display order for the lineup groups (falls back to config order
+// when roleSlots omit a role entirely, every known role is still tried).
+const ROLE_ORDER: Role[] = ["guitar", "bass", "drums", "vocals", "keyboard"];
+
+export default function ShiftCard({ shift, highlightName, availableTeamMembers = [], roleSlots }: ShiftCardProps) {
   const { dayName, dayNumber } = formatDate(shift.date);
-  
+
   // Helper function to get color from availableTeamMembers
   const getMemberColor = (memberName: string, providedColor?: string): string => {
     // If color is already provided in the shift data, use it
     if (providedColor) return providedColor;
-    
+
     // Otherwise, lookup from availableTeamMembers
     const teamMember = availableTeamMembers.find(m => m.name === memberName);
     return teamMember?.color || 'gray';
   };
-  
+
   // Check if this is today
   const isToday = new Date(shift.date).toDateString() === new Date().toDateString();
-  
+
   // Check if shift is in the past
   const isPast = new Date(shift.date) < new Date(new Date().setHours(0, 0, 0, 0));
+
+  const totalExpected = roleSlots
+    ? Object.values(roleSlots).reduce((sum, n) => sum + n, 0)
+    : 0;
+
+  const header = (
+    <CardHeader className="flex-row items-start justify-between gap-3 border-b border-line p-5 pb-4 space-y-0">
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <span className="font-display text-caption uppercase tracking-wide text-ink-400">
+            {dayName}
+          </span>
+          {isToday && (
+            <span className="inline-flex items-center gap-1 rounded-pill bg-live-50 px-2 py-0.5 font-display text-caption uppercase tracking-wide text-live">
+              <span className="h-1.5 w-1.5 rounded-full bg-live" aria-hidden="true" />
+              Oggi
+            </span>
+          )}
+        </div>
+        <span className="font-mono text-mono-num text-ink-950">{dayNumber}</span>
+      </div>
+
+      <span className="pt-1 text-caption text-ink-400">
+        {shift.team.length} {shift.team.length === 1 ? "membro" : "membri"}
+      </span>
+    </CardHeader>
+  );
 
   // Show message if no team assigned
   if (!shift.team || shift.team.length === 0) {
     return (
-      <Card className="bg-white border-zinc-200 shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden">
-        <div className="absolute top-0 left-0 w-1 h-full bg-zinc-300" />
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-zinc-100 rounded-lg">
-              <Calendar className="w-5 h-5 text-zinc-400" />
-            </div>
-            <CardTitle className="font-display text-xl text-zinc-800">
-              {dayName} {dayNumber}
-            </CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-zinc-500 text-sm italic">Nessun turno assegnato</p>
+      <Card className={`overflow-hidden rounded-lg2 border-line bg-surface shadow-card ${isPast ? 'opacity-70' : ''}`}>
+        {header}
+        <CardContent className="p-5 pt-4">
+          <p className="text-sm italic text-ink-400">Nessun turno assegnato</p>
         </CardContent>
       </Card>
     );
   }
 
+  // Group assignments by role, once per instrument, in ROLE_ORDER — this is
+  // the core "Call Sheet" change: the role label appears once per group,
+  // never repeated as a per-person badge.
+  const groupedByRole = ROLE_ORDER
+    .map(role => ({ role, members: shift.team.filter(member => member.role === role) }))
+    .filter(group => group.members.length > 0);
+
   return (
-    <Card className={`bg-white border-zinc-200 shadow-md hover:shadow-xl transition-all duration-300 group overflow-hidden hover:-translate-y-1 ${
-      isPast ? 'opacity-60' : ''
-    }`}>
-      <div className={`absolute top-0 left-0 w-1 h-full ${
-        isToday 
-          ? 'bg-gradient-to-b from-accent-success to-accent-info animate-pulse' 
-          : 'bg-gradient-to-b from-slate-600 to-slate-400'
-      }`} />
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg transition-colors ${
-              isToday 
-                ? 'bg-accent-success/10 group-hover:bg-accent-success/20' 
-                : 'bg-slate-100 group-hover:bg-slate-200'
-            }`}>
-              <Calendar className={`w-5 h-5 ${isToday ? 'text-accent-success' : 'text-slate-600'}`} />
-            </div>
-            <div>
-              <CardTitle className="font-display text-xl text-zinc-800 tracking-tight">
-                {dayName} {dayNumber}
-              </CardTitle>
-              {isToday && (
-                <span className="text-xs font-semibold text-accent-success uppercase tracking-wide">
-                  Oggi
-                </span>
-              )}
-            </div>
-          </div>
-          <span className="px-3 py-1 text-xs font-medium text-slate-700 bg-slate-100 rounded-full">
-            {shift.team.length} {shift.team.length === 1 ? "membro" : "membri"}
-          </span>
+    <Card className={`overflow-hidden rounded-lg2 border-line bg-surface shadow-card ${isPast ? 'opacity-70' : ''}`}>
+      {header}
+
+      <CardContent className="flex flex-col gap-4 p-5 pt-4">
+        <div className="flex flex-col gap-3">
+          {groupedByRole.map(({ role, members }) => {
+            const Icon = getRoleIcon(role);
+            return (
+              <div key={role} className="flex flex-col gap-1.5 sm:flex-row sm:gap-3">
+                <div className="flex items-center gap-1.5 font-display text-caption text-ink-600 sm:w-24 sm:shrink-0 sm:pt-1">
+                  <Icon className="h-3.5 w-3.5 flex-shrink-0" strokeWidth={2.5} aria-hidden="true" />
+                  <span>{roleLabels[role]}</span>
+                </div>
+                <div className="flex flex-1 flex-wrap gap-2">
+                  {members.map((member, idx) => (
+                    <TeamMemberCard
+                      key={`${member.name}-${role}-${idx}`}
+                      memberName={member.name}
+                      color={getMemberColor(member.name, member.color)}
+                      isHighlighted={highlightName === member.name}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        <div className="h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent mb-3" />
-        {shift.team.map((member, idx) => {
-          return (
-            <div 
-              key={`${member.name}-${member.role}-${idx}`}
-              className="animate-slide-in"
-              style={{ animationDelay: `${idx * 50}ms` }}
-            >
-              <TeamMemberCard
-                memberName={member.name}
-                role={member.role}
-                color={getMemberColor(member.name, member.color)}
-                isHighlighted={highlightName === member.name}
-              />
-            </div>
-          );
-        })}
-        
-        <TeamSummary team={shift.team} />
+
+        <TeamSummary team={shift.team} roleSlots={roleSlots ?? ({} as Record<Role, number>)} />
+
+        {totalExpected > 0 && (
+          <div className="border-t border-line pt-3">
+            <Meter value={shift.team.length} max={totalExpected} />
+          </div>
+        )}
       </CardContent>
     </Card>
   );
