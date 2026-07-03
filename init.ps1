@@ -55,6 +55,21 @@ switch ($task) {
         }
 
         Write-Host "Dependencies installed successfully."
+
+        # 1.5 Verify the Playwright MCP skill is available (non-fatal: dev can proceed without it).
+        #     See docs/UI_TESTING.md for how the UI is tested with Playwright.
+        if (Get-Command "claude" -ErrorAction SilentlyContinue) {
+            $mcpList = (& claude mcp list 2>&1 | Out-String)
+            $playwrightConnected = $mcpList -match "(?im)^.*playwright.*Connected.*$"
+            if ($playwrightConnected) {
+                Write-Host "Playwright MCP skill disponibile (vedi docs/UI_TESTING.md)."
+            } else {
+                Write-Warning "Playwright MCP skill non disponibile o non connessa. I test UI (docs/UI_TESTING.md) non saranno eseguibili finche' non e' configurata."
+            }
+        } else {
+            Write-Warning "Claude CLI non trovata: check Playwright saltato (vedi docs/UI_TESTING.md)."
+        }
+
         Write-Host "Setup phase completed."
     }
     "build" {

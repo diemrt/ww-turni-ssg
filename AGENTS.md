@@ -10,6 +10,8 @@ senza protezione — vedi ARCHITECTURE.md), con dati letti a runtime da `public/
 - [ARCHITECTURE.md](/docs/ARCHITECTURE.md): descrive l'architettura, lo stack e la struttura del codice del progetto
 - [GIT.md](/docs/GIT.md): indica le linee guida da usare per il versioning con git
 - [ISSUES.md](/docs/ISSUES.md): descrive come gestire le issues del progetto e usare `issue-manager.ps1`
+- [SPEC.md](/docs/SPEC.md): spiega come creare i file di spec (superpowers) del progetto
+- [UI_TESTING.md](/docs/UI_TESTING.md): standard d'uso della skill Playwright per testare la UI
 
 ## All'inizio di ogni sessione (clock in)
 
