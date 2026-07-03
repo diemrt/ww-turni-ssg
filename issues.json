@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T15:52:06Z",
+  "last_updated": "2026-07-03T15:59:14Z",
   "rules": {
     "single_active_issue": false
   },
@@ -286,13 +286,13 @@
       "id": "827a9407-74a6-4045-9d37-a2205e79dad0",
       "title": "feat(admin): warning riepilogati e raggruppati",
       "description": "Ridisegnare WarningsPanel: invece di molti banner amber impilati (oggi oltre 40 su un mese vuoto), mostrare una barra di riepilogo con conteggi per tipo (Slot vuoto, Doppia assegnazione, Assente ma assegnato) e dettaglio espandibile/collassabile. Usare token semantici (attention rust) non muri amber. Resta non-bloccante per l esportazione. Dipende da: primitivi/token.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "Mese vuoto mostra riepilogo compatto con conteggi per tipo (non decine di banner); espansione mostra il dettaglio per data; resta non-bloccante (esportazione sempre possibile); usa token attention; build verde.",
-        "state": "unknown"
+        "criteria": "VERIFIED independently. (1) Summary bar renders 3 Chip components (one per WarningType: Slot vuoto/Doppia assegnazione/Assente ma assegnato) with counts via groups.map, wrapped in role=list -- an empty month dominated by EMPTY_SLOT shows one compact chip row, not 40 stacked banners. (2) Each type group with items.length>0 renders a real <button type=button> with aria-expanded={isExpanded} and aria-controls={panelId}, collapsed by default (useState<Partial<Record<WarningType,boolean>>>({})), reveals a <ul> with per-warning.message (date/role) detail on click. (3) grep amber- in WarningsPanel.tsx = 0 matches; uses bg-attention-50/text-attention/bg-attention throughout; empty state (Nessun warning) uses bg-positive-50/text-positive. (4) Non-blocking confirmed: WarningsPanel only takes warnings prop (read-only), no onExport/disabled wiring; AdminEditor.tsx handleExport button and Importa turni.json label/input have no disabled or warnings-based gating -- export/import always available regardless of stats.warnings. (5) git diff main...feat/design-system -- src/utils/shiftStats.ts is empty (file untouched); AdminEditor.tsx line 245 computes stats via shiftStats(config, monthData) unchanged and line 369 passes <WarningsPanel warnings={stats.warnings} />. (6) .\\init.ps1 build: tsc -b && vite build succeeded, dist/ generated (index.html, css, js bundles), no errors. npm test (vitest run): Test Files 7 passed (7), Tests 34 passed (34), Duration ~628ms.",
+        "state": "pass"
       },
       "created_at": "2026-07-03T14:45:14Z",
-      "updated_at": "2026-07-03T14:45:14Z"
+      "updated_at": "2026-07-03T15:59:14Z"
     },
     {
       "id": "e675f4fb-1b35-43e9-a925-29cd3e7784fb",
