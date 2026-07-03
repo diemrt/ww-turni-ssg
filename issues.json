@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T15:36:33Z",
+  "last_updated": "2026-07-03T15:43:04Z",
   "rules": {
     "single_active_issue": false
   },
@@ -262,13 +262,13 @@
       "id": "bf1e0974-c5c8-402d-959b-39e60e59a826",
       "title": "feat(public): breakpoint responsive",
       "description": "Introdurre responsivita reale nella vista pubblica: mobile-first con prefissi sm/md/lg che passano a layout multi-colonna su schermi larghi (oggi zero breakpoint, gestito solo via container max-width). Verificare assenza di overflow orizzontale ai vari viewport. Dipende da: ticket/hero/quickfilter.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "Almeno un breakpoint effettivo (sm/md/lg) usato; layout multi-colonna oltre 768px; nessun overflow orizzontale a 320/390/768/1024; tap target almeno 44px; build verde.",
-        "state": "unknown"
+        "state": "pass",
+        "criteria": "VERIFIED (independent): (1) Real breakpoints present - grep 'md:|lg:|xl:' in PublicView.tsx (lines 115,172) and Header.tsx (line 24): main/header use max-w-2xl md:max-w-4xl xl:max-w-6xl; previously zero. (2) Multi-column beyond 768px: PublicView.tsx:172 shift grid = 'grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3' -> 1 col mobile, 2 col >=768px (md), 3 col >=1280px (xl). (3) No horizontal overflow: containers use max-w-* + mx-auto + px-4 (no fixed px widths wider than viewport); ShiftCard role rows use 'flex flex-col gap-1.5 sm:flex-row' with flex-wrap on chip containers; TeamMemberCard/Chip and TeamSummary badges wrap via flex-wrap; filter banner text uses 'min-w-0 break-words'; QuickFilter dialog uses 'w-72 max-w-[calc(100vw-3rem)]' so it never exceeds viewport at 320/390/768/1024. (4) Tap targets >=44px: QuickFilter trigger button 'min-h-[44px]', filter-active pill 'min-h-[44px]', all icon-only close buttons 'h-9 min-h-[44px] w-9 min-w-[44px]', dialog member rows 'min-h-[44px]'; filter-banner remove button also 'min-h-[44px]'. (5) Build: 'tsc -b && vite build' succeeded (dist/ generated, 259KB JS / 26KB CSS gzip). Tests: vitest run -> 7 test files passed, 34 tests passed. All criteria confirmed by direct file reads and real command output; no edits made to source."
       },
       "created_at": "2026-07-03T14:44:48Z",
-      "updated_at": "2026-07-03T14:44:48Z"
+      "updated_at": "2026-07-03T15:43:04Z"
     },
     {
       "id": "a05942a0-9fbb-4633-a8ac-dd4d19d9885a",

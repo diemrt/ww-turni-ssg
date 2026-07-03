@@ -21,8 +21,8 @@ export default function Header({ title }: HeaderProps) {
         isScrolled ? "shadow-card" : ""
       }`}
     >
-      <div className="max-w-4xl mx-auto px-4 py-3">
-        <h1 className="text-center font-display text-heading text-ink-950 tracking-tight">
+      <div className="max-w-2xl md:max-w-4xl xl:max-w-6xl mx-auto px-4 py-3">
+        <h1 className="text-center font-display text-heading text-ink-950 tracking-tight break-words">
           {title}
         </h1>
       </div>

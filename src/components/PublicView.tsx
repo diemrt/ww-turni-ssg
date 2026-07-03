@@ -112,7 +112,7 @@ function PublicView() {
     <div className="min-h-screen bg-zinc-50">
       <Header title={merged.title} />
 
-      <main className="max-w-4xl mx-auto px-4 py-8 pb-24" role="main">
+      <main className="max-w-2xl md:max-w-4xl xl:max-w-6xl mx-auto px-4 py-8 pb-24" role="main">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-20 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-slate-700 focus:text-white focus:rounded-lg"
@@ -127,9 +127,9 @@ function PublicView() {
               role="status"
               aria-live="polite"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex min-w-0 flex-1 items-center gap-2">
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-live" aria-hidden="true" />
-                <p className="text-sm text-ink-800">
+                <p className="min-w-0 break-words text-sm text-ink-800">
                   Turni evidenziati per <span className="font-semibold text-ink-950">{filterName}</span>
                   {shiftsWithSelectedMember.length === 0 && " — nessun turno assegnato in questo periodo"}
                 </p>
@@ -168,11 +168,15 @@ function PublicView() {
             </p>
           )}
 
-          <div className="space-y-6" role="list" aria-label="Lista turni">
+          <div
+            className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3"
+            role="list"
+            aria-label="Lista turni"
+          >
             {restShifts.map((shift, idx) => (
               <div
                 key={`${shift.date}-${idx}`}
-                className="animate-fade-up"
+                className="min-w-0 animate-fade-up"
                 style={{ animationDelay: `${idx * 100}ms` }}
                 data-date={shift.date}
                 role="listitem"
