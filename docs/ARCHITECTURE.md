@@ -253,3 +253,108 @@ dell'editor admin e del merge dati, senza testare l'UI dei componenti React:
 
 `.\init.ps1 build` resta la verifica di build/type-check; `npm test` è la verifica di
 questa logica pura, entrambe da eseguire come sanity check dopo modifiche rilevanti.
+
+## 9. Design System (Call Sheet)
+
+### 9.1 Direzione
+
+Il progetto tratta il piano turni del worship team come un **"call sheet" / foglio di
+chiamata**, non come una tabella grigia: ogni turno è un "biglietto di servizio" con data
+in evidenza, formazione (lineup) raggruppata per strumento, completezza a colpo d'occhio e
+una personalizzazione ("Tu suoni: {ruolo}") per chi sta guardando. Coerentemente con
+sez. 1/5:
+
+- **Vista pubblica**: mobile-first, un solo tema chiaro (nessuna dark mode).
+- **Editor admin**: desktop-first, griglia densa con scroll orizzontale (sez. 5).
+
+### 9.2 Token (`tailwind.config.js`)
+
+Tutti i colori, i font e le scale sotto sono estensioni Tailwind dichiarate in
+`tailwind.config.js`, non valori inventati ad-hoc nei componenti.
+
+- **Neutrali "warm-ink"**: `ink.950/800/600/400` (testo/inchiostro, dal più scuro al più
+  chiaro), `line` (bordi), `paper` (sfondo pagina), `surface` (sfondo card/pannelli).
+- **Brand** (viola liturgico): `brand.50/600/700` — `brand.600` è il colore di azione
+  primaria e dell'anello di focus (vedi 9.5).
+- **Live/oggi** (oro): `live.DEFAULT` / `live.50` — usato per il badge "Oggi" e la ribbon
+  "Tu suoni".
+- **Semantiche**: `positive.DEFAULT/50` (ok/nessun warning), `attention.DEFAULT/50`
+  (warning non bloccanti).
+- **Colori persona ("Call Sheet")**: dieci famiglie `person-<nome>-{50,100,500}` —
+  `yellow`, `blue`, `green`, `red`, `orange`, `pink`, `purple`, `cyan`, `brown`, `gray`
+  (quest'ultimo è il fallback). Lo shade `500` è il pallino/bordo pieno, `50`/`100` sono i
+  tint pensati per stare dietro a testo `ink` scuro (mai testo bianco su fill saturo).
+- **Alias legacy**: `accent-success` / `accent-info` / `accent-warning` e i dieci
+  `team-<nome>` restano nel config per compatibilità con componenti non ancora migrati;
+  **non vanno usati in codice nuovo** (verranno rimossi in una issue successiva) — per il
+  colore persona usare sempre `personColor()` (sez. 9.3).
+- **Font**: `font-display` → *Bricolage Grotesque* (titoli/eyebrow), `font-sans` →
+  *Hanken Grotesk* (corpo testo, default), `font-mono` → *Space Mono* (numeri di giorno,
+  conteggi, meter). Caricati via Google Fonts in `index.html`.
+- **Scala tipografica**: `text-display`, `text-heading`, `text-caption`, `text-mono-num`
+  (dimensione + line-height + letter-spacing + peso, non solo una dimensione).
+- **Radius**: `rounded-sm2` (6px), `rounded-md2` (10px), `rounded-lg2` (14px),
+  `rounded-pill` (9999px, chip/meter).
+- **Ombre**: `shadow-card` (default pannelli/card), `shadow-raised` (elementi in rilievo,
+  es. hero "Prossimo servizio"), `shadow-overlay` (livelli sopra il contenuto).
+
+### 9.3 Primitivi (`src/components/ui/`)
+
+Componenti base riesportati dal barrel `src/components/ui/index.ts`, pensati per essere
+riusati invece di scrivere classi Tailwind ad-hoc ripetute:
+
+| Primitivo | File | Ruolo |
+| --- | --- | --- |
+| `Button` | `Button.tsx` | Bottone con varianti `primary` / `ghost` / `danger` e dimensioni `sm` / `md` (via `cva`), focus ring `brand-600`. |
+| `Chip` | `Chip.tsx` | Pillola di testo; con prop `color` (uno dei 10 nomi persona) mostra pallino + tint risolti da `personColor()`; senza `color` è un chip neutro (`tone="neutral"`). |
+| `Select` | `Select.tsx` | `<select>` stilizzato (bordo `line`, sfondo `surface`, focus ring `brand-600`), usato nelle celle della griglia admin. |
+| `Panel` | `Panel.tsx` | Contenitore a card con `title`/`description` opzionali in header, usato per i pannelli admin (`WarningsPanel`, `StatsPanel`). |
+| `Meter` | `Meter.tsx` | Barra di progresso `value`/`max` con `role="meter"` e label mono `value/max`; diventa `bg-positive` quando piena, altrimenti `bg-brand-600`. Usato sia per la completezza del turno (`ShiftCard`) sia per la distribuzione turni (`StatsPanel`). |
+| `Card` / `CardHeader` / `CardTitle` / `CardContent` | `card.tsx` | Card shadcn/ui di base (bordo `line`, sfondo `surface`, `shadow-card`); `ShiftCard` la estende per il biglietto di servizio pubblico. |
+
+`src/utils/personColor.ts` espone `personColor(color)` (10 nomi + fallback `gray`) come
+**unica fonte di verità** per i colori persona: restituisce `{ dot, tint, ring, text }`
+(classi Tailwind letterali, non composte via interpolazione, per restare visibili allo
+scanner JIT). Sostituisce eventuali mappe colore duplicate nei singoli componenti — chi
+deve mostrare un colore persona chiama `personColor()`, non ridefinisce la mappa.
+
+### 9.4 Pattern ricorrenti
+
+- **Biglietto di servizio pubblico (`ShiftCard`)**: numero del giorno in `font-mono`
+  (`text-mono-num`, ingrandito in variante `hero`); formazione raggruppata **per
+  strumento** (icona + etichetta una sola volta per gruppo, non ripetuta per persona) con
+  i membri come `Chip` colorati; `Meter` di completezza (`shift.team.length` su totale slot
+  attesi da `roleSlots`); variante `hero` per il **"Prossimo servizio"** (il primo turno
+  futuro cronologicamente), con eyebrow brand, ombra `shadow-raised` e numero ingrandito;
+  ribbon oro **"Tu suoni: {ruolo}"** quando la persona selezionata nel `QuickFilter` è
+  assegnata a quel turno (i turni non suoi restano visibili ma con opacità ridotta, mai
+  filtrati via).
+- **Griglia admin (`ShiftGrid`)**: header di colonna/riga `sticky` (colonna date in alto,
+  colonna ruoli a sinistra) per restare leggibile durante lo scroll orizzontale/verticale
+  su un mese intero.
+- **`WarningsPanel`**: barra di riepilogo con un `Chip` per tipo di warning (slot vuoto,
+  doppia assegnazione, assente ma assegnato) sempre visibile, e un gruppo dettaglio
+  collassabile per tipo (aperto on-demand) invece dell'elenco piatto di un banner per
+  warning.
+- **`StatsPanel`**: una riga per persona del roster con pallino `personColor()` + `Meter`
+  proporzionale al conteggio turni rispetto al massimo del mese — legge come un mini bar
+  chart di distribuzione, non solo come numeri.
+- **Regola colore persona**: sempre pallino (`dot`, shade `500`) + sfondo tint chiaro
+  (shade `50`/`100`) + testo `ink` scuro; mai testo bianco su fill saturo — pensato per
+  restare leggibile (contrasto AA) con dieci colori diversi in contemporanea sulla stessa
+  vista.
+
+### 9.5 Accessibilità
+
+- **Focus da tastiera**: fallback globale in `src/index.css` — qualunque elemento
+  focusabile (`a`, `button`, `select`, `input`, `textarea`, `[tabindex]`) che non definisca
+  già un proprio `focus-visible:ring-*` (come fanno `Button`/`Select`) riceve comunque un
+  outline `brand-600` da 2px in `:focus-visible`.
+- **`prefers-reduced-motion`**: quando l'OS richiede la riduzione del movimento,
+  `src/index.css` azzera durate di animazione/transizione e disattiva lo scroll fluido, e
+  forza le classi di ingresso (`animate-fade-in`, `animate-fade-up`, `animate-slide-in`,
+  definite in `tailwind.config.js`) al loro stato finale visibile invece di lasciarle
+  bloccate a `opacity: 0`.
+- **Target di tocco**: i controlli interattivi (`Button` misura `md` = `h-10`, `Select`
+  con `min-h-[40px]`) restano vicini o sopra la soglia dei 44px per un uso comodo da
+  mobile nella vista pubblica.

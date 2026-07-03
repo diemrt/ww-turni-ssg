@@ -7,7 +7,7 @@ senza protezione — vedi ARCHITECTURE.md), con dati letti a runtime da `public/
 
 # Documenti
 
-- [ARCHITECTURE.md](/docs/ARCHITECTURE.md): descrive l'architettura, lo stack e la struttura del codice del progetto
+- [ARCHITECTURE.md](/docs/ARCHITECTURE.md): descrive l'architettura, lo stack e la struttura del codice del progetto (sez. 9 per il design system "Call Sheet")
 - [GIT.md](/docs/GIT.md): indica le linee guida da usare per il versioning con git
 - [ISSUES.md](/docs/ISSUES.md): descrive come gestire le issues del progetto e usare `issue-manager.ps1`
 - [SPEC.md](/docs/SPEC.md): spiega come creare i file di spec (superpowers) del progetto
@@ -81,3 +81,21 @@ Oltre a `init.ps1`, il progetto ha **Vitest** per la logica pura (editor admin, 
 config/dati): `npm test` (alias di `vitest run`) esegue i test in `src/**/__tests__/`.
 Da lanciare come verifica aggiuntiva quando si tocca `src/utils/` o
 `src/components/admin/` — non sostituisce `.\init.ps1 build`, lo affianca.
+
+## Design system (Call Sheet)
+
+Il progetto ha un design system dedicato ("Call Sheet", vedi
+[ARCHITECTURE.md](/docs/ARCHITECTURE.md) sez. 9): token Tailwind (`ink`/`brand`/`live`/
+`positive`/`attention`/`person-*`), primitivi in `src/components/ui/` (`Button`, `Chip`,
+`Select`, `Panel`, `Meter`, `Card`) e `personColor()` (`src/utils/personColor.ts`) come
+unica fonte per i colori persona. Qualunque UI nuova o modificata **deve riusare** questi
+token/primitivi invece di:
+
+- definire mappe colore ad-hoc per persona nei singoli componenti;
+- usare esadecimali/RGB "a mano" nel JSX o in classi Tailwind arbitrarie;
+- usare le scale grigie/ambra di default di Tailwind (`zinc-*`, `gray-*`, `amber-*`) al
+  posto di `ink-*`/`live-*`/`attention-*`.
+
+Gli alias legacy `team-*`/`accent-*` restano nel `tailwind.config.js` solo per
+compatibilità con componenti non ancora migrati: non vanno usati in codice nuovo. Dettagli
+e motivazioni in ARCHITECTURE.md sez. 9.

@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T16:25:31Z",
+  "last_updated": "2026-07-03T16:31:12Z",
   "rules": {
     "single_active_issue": false
   },
@@ -334,13 +334,13 @@
       "id": "76d9ec03-2deb-4cf1-9ba9-c07b5c3c1afc",
       "title": "docs: sezione design system",
       "description": "Aggiornare docs/ARCHITECTURE.md e AGENTS.md con una sezione sul design system Call Sheet: token (ink/brand/live/semantici/colori-persona), primitivi UI (Button/Chip/Card/Select/Panel/Meter), personColor util, direzione estetica e firma (service ticket). Ultima issue. Dipende da: tutte.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "ARCHITECTURE.md + AGENTS.md descrivono i token reali, i primitivi reali (esistenti in src/components/ui/) e la direzione Call Sheet; coerenti col codice; nessun riferimento a token/componenti inesistenti.",
-        "state": "unknown"
+        "state": "pass",
+        "criteria": "Verifica indipendente OK. Token cross-checked 1:1 contro tailwind.config.js: ink 950/800/600/400, line, paper, surface, brand 50/600/700, live DEFAULT/50, positive DEFAULT/50, attention DEFAULT/50, person-<10 nomi>-{50,100,500}, alias legacy accent-*/team-* (tutti presenti, nessuna deviazione). font-display/sans/mono, text-display/heading/caption/mono-num, rounded-sm2/md2/lg2/pill, shadow-card/raised/overlay: tutti presenti in tailwind.config.js. Primitivi cross-checked contro src/components/ui/: Button.tsx (varianti primary/ghost/danger, size sm/md via cva, focus ring brand-600 - confermato), Chip.tsx (prop color risolta via personColor, tone neutral default - confermato), Select.tsx (border line, bg surface, focus ring brand-600, min-h 40px - confermato), Panel.tsx (title/description header opzionale - confermato), Meter.tsx (value/max, role=meter, bg-positive se pieno altrimenti bg-brand-600 - confermato), card.tsx (Card/CardHeader/CardTitle/CardContent, border line, bg surface, shadow-card - confermato). personColor() in src/utils/personColor.ts ha firma esatta personColor(color: string): PersonColorClasses con return {dot, tint, ring, text} come descritto. Pattern verificati nel codice reale: ShiftCard.tsx (hero variant per Prossimo servizio in PublicView.tsx, ribbon Tu suoni, raggruppamento per ruolo, dimming non-filtrato mai nascosto, Meter completezza), ShiftGrid.tsx (sticky su colonna date e colonna ruoli, confermato via grep), WarningsPanel.tsx (Chip riepilogo per tipo + gruppo dettaglio collassabile, confermato), StatsPanel.tsx (riga per persona con dot personColor + Meter proporzionale al max, confermato), src/index.css (fallback focus-visible outline brand-600 su :where(a,button,select,input,textarea,[tabindex]), blocco prefers-reduced-motion che azzera durate e forza le classi animate-* a stato finale - confermato 1:1 con sez. 9.5). Nessun token o componente citato nei docs risulta inesistente nel codice. git diff limitato a docs/ARCHITECTURE.md, AGENTS.md, issues.json (nessuna modifica a src/): confermato. .\\init.ps1 build -> verde (tsc -b + vite build, 1762 moduli, build succeeded)."
       },
       "created_at": "2026-07-03T14:46:04Z",
-      "updated_at": "2026-07-03T14:46:04Z"
+      "updated_at": "2026-07-03T16:31:12Z"
     }
   ]
 }
