@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-02T17:56:25Z",
+  "last_updated": "2026-07-03T09:51:33Z",
   "rules": {
     "single_active_issue": false
   },
@@ -106,85 +106,85 @@
       "id": "7cf1e909-9fb6-41b9-87fa-366612f55160",
       "title": "feat: public view refactor (fetch config+turni, merge, render)",
       "description": "Aggiornare App/vista pubblica: fetch parallelo di config.json e turni.json, unione tramite util mergeConfig (colore per nome), poi render invariato di ShiftCard/TeamMemberCard/TeamSummary. Ordinamento turni per data invariato. Gestire errore se manca uno dei due file (stato d'errore/EmptyState). QuickFilter e stati Loading/Empty invariati. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 5). Dipendenze: split modello dati, mergeConfig, routing.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "la vista pubblica mostra i turni di Giugno con i colori corretti risolti da config; errore gestito se un file manca; init.ps1 build passa.",
-        "state": "unknown"
+        "criteria": "Verified independently: (1) src/components/PublicView.tsx fetches /config.json and /turni.json in parallel via Promise.all (lines 26-34), merges them with mergeConfig from src/utils/mergeConfig.ts (line 38), sorts merged shifts by date via useMemo (lines 49-54), and renders EmptyState error UI if either fetch fails (res.ok check throws, caught and sets error=true, lines 27-34 and 41-45, rendered at line 81-90). (2) public/config.json contains availableTeamMembers with color per member (Diego=yellow, Samuele=blue, etc), no shifts. public/turni.json contains title/month/shifts/absences for June 2026, shift.team entries have only name+role, no inline color field - matches new split schema. (3) Colors are resolved via mergeConfig: colorByName map built from config.availableTeamMembers (mergeConfig.ts lines 39-41), applied to each shift assignment with FALLBACK_COLOR fallback (line 48); confirmed by passing mergeConfig.test.ts (3 tests: resolves known color, falls back for unknown name, preserves title/month/absences). ShiftCard receives already-resolved color from ResolvedShiftAssignment. (4) Ran .\\init.ps1 build: tsc -b && vite build succeeded, dist/ generated (1743 modules transformed, built in 5.21s). Ran npm test: vitest run, 6 test files passed, 30/30 tests passed.",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-03T09:10:32Z"
     },
     {
       "id": "abe6aeb9-6c50-41a1-98c1-fac9021403ec",
       "title": "feat: admin MonthPicker + colonne date (con rimozione data)",
       "description": "In AdminEditor: selettore mese+anno che imposta month (YYYY-MM) e title (via util). Generare le colonne-date con monthDates dai validDayOfWeek di config. Ogni colonna ha controllo per rimuovere quella data dalla pianificazione del mese. Desktop-first, scroll orizzontale. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.1). Dipendenze: monthDates, routing/shell, config fetch.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "scelto Giugno 2026 compaiono le colonne 05..28; rimozione di una data la toglie dalla griglia; title generato in italiano.",
-        "state": "unknown"
+        "criteria": "VERIFIED by independent review: MonthPicker.tsx (src/components/admin/MonthPicker.tsx) is a month+year selector that emits YYYY-MM via onChange. AdminEditor.tsx (src/components/admin/AdminEditor.tsx) fetches config.json, computes allDates = monthDates(month, config.validDayOfWeek) and title = monthTitle(month). The real public config.json has validDayOfWeek = ['Friday','Sunday'], so selecting month 2026-06 produces dates 2026-06-05, 07, 12, 14, 19, 21, 26, 28 (matching src/utils/__tests__/monthDates.test.ts, which passes), and title = 'Turni di Giugno 2026' (also asserted and passing). Removal logic verified by reading code: dateColumns = useMemo(() => allDates.filter(date => !removedSet.has(date))), where removedSet is derived from removedDatesByMonth[month]; handleRemoveDate appends the clicked date via a functional state update (setRemovedDatesByMonth(prev => ({...prev, [month]: [...(prev[month] ?? []), date]}))). This correctly removes the corresponding column from the grid on click, keyed per-month so switching months does not leak removals. Build verified: init.ps1 build runs tsc -b and vite build successfully with no type errors, dist output generated. Tests verified: npm test (vitest run) - 6 test files, 30 tests, all passed.",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-03T09:16:54Z"
     },
     {
       "id": "49263272-f166-485d-bf87-aeb601cc211c",
       "title": "feat: admin ShiftGrid + ShiftCell (slot, dropdown filtrato, colore, assenti disabilitati)",
       "description": "Griglia: righe = per ogni ruolo in availableRoles, roleSlots[role] righe (es. Voce 1..5) con etichette italiane; colonne = date. ShiftCell = dropdown con le persone che hanno quel ruolo (availableTeamMembers.roles include role) + opzione vuoto; sfondo/segno cella col colore persona. Persone assenti nella data (da absences) disabilitate/grigie. Lo stato della griglia costruisce le shifts di MonthData. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.2). Dipendenze: MonthPicker/date, config, tipi.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "righe rispettano roleSlots; dropdown mostra solo persone col ruolo giusto; assenti disabilitati; selezione aggiorna shifts; colore cella corretto.",
-        "state": "unknown"
+        "criteria": "VERIFIED by independent code read (not just comments) + build/test run. (1) righe rispettano roleSlots: ShiftGrid.tsx buildGridRows() loops config.availableRoles and pushes roleSlots[role] rows each; with public/config.json roleSlots {guitar:1,keyboard:1,drums:1,bass:1,vocals:5} this yields 9 rows total, vocals rows labeled 'Voce 1'..'Voce 5' (roleLabels.vocals='Voce' from src/utils/iconMapper.ts), single-slot roles unnumbered. (2) dropdown filtrato: ShiftGrid builds peopleByRole via config.availableTeamMembers.filter(m => m.roles.includes(role)) and passes only that filtered array as ShiftCell's `people` prop; ShiftCell renders options solely from `people` (e.g. Voce rows only ever show Manuela/Natalia/Magdy/David, never Diego/Samuele/Daniele/Beppe). (3) assenti disabilitati: ShiftGrid computes absentNames=new Set(absences[date]) per cell and passes to ShiftCell, which sets `disabled={absentNames.has(person.name)}` on each <option> (labeled '(assente)'). (4) selezione aggiorna shifts: ShiftCell.onChange -> ShiftGrid.onSelectionChange(key,name) -> AdminEditor.handleSelectionChange writes into selectionsByMonth state; shifts is derived via useMemo(shiftsFromSelections(dateColumns, buildGridRows(config), selections)), a pure projection off that state, so every selection change re-derives MonthData.shifts. (5) colore cella corretto: ShiftCell finds selectedMember in the (role-filtered) people list by name, maps member.color through CELL_COLOR_CLASSES (bg-team-<color>/50) which is a strict subset of the team-* palette defined in tailwind.config.js (yellow/blue/green/red/orange/pink/purple/cyan/brown/gray) -- all 9 config.json member colors resolve correctly; empty selection falls back to bg-white. Build: `.\\init.ps1 build` -> tsc -b && vite build succeeded (dist output generated, no type errors). Tests: `npm test` -> 6 test files, 30/30 passed (note: existing tests are util-level only, e.g. src/utils/__tests__/*; no dedicated ShiftGrid/ShiftCell unit tests exist yet, but no regressions and manual logic trace confirms correctness).",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-03T09:23:21Z"
     },
     {
       "id": "3d517fc4-1cfd-4adc-88e6-95012bdf5c0e",
       "title": "feat: admin AbsencePanel (assenze per data -> absences)",
       "description": "Pannello assenze: per ogni data del mese, multi-select delle persone assenti; aggiorna absences (mappa date->nomi) in MonthData. Le assenze alimentano il guardrail dei dropdown della griglia e vengono salvate/esportate. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.3). Dipendenze: date generate, ShiftGrid (guardrail condiviso), tipi.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "segnando un assente per una data, appare in absences e il dropdown della griglia lo disabilita in quel giorno; absences persiste nel modello.",
-        "state": "unknown"
+        "criteria": "VERIFIED by independent code trace: (1) src/components/admin/AbsencePanel.tsx renders one checkbox per (date, roster member); onChange calls onToggle(date, member.name). (2) src/components/admin/AdminEditor.tsx owns `absencesByMonth` state; `absences = absencesByMonth[month] ?? {}` is passed as the SAME object to both <ShiftGrid absences={absences}> (line 199) and <AbsencePanel absences={absences}> (line 210) -- confirmed single source of truth, no parallel absences state. handleAbsenceToggle (line 106-123) adds/removes `name` from `absences[date]` array, pruning the date key entirely when the array empties. (3) src/components/admin/ShiftGrid.tsx builds `absentNames = new Set(absences[date] ?? [])` per date column (line 125) and passes it to ShiftCell as `absentNames` prop. src/components/admin/ShiftCell.tsx renders each <option disabled={absentNames.has(person.name)}> plus an '(assente)' suffix (line 61-64) -- so toggling absence in the panel immediately disables that person's option in the grid for that date. (4) `absences` type is Record<string,string[]>, identical to MonthData.absences in src/types/index.ts (line 34: 'date -> nomi assenti'), so the same shape persists directly into the exported month model with no transform needed. Build: `.\\init.ps1 build` -> tsc -b && vite build succeeded (dist output generated). Tests: `npm test` -> 30/30 passed across 6 files (no dedicated AbsencePanel test file exists, but nothing regressed).",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-03T09:27:54Z"
     },
     {
       "id": "618525a8-27fb-4b1d-a172-425b0c4a9a9e",
       "title": "feat: admin StatsPanel + WarningsPanel (conteggi live + warning)",
       "description": "StatsPanel: lista persone con numero turni assegnati nel mese, ricalcolo live (util shiftStats). WarningsPanel: elenco warning non bloccanti (slot vuoti, doppione stesso giorno, assente assegnato) da shiftStats; non impediscono l'export. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.4, 6.5). Dipendenze: shiftStats, ShiftGrid, AbsencePanel.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "i conteggi si aggiornano assegnando/rimuovendo; i tre tipi di warning compaiono quando previsto; i warning non bloccano azioni.",
-        "state": "unknown"
+        "criteria": "VERIFIED (independent review). (1) Conteggi live: AdminEditor.tsx builds monthData via useMemo([title,month,shifts,absences]) then stats via useMemo(() => shiftStats(config, monthData), [config, monthData]) (lines 141-149) -- shifts is itself derived live from `selections` (the grid's source of truth) via shiftsFromSelections, so any assignment/removal in ShiftGrid or any AbsencePanel toggle changes `shifts`/`absences` -> monthData -> stats recomputes -> StatsPanel/WarningsPanel re-render with new counts, confirmed by reading the full useMemo dependency chain. (2) shiftStats.ts exports shiftStats(config: AppConfig, month: MonthData): {counts: ShiftCount[], warnings: ShiftWarning[]} -- exact signature and return shape match the AdminEditor call site (stats.counts, stats.warnings consumed directly by StatsPanel/WarningsPanel props). (3) All 3 warning kinds present and surfaced: WarningType.EMPTY_SLOT (role under-filled vs config.roleSlots), DUPLICATE_SAME_DAY (same name twice same date), ABSENT_ASSIGNED (assigned while absent) -- all computed in shiftWarnings() and all 3 have entries in WarningsPanel.tsx's WARNING_LABELS map (Slot vuoto / Doppia assegnazione / Assente ma assegnato), each covered by its own passing unit test in shiftStats.test.ts. (4) Non-blocking confirmed: grepped src/components/admin for `disabled`/`stats.warnings`/`warnings.length` -- the only `disabled` usage is ShiftCell.tsx's dropdown option (absentee greying, unrelated to warnings); WarningsPanel only uses warnings.length to switch between an empty-state message and the list, never to disable anything; no gating of ShiftGrid, AbsencePanel, or any export/action control based on stats.warnings anywhere in the codebase. (5) `.\\init.ps1 build` succeeded (tsc -b && vite build, dist/ generated, no errors). `npm test` succeeded: 6 test files, 30 tests passed, including dedicated shiftCounts and shiftWarnings (all 3 kinds + clean-dataset) tests in src/utils/__tests__/shiftStats.test.ts.",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-03T09:32:45Z"
     },
     {
       "id": "d649588c-dadd-412f-9a6b-02138a7af5e7",
       "title": "feat: AdminEditor wiring (autosave bozza, export, import)",
       "description": "Collegare i pezzi in AdminEditor: autosave della bozza MonthData in localStorage per mese (util draftStorage); all'apertura, se esiste bozza, proporre Riprendi/Scarta. Bottone Esporta => scarica turni.json (util exportImport). Bottone Importa turni.json => carica file dal disco e ripopola shifts+absences. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.6). Dipendenze: draftStorage/exportImport, ShiftGrid, AbsencePanel, MonthPicker.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "modifiche autosalvate in localStorage e riprendibili; Esporta scarica un turni.json conforme; Importa ripopola griglia+assenze; init.ps1 build passa.",
-        "state": "unknown"
+        "criteria": "VERIFIED (independent review): (1) Autosave - AdminEditor.tsx useEffect (line ~180) calls draftStorage.saveDraft(monthData) on every change (skips while a draft prompt is pending or grid is empty); loadDraft(month) computed as pendingDraft (useMemo) surfaces a Riprendi/Scarta banner when a draft exists and no in-memory state yet; Riprendi calls selectionsFromShifts(config, draft.shifts) + sets absences from draft.absences; Scarta calls clearDraft(month). draftStorage.ts persists under key `ww-turni-draft-<month>`, fails silently if localStorage unavailable. (2) Export - handleExport calls exportImport.exportMonthData(monthData), which serializes {title, month, shifts, absences} via JSON.stringify(month,null,2) and triggers a Blob+anchor download named turni.json; shape matches public/turni.json exactly (verified field names/order). (3) Import - handleImportFile reads the file via FileReader, calls importMonthData (= parseMonthData) which validates title/month/shifts/absences and throws descriptive Errors on malformed input (all caught in try/catch, surfaced as importError state, never crashes); on success reverse-maps imported.shifts via ShiftGrid.selectionsFromShifts(config, shifts) into the flat selections map and sets absences, then jumps to imported.month. (4) Round-trip test at src/components/admin/__tests__/ShiftGrid.test.ts asserts shiftsFromSelections(dateColumns, rows, selectionsFromShifts(config, shifts)) deep-equals the original multi-date, multi-role `shifts` array (genuine inverse-function assertion, plus edge cases: first-free-slot fill order, dropped overflow assignment, empty input). Also src/utils/__tests__/exportImport.test.ts covers serialize/parse round-trip and malformed-field error messages. (5) `.\\init.ps1 build` succeeded (tsc -b && vite build, dist/ generated). `npm test` (vitest run): 7 test files, 34/34 tests passed, including the ShiftGrid round-trip test. All 4 acceptance criteria confirmed met.",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-03T09:45:12Z"
     },
     {
       "id": "7646605c-d01b-4a39-99bc-557834f8651a",
       "title": "docs: update ARCHITECTURE.md and AGENTS.md for new model + admin",
       "description": "Aggiornare documentazione: ARCHITECTURE.md (split config/turni, rotta admin hash, componenti admin, flusso fetch+merge, Vitest); AGENTS.md se cambia lo stack (Vitest, script test). Documentare la scelta della rotta admin non protetta. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md. Dipendenze: ultima, dopo comportamento stabile.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "ARCHITECTURE.md riflette split dati, routing admin e testing; AGENTS.md coerente; nessun riferimento obsoleto al vecchio schema turni.json.",
-        "state": "unknown"
+        "criteria": "PASS (verifica indipendente). docs/ARCHITECTURE.md: sez.3 documenta lo split config.json (stabile: validDayOfWeek/availableRoles/roleSlots/availableTeamMembers con color) vs turni.json (per mese: title/month/shifts/absences, NIENTE color/roster/giorni validi), con mergeConfig che risolve il color per name (fallback 'gray'); sez.4 documenta #/admin come hash route non protetta 'scelta consapevole'; sez.5/6 elencano i componenti admin reali (AdminEditor, MonthPicker, ShiftGrid, ShiftCell, AbsencePanel, StatsPanel, WarningsPanel) e gli util (dateFormatter, iconMapper, monthDates, mergeConfig, shiftStats, draftStorage, exportImport) - confermato 1:1 con `ls src/components/admin/` e `ls src/utils/`; sez.2 descrive il flusso fetch parallelo + merge della PublicView; sez.8 documenta Vitest (`npm test` -> `vitest run`) con elenco dei file di test, confermato in package.json (script 'test': 'vitest run', dep vitest 4.1.9). Grep mirato su ARCHITECTURE.md e AGENTS.md per riferimenti obsoleti (color/availableTeamMembers/validDayOfWeek/availableRoles descritti come parte di turni.json): NESSUNO trovato - questi campi compaiono solo nel contesto di config.json, coerente con public/turni.json reale (contiene solo title/month/shifts/absences) e public/config.json reale (contiene validDayOfWeek/availableRoles/roleSlots/availableTeamMembers con color). AGENTS.md coerente: menziona Vitest/npm test come verifica aggiuntiva a init.ps1 build, route admin non protetta, nessuna contraddizione. Sanity: `.\\init.ps1 build` OK (tsc -b && vite build, dist/ generato); `npm test` OK (7 file di test, 34 test passati).",
+        "state": "pass"
       },
       "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:28:59Z"
+      "updated_at": "2026-07-03T09:51:33Z"
     }
   ]
 }
