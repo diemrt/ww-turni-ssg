@@ -352,7 +352,7 @@ function AdminEditor() {
           absences={absences}
           onSelectionChange={handleSelectionChange}
         />
-        <p className="mt-2 text-sm text-zinc-500">
+        <p className="mt-3 text-sm text-ink-600">
           {shifts.reduce((total, shift) => total + shift.team.length, 0)} turni assegnati
         </p>
       </div>

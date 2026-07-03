@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T15:43:04Z",
+  "last_updated": "2026-07-03T15:52:06Z",
   "rules": {
     "single_active_issue": false
   },
@@ -274,13 +274,13 @@
       "id": "a05942a0-9fbb-4633-a8ac-dd4d19d9885a",
       "title": "feat(admin): restyle griglia",
       "description": "Ridisegnare ShiftGrid/ShiftCell (desktop-first): colonna Ruolo + header date STICKY durante lo scroll; celle select custom (usa primitivo Select) con pallino+tinta persona e testo scuro; righe zebra; densita compatta; coerenza coi token del design system. Logica pura (shiftsFromSelections ecc.) invariata. Dipende da: primitivi, personColor, cleanup.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "state": "unknown",
-        "criteria": "Colonna Ruolo e header date restano visibili allo scroll (sticky); celle usano il primitivo Select con pallino+tinta e testo scuro leggibile; zebra + densita compatta; ShiftGrid.test.ts ancora verde; build verde."
+        "state": "pass",
+        "criteria": "VERIFIED independently: (1) Sticky - corner th has sticky left-0 top-0 z-30 bg-surface; date header ths have sticky top-0 z-20 bg-surface; Ruolo column body ths have sticky left-0 z-10 plus zebra bg (bg-surface/bg-paper), all opaque hex colors (surface=#FFFFFF, paper=#FBFAF9), correct z-stack corner greater than header greater than rowhead. (2) ShiftCell.tsx imports Select from @/components/ui/Select, renders color dot span (swatch.dot) absolutely positioned over left edge, select bg tinted via swatch.tint+swatch.text (text-ink-800, dark ink), classes merged via cn/twMerge so tint overrides base bg-surface; absent people keep disabled attr plus literal (assente) suffix text; empty cell falls back to bg-surface/text-ink-800. (3) ShiftGrid.tsx alternates zebraClass = rowIndex mod 2 ? bg-paper : bg-surface per row; compact padding px-1.5 py-1 on td, px-3 py-1.5 on row header, border-spacing-0. (4) Pure helpers buildSelectionKey, buildGridRows, shiftsFromSelections, selectionsFromShifts read byte-identical to pre-change logic (only JSX/className lines touched in git diff); src/components/admin/__tests__/ShiftGrid.test.ts has zero diff vs HEAD and was not touched. (5) Build: init.ps1 build -> tsc -b and vite build succeeded, dist output generated (259.74 kB js, 26.62 kB css). Tests: npm test -> 7 test files, 34 tests, all passed (605ms). ShiftGrid.test.ts specifically: 4/4 passed (selectionsFromShifts round-trip, first-free-slot fill, drop-when-no-free-slot, empty-shifts-array)."
       },
       "created_at": "2026-07-03T14:45:00Z",
-      "updated_at": "2026-07-03T14:45:00Z"
+      "updated_at": "2026-07-03T15:52:06Z"
     },
     {
       "id": "827a9407-74a6-4045-9d37-a2205e79dad0",

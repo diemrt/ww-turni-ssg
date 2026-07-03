@@ -125,15 +125,18 @@ function ShiftGrid({ config, dateColumns, selections, absences, onSelectionChang
   }, [config]);
 
   if (dateColumns.length === 0) {
-    return <p className="text-sm text-zinc-500">Nessuna data disponibile per questo mese.</p>;
+    return <p className="text-sm text-ink-400">Nessuna data disponibile per questo mese.</p>;
   }
 
   return (
-    <div className="overflow-x-auto pb-4">
-      <table className="min-w-max border-separate border-spacing-1">
+    <div className="overflow-x-auto rounded-lg2 border border-line bg-surface pb-2 shadow-card">
+      <table className="min-w-max border-separate border-spacing-0 text-sm">
         <thead>
           <tr>
-            <th className="sticky left-0 z-10 bg-zinc-50 px-2 py-2 text-left text-xs font-medium uppercase tracking-wide text-zinc-500">
+            <th
+              scope="col"
+              className="sticky left-0 top-0 z-30 whitespace-nowrap border-b border-r border-line bg-surface px-3 py-2 text-left font-display text-caption uppercase tracking-wide text-ink-600"
+            >
               Ruolo
             </th>
             {dateColumns.map((date) => {
@@ -141,40 +144,47 @@ function ShiftGrid({ config, dateColumns, selections, absences, onSelectionChang
               return (
                 <th
                   key={date}
-                  className="px-2 py-2 text-center text-xs font-medium uppercase tracking-wide text-zinc-500"
+                  scope="col"
+                  className="sticky top-0 z-20 min-w-[4.5rem] border-b border-line bg-surface px-2 py-2 text-center"
                 >
-                  {dayName.slice(0, 3)} {dayNumber}
+                  <span className="block font-display text-caption uppercase tracking-wide text-ink-600">
+                    {dayName.slice(0, 3)}
+                  </span>
+                  <span className="block font-mono text-sm text-ink-950">{dayNumber}</span>
                 </th>
               );
             })}
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr key={`${row.role}::${row.slotIndex}`}>
-              <th
-                scope="row"
-                className="sticky left-0 z-10 whitespace-nowrap bg-zinc-50 px-2 py-1 text-left text-sm font-medium text-zinc-700"
-              >
-                {row.label}
-              </th>
-              {dateColumns.map((date) => {
-                const key = buildSelectionKey(date, row.role, row.slotIndex);
-                const absentNames = new Set(absences[date] ?? []);
-                return (
-                  <td key={key} className="w-32">
-                    <ShiftCell
-                      label={`${row.label} - ${date}`}
-                      people={peopleByRole.get(row.role) ?? []}
-                      value={selections[key] ?? ""}
-                      absentNames={absentNames}
-                      onChange={(name) => onSelectionChange(key, name)}
-                    />
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
+          {rows.map((row, rowIndex) => {
+            const zebraClass = rowIndex % 2 === 0 ? "bg-surface" : "bg-paper";
+            return (
+              <tr key={`${row.role}::${row.slotIndex}`} className={zebraClass}>
+                <th
+                  scope="row"
+                  className={`sticky left-0 z-10 whitespace-nowrap border-r border-line px-3 py-1.5 text-left font-display text-sm text-ink-700 ${zebraClass}`}
+                >
+                  {row.label}
+                </th>
+                {dateColumns.map((date) => {
+                  const key = buildSelectionKey(date, row.role, row.slotIndex);
+                  const absentNames = new Set(absences[date] ?? []);
+                  return (
+                    <td key={key} className="w-32 px-1.5 py-1 align-middle">
+                      <ShiftCell
+                        label={`${row.label} - ${date}`}
+                        people={peopleByRole.get(row.role) ?? []}
+                        value={selections[key] ?? ""}
+                        absentNames={absentNames}
+                        onChange={(name) => onSelectionChange(key, name)}
+                      />
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
