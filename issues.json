@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T14:55:35Z",
+  "last_updated": "2026-07-03T15:03:32Z",
   "rules": {
     "single_active_issue": false
   },
@@ -202,13 +202,13 @@
       "id": "7058baec-44d8-4583-9396-f236b4130378",
       "title": "feat: libreria primitivi UI snelli (cva)",
       "description": "Creare i primitivi riutilizzabili in src/components/ui/ usando class-variance-authority (gia installato, oggi inutilizzato) e cn() (src/lib/utils.ts): Button (variant primary/ghost/danger, size), Chip (pallino colore-persona + label), Card (estende ui/card.tsx esistente, allinea da zinc a ink), Select (wrapper stilizzato del native select), Panel (contenitore sezione con header), Meter (barra completezza x su y). Creare src/utils/personColor.ts come UNICA fonte colore-persona: personColor(color) restituisce dot/tint/ring con fallback gray, che sostituira le due color-map duplicate. Nessuna dipendenza nuova. Dipende da: fondamenta token.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "state": "unknown",
-        "criteria": "Primitivi Button/Chip/Card/Select/Panel/Meter esportati e tipati in src/components/ui/; cva effettivamente usato (>=1 cva); personColor copre i 10 colori con fallback gray, tipizzato; build verde; npm test verde."
+        "state": "pass",
+        "criteria": "VERIFIED independently (feat/design-system, 2026-07-03). Files present & typed: src/components/ui/{Button,Chip,Select,Panel,Meter,card}.tsx + index.ts barrel re-exporting all six; all typed via React.forwardRef + explicit Props interfaces extending HTML attribute types, no ': any' in src/components/ui. cva: imported+called in Button.tsx (buttonVariants) and Chip.tsx (chipVariants) - 2 usages, satisfies >=1. personColor: src/utils/personColor.ts exports typed PersonColorName union (10 values: yellow/blue/green/red/orange/pink/purple/cyan/brown/gray) and personColor(color): PersonColorClasses with static literal Tailwind strings per color (dot/tint/ring/text), unknown input falls back to PERSON_COLOR_MAP.gray. CSS-emission proof: ran '.\\init.ps1 build' (tsc -b && vite build) -> succeeded, dist/assets/index-*.css produced; grepped dist CSS and confirmed all 10 colors present as both bg-person-<name>-500 and ring-person-<name>-500 (e.g. bg-person-blue-500, ring-person-gray-500), i.e. JIT did not purge them (tailwind.config.js content glob src/**/*.{js,ts,jsx,tsx} covers personColor.ts). Build: green (1753 modules transformed, built in 4.78s). npm test: green - 7 test files passed, 34 tests passed."
       },
       "created_at": "2026-07-03T14:43:14Z",
-      "updated_at": "2026-07-03T14:43:14Z"
+      "updated_at": "2026-07-03T15:03:32Z"
     },
     {
       "id": "4e390d38-7ea5-4365-b76c-9fcd1397ea3a",
