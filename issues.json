@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T16:19:04Z",
+  "last_updated": "2026-07-03T16:25:31Z",
   "rules": {
     "single_active_issue": false
   },
@@ -322,13 +322,13 @@
       "id": "ebeac566-7000-4ed6-988a-5deb6aa985e8",
       "title": "chore: QA visiva Playwright",
       "description": "QA visiva finale secondo docs/UI_TESTING.md: npm run dev, screenshot vista pubblica (390/768/1440) e admin (1440) via skill Playwright, confronto con lo stato attuale (baseline), verifica nessuna regressione. Screenshot salvati nello scratchpad, MAI nel repo, cancellati a fine verifica. Dipende da: tutte le issue di UI.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "criteria": "Screenshot acquisiti ai viewport indicati e confrontati; nessuna regressione visiva rispetto agli obiettivi del design; nessun file png o cartella playwright residua nel repo (git status pulito).",
-        "state": "unknown"
+        "state": "pass",
+        "criteria": "PASS. Screenshot acquisiti via Playwright CLI (chromium headless) su dev server :5199 ai 4 viewport: pubblica 390 (1 colonna), pubblica 768, pubblica 1440 (hero full-width + griglia 3 colonne), admin 1440. Confronto con baseline di inizio sessione: nessuna regressione, trasformazione coerente. Pubblica: header sticky, hero Prossimo servizio (DOMENICA 5, meter 6/9), lineup per strumento con chip pallino+tinta testo scuro (contrasto ok, niente white-on-fill), summary ruoli, stato Incompleto, FAB Trova me. Admin: toolbar brand (Esporta primary viola / Importa ghost), colonna RUOLO + header date sticky, celle Select stilizzate, Assenze a chip toggle, Conteggio turni a barre di distribuzione, Warning ridotti da 40 banner a 3 chip riepilogo + gruppo collassabile. Screenshot salvati solo in scratchpad e cancellati; git status non contiene png/playwright/test-results (solo issues.json)."
       },
       "created_at": "2026-07-03T14:45:48Z",
-      "updated_at": "2026-07-03T14:45:48Z"
+      "updated_at": "2026-07-03T16:25:31Z"
     },
     {
       "id": "76d9ec03-2deb-4cf1-9ba9-c07b5c3c1afc",
