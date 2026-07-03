@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-zinc-50 text-zinc-900 min-h-screen;
+    @apply bg-paper text-ink-800 min-h-screen;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
