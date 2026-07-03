@@ -5,6 +5,7 @@ import QuickFilter from "@/components/QuickFilter";
 import EmptyState from "@/components/EmptyState";
 import LoadingState from "@/components/LoadingState";
 import { mergeConfig, type MergedMonth, type ResolvedShift } from "@/utils/mergeConfig";
+import { getTodayDateString } from "@/utils/dateFormatter";
 import type { AppConfig, MonthData } from "@/types";
 
 /**
@@ -68,6 +69,24 @@ function PublicView() {
     );
   }, [sortedShifts, filterName]);
 
+  // "Prossimo servizio" hero: the first (chronologically) shift whose date
+  // is today or in the future, computed from the same filtered list so the
+  // hero stays consistent with an active name filter. Comparison is done on
+  // the "YYYY-MM-DD" strings directly (both shift.date and today are
+  // formatted the same way) to stay timezone-safe. That shift is promoted
+  // to the hero and excluded from the list below so it isn't duplicated.
+  const nextShiftIndex = useMemo(() => {
+    const today = getTodayDateString();
+    return filteredShifts.findIndex(shift => shift.date >= today);
+  }, [filteredShifts]);
+
+  const heroShift = nextShiftIndex >= 0 ? filteredShifts[nextShiftIndex] : null;
+
+  const restShifts = useMemo(() => {
+    if (nextShiftIndex < 0) return filteredShifts;
+    return filteredShifts.filter((_, idx) => idx !== nextShiftIndex);
+  }, [filteredShifts, nextShiftIndex]);
+
   if (loading) {
     return <LoadingState />;
   }
@@ -108,8 +127,30 @@ function PublicView() {
             </div>
           )}
 
+          {heroShift && (
+            <div
+              className="mb-8 animate-fade-in"
+              data-date={heroShift.date}
+              aria-label="Prossimo servizio"
+            >
+              <ShiftCard
+                shift={heroShift}
+                highlightName={filterName}
+                availableTeamMembers={config.availableTeamMembers}
+                roleSlots={config.roleSlots}
+                variant="hero"
+              />
+            </div>
+          )}
+
+          {!heroShift && filteredShifts.length > 0 && (
+            <p className="mb-6 text-sm italic text-ink-400">
+              Nessun servizio in programma
+            </p>
+          )}
+
           <div className="space-y-6" role="list" aria-label="Lista turni">
-            {filteredShifts.map((shift, idx) => (
+            {restShifts.map((shift, idx) => (
               <div
                 key={`${shift.date}-${idx}`}
                 className="animate-fade-up"

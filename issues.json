@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T15:18:24Z",
+  "last_updated": "2026-07-03T15:26:39Z",
   "rules": {
     "single_active_issue": false
   },
@@ -238,13 +238,13 @@
       "id": "8861536b-d691-4259-a9ab-3dbc23e0269e",
       "title": "feat(public): hero Prossimo servizio + stato oggi/passato",
       "description": "Vista pubblica: mettere in evidenza in cima il PROSSIMO servizio (prima data maggiore o uguale a oggi) come hero del design (tesi: aprire su quando suono). Marcare Oggi con il token live (oro). Attenuare (dim/opacity) le date passate. Header slim sticky con titolo mese. Dipende da: ticket servizio ridisegnato.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "state": "unknown",
-        "criteria": "Il prossimo servizio (data futura o odierna) e visivamente primario in cima; Oggi marcato col token live oro; date passate attenuate; header mese sticky; build verde."
+        "criteria": "VERIFIED independently 2026-07-03. (1) Hero: PublicView.tsx L78-88 computes nextShiftIndex via filteredShifts.findIndex(shift.date >= today), today from getTodayDateString() (local Y/M/D, not toISOString) - confirmed in dateFormatter.ts L8-14. Hero rendered with variant='hero' (L136-143), excluded from restShifts via filter(idx!==nextShiftIndex) so no duplication. Fallback 'Nessun servizio in programma' when no hero but shifts exist (L146-150) and EmptyState when list empty (L171-180). (2) Today marker: ShiftCard.tsx L67-72 uses bg-live-50, text-live, bg-live tokens for 'Oggi' pill - gold live token confirmed. (3) Past dimming: ShiftCard.tsx L53 applies opacity-70 when isPast (non-hero only, correct since hero is always today/future); ordering stays chronological via sortedShifts sort in PublicView L51-56. (4) Header.tsx: sticky top-0 z-20 (L20), border-line + backdrop-blur (L20), shadow-card added on scroll via isScrolled state (L12,21), font-display heading title (L25-27), slim py-3 (L24). (5) Date-compare robustness confirmed by code read: getTodayDateString builds from now.getFullYear/getMonth/getDate, never toISOString. Manually traced with today=2026-07-03 against public/turni.json dates [05,07,12,14,19,21,26,28]: first date >= today is 2026-07-05, hero resolves correctly to index 0. (6) Build: '.\\init.ps1 build' succeeded (tsc -b && vite build, 1762 modules, dist/ generated, no errors). Tests: 'npm test' -> Test Files 7 passed (7), Tests 34 passed (34).",
+        "state": "pass"
       },
       "created_at": "2026-07-03T14:43:14Z",
-      "updated_at": "2026-07-03T14:43:14Z"
+      "updated_at": "2026-07-03T15:26:39Z"
     },
     {
       "id": "7f67e72a-c1d3-4930-a10b-3a4a3fd4e008",

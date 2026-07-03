@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, Meter } from "@/components/ui";
 import TeamMemberCard from "@/components/TeamMemberCard";
 import TeamSummary from "@/components/TeamSummary";
-import { formatDate } from "@/utils/dateFormatter";
+import { formatDate, getTodayDateString } from "@/utils/dateFormatter";
 import { getRoleIcon, roleLabels } from "@/utils/iconMapper";
 import type { Role, Shift, TeamMember } from "@/types";
 
@@ -11,14 +11,21 @@ interface ShiftCardProps {
   availableTeamMembers?: TeamMember[];
   /** Expected slot count per role (config.roleSlots) — drives the completeness meter. */
   roleSlots?: Record<Role, number>;
+  /**
+   * "hero" promotes this card to the "Prossimo servizio" treatment: larger,
+   * elevated (shadow-raised), brand-accented eyebrow. Defaults to the normal
+   * ticket card used for the rest of the list.
+   */
+  variant?: "default" | "hero";
 }
 
 // Instrument display order for the lineup groups (falls back to config order
 // when roleSlots omit a role entirely, every known role is still tried).
 const ROLE_ORDER: Role[] = ["guitar", "bass", "drums", "vocals", "keyboard"];
 
-export default function ShiftCard({ shift, highlightName, availableTeamMembers = [], roleSlots }: ShiftCardProps) {
+export default function ShiftCard({ shift, highlightName, availableTeamMembers = [], roleSlots, variant = "default" }: ShiftCardProps) {
   const { dayName, dayNumber } = formatDate(shift.date);
+  const isHero = variant === "hero";
 
   // Helper function to get color from availableTeamMembers
   const getMemberColor = (memberName: string, providedColor?: string): string => {
@@ -30,19 +37,29 @@ export default function ShiftCard({ shift, highlightName, availableTeamMembers =
     return teamMember?.color || 'gray';
   };
 
-  // Check if this is today
-  const isToday = new Date(shift.date).toDateString() === new Date().toDateString();
-
-  // Check if shift is in the past
-  const isPast = new Date(shift.date) < new Date(new Date().setHours(0, 0, 0, 0));
+  // Today/past are derived from date-only string comparison (both this and
+  // shift.date are "YYYY-MM-DD"), never from Date object comparisons — that
+  // keeps the result stable regardless of the viewer's timezone.
+  const today = getTodayDateString();
+  const isToday = shift.date === today;
+  const isPast = shift.date < today;
 
   const totalExpected = roleSlots
     ? Object.values(roleSlots).reduce((sum, n) => sum + n, 0)
     : 0;
 
+  const cardToneClass = isHero
+    ? "border-brand-600/30 shadow-raised ring-1 ring-brand-600/15"
+    : `border-line shadow-card ${isPast ? "opacity-70" : ""}`;
+
   const header = (
-    <CardHeader className="flex-row items-start justify-between gap-3 border-b border-line p-5 pb-4 space-y-0">
+    <CardHeader className={`flex-row items-start justify-between gap-3 border-b border-line space-y-0 ${isHero ? "p-6 pb-5" : "p-5 pb-4"}`}>
       <div className="flex flex-col gap-1">
+        {isHero && (
+          <span className="font-display text-caption uppercase tracking-wide text-brand-600">
+            Prossimo servizio
+          </span>
+        )}
         <div className="flex items-center gap-2">
           <span className="font-display text-caption uppercase tracking-wide text-ink-400">
             {dayName}
@@ -54,7 +71,7 @@ export default function ShiftCard({ shift, highlightName, availableTeamMembers =
             </span>
           )}
         </div>
-        <span className="font-mono text-mono-num text-ink-950">{dayNumber}</span>
+        <span className={`font-mono text-ink-950 ${isHero ? "text-4xl sm:text-5xl" : "text-mono-num"}`}>{dayNumber}</span>
       </div>
 
       <span className="pt-1 text-caption text-ink-400">
@@ -66,7 +83,7 @@ export default function ShiftCard({ shift, highlightName, availableTeamMembers =
   // Show message if no team assigned
   if (!shift.team || shift.team.length === 0) {
     return (
-      <Card className={`overflow-hidden rounded-lg2 border-line bg-surface shadow-card ${isPast ? 'opacity-70' : ''}`}>
+      <Card className={`overflow-hidden rounded-lg2 bg-surface ${cardToneClass}`}>
         {header}
         <CardContent className="p-5 pt-4">
           <p className="text-sm italic text-ink-400">Nessun turno assegnato</p>
@@ -83,10 +100,10 @@ export default function ShiftCard({ shift, highlightName, availableTeamMembers =
     .filter(group => group.members.length > 0);
 
   return (
-    <Card className={`overflow-hidden rounded-lg2 border-line bg-surface shadow-card ${isPast ? 'opacity-70' : ''}`}>
+    <Card className={`overflow-hidden rounded-lg2 bg-surface ${cardToneClass}`}>
       {header}
 
-      <CardContent className="flex flex-col gap-4 p-5 pt-4">
+      <CardContent className={`flex flex-col gap-4 ${isHero ? "p-6 pt-4" : "p-5 pt-4"}`}>
         <div className="flex flex-col gap-3">
           {groupedByRole.map(({ role, members }) => {
             const Icon = getRoleIcon(role);

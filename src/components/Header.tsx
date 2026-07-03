@@ -16,21 +16,15 @@ export default function Header({ title }: HeaderProps) {
   }, []);
 
   return (
-    <header 
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? "bg-slate-800/95 backdrop-blur-md shadow-lg shadow-slate-900/10" 
-          : "bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg"
+    <header
+      className={`sticky top-0 z-20 border-b border-line bg-paper/80 backdrop-blur transition-shadow duration-300 ${
+        isScrolled ? "shadow-card" : ""
       }`}
     >
-      <div className="max-w-4xl mx-auto px-4 py-6">
-        <div className="flex items-center justify-center gap-3">
-          <div className="text-center">
-            <h1 className="font-display text-display text-white tracking-tight">
-              {title}
-            </h1>
-          </div>
-        </div>
+      <div className="max-w-4xl mx-auto px-4 py-3">
+        <h1 className="text-center font-display text-heading text-ink-950 tracking-tight">
+          {title}
+        </h1>
       </div>
     </header>
   );
