@@ -3,50 +3,61 @@ import Header from "@/components/Header";
 import ShiftCard from "@/components/ShiftCard";
 import QuickFilter from "@/components/QuickFilter";
 import EmptyState from "@/components/EmptyState";
-import type { TurniData } from "@/types";
+import { mergeConfig, type MergedMonth, type ResolvedShift } from "@/utils/mergeConfig";
+import type { AppConfig, MonthData } from "@/types";
 
 /**
- * Public view (`#/` or empty hash) — existing behavior, unchanged.
+ * Public view (`#/` or empty hash).
  *
- * Extracted from App.tsx so App can dispatch between this and the admin
- * editor based on the hash route (see
- * docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md sez. 4).
- * The config/turni.json merge described in sez. 5 is a separate later issue.
+ * Fetches `public/config.json` (team roster + colors) and `public/turni.json`
+ * (a month's shifts/absences) in parallel, then merges them via mergeConfig
+ * so each shift assignment's `color` is resolved by name. See
+ * docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md sez. 5.
  */
 function PublicView() {
-  const [data, setData] = useState<TurniData | null>(null);
+  const [config, setConfig] = useState<AppConfig | null>(null);
+  const [merged, setMerged] = useState<MergedMonth | null>(null);
   const [loading, setLoading] = useState(true);
-  const [sortedShifts, setSortedShifts] = useState<TurniData['shifts']>([]);
+  const [error, setError] = useState(false);
   const [filterName, setFilterName] = useState("");
 
-  // Fetch turni.json from public folder
+  // Fetch config.json + turni.json in parallel from the public folder
   useEffect(() => {
-    fetch('/turni.json')
-      .then(res => res.json())
-      .then((json: TurniData) => {
-        setData(json);
+    Promise.all([
+      fetch('/config.json').then(res => {
+        if (!res.ok) throw new Error(`config.json: ${res.status}`);
+        return res.json() as Promise<AppConfig>;
+      }),
+      fetch('/turni.json').then(res => {
+        if (!res.ok) throw new Error(`turni.json: ${res.status}`);
+        return res.json() as Promise<MonthData>;
+      }),
+    ])
+      .then(([config, month]) => {
+        setConfig(config);
+        setMerged(mergeConfig(config, month));
         setLoading(false);
       })
       .catch(err => {
-        console.error('Failed to load turni.json:', err);
+        console.error('Failed to load config.json/turni.json:', err);
+        setError(true);
         setLoading(false);
       });
   }, []);
 
-  useEffect(() => {
-    if (!data) return;
-    // Sort shifts by date
-    const sorted = [...data.shifts].sort((a, b) => {
+  // Sort shifts by date
+  const sortedShifts = useMemo<ResolvedShift[]>(() => {
+    if (!merged) return [];
+    return [...merged.shifts].sort((a, b) => {
       return new Date(a.date).getTime() - new Date(b.date).getTime();
     });
-    setSortedShifts(sorted);
-  }, [data]);
+  }, [merged]);
 
   // Get unique member names from available team members
   const memberNames = useMemo(() => {
-    if (!data || !data.availableTeamMembers) return [];
-    return data.availableTeamMembers.map(m => m.name).sort();
-  }, [data]);
+    if (!config) return [];
+    return config.availableTeamMembers.map(m => m.name).sort();
+  }, [config]);
 
   // Filter shifts based on selected name
   const filteredShifts = useMemo(() => {
@@ -67,7 +78,7 @@ function PublicView() {
     );
   }
 
-  if (!data) {
+  if (error || !merged || !config) {
     return (
       <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
         <EmptyState
@@ -80,7 +91,7 @@ function PublicView() {
 
   return (
     <div className="min-h-screen bg-zinc-50">
-      <Header title={data.title} />
+      <Header title={merged.title} />
 
       <main className="max-w-4xl mx-auto px-4 py-8 pb-24" role="main">
         <a
@@ -112,7 +123,7 @@ function PublicView() {
                 data-date={shift.date}
                 role="listitem"
               >
-                <ShiftCard shift={shift} highlightName={filterName} availableTeamMembers={data.availableTeamMembers} />
+                <ShiftCard shift={shift} highlightName={filterName} availableTeamMembers={config.availableTeamMembers} />
               </div>
             ))}
           </div>
