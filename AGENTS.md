@@ -31,6 +31,7 @@ senza protezione — vedi ARCHITECTURE.md), con dati letti a runtime da `public/
 ## Regola 1-WIP (una issue alla volta)
 
 Lavora le issue **in modo sequenziale**: una sola issue può essere `in_progress` per volta.
+**Avvia  Un subagent per issue**, UNO alla volta, in ordine di dipendenza. Usa un modello con un consumo di token medio, come Sonnet.
 Non avviare (non portare a `in_progress`) la issue successiva finché quella corrente non è
 stata **verificata e chiusa** secondo il flusso di clock-out. Questo evita lavoro parallelo
 non verificato e rende ogni chiusura tracciabile.

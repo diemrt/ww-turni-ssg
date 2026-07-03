@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T09:51:33Z",
+  "last_updated": "2026-07-03T14:55:35Z",
   "rules": {
     "single_active_issue": false
   },
@@ -185,6 +185,162 @@
       },
       "created_at": "2026-07-02T17:28:59Z",
       "updated_at": "2026-07-03T09:51:33Z"
+    },
+    {
+      "id": "2bafd2e4-2aa4-40a7-b2b4-8ebb1319c661",
+      "title": "chore: branch + fondamenta design system (Call Sheet)",
+      "description": "Fondamenta del design system Call Sheet. In tailwind.config.js sostituire i token: neutri ink caldo (ink-950 #17151C, ink-800 #2A2733, ink-600 #4A4652, ink-400 #8B8794, line #E9E6E1, paper #FBFAF9, surface #FFFFFF), brand viola liturgico (brand-600 #5A4B9C, brand-700 #4A3D85, brand-50 #EEEBF6), live/oggi oro (live #E0A43B, live-50 #FBF2DE), semantici (positive #3B8A6B, attention #C4623C, +50). Ridefinire i 10 colori-persona come coppia -500 + -100/-50 (tinta con testo ink scuro), MAI fill pieno con testo bianco. Aggiungere scala type reale (display/title/heading/body/caption/mono-num), scala radius (sm6/md10/lg14/pill), shadow (card/raised/overlay). In index.html sostituire i Google Fonts con Bricolage Grotesque (600-800), Hanken Grotesk (400-600), Space Mono. Rimuovere token morti (accent inutilizzati, text-title, text-body). Solo tema chiaro. Prima issue, base per tutte le altre.",
+      "status": "done",
+      "validation": {
+        "state": "pass",
+        "criteria": "VERIFIED (independent): tailwind.config.js has ink.{950,800,600,400}, line, paper, surface, brand.{50,600,700}, live.{DEFAULT,50}, positive.{DEFAULT,50}, attention.{DEFAULT,50}, and all 10 person-* scales (yellow/blue/green/red/orange/pink/purple/cyan/brown/gray) each with {50,100,500}. fontFamily sans=Hanken Grotesk, display=Bricolage Grotesque, mono=Space Mono. Dead fontSize keys title/body removed from config; grep src for text-title/text-body = 0 hits. accent-success/info/warning legacy aliases still resolve (used in WarningsPanel/PublicView/ShiftCard/TeamSummary; confirmed present in built CSS). index.html Google Fonts link loads Bricolage Grotesque(600;700;800) + Hanken Grotesk(400;500;600;700) + Space Mono(400;700). src/index.css body uses bg-paper text-ink-800, confirmed resolved in dist CSS (rgb(251 250 249)=paper, rgb(42 39 51)=ink-800) plus all 3 font-families present in output. init.ps1 build: tsc -b && vite build succeeded, 1753 modules transformed, built in 6.81s. npm test: 7 test files passed (7), 34 tests passed (34)."
+      },
+      "created_at": "2026-07-03T14:43:14Z",
+      "updated_at": "2026-07-03T14:55:35Z"
+    },
+    {
+      "id": "7058baec-44d8-4583-9396-f236b4130378",
+      "title": "feat: libreria primitivi UI snelli (cva)",
+      "description": "Creare i primitivi riutilizzabili in src/components/ui/ usando class-variance-authority (gia installato, oggi inutilizzato) e cn() (src/lib/utils.ts): Button (variant primary/ghost/danger, size), Chip (pallino colore-persona + label), Card (estende ui/card.tsx esistente, allinea da zinc a ink), Select (wrapper stilizzato del native select), Panel (contenitore sezione con header), Meter (barra completezza x su y). Creare src/utils/personColor.ts come UNICA fonte colore-persona: personColor(color) restituisce dot/tint/ring con fallback gray, che sostituira le due color-map duplicate. Nessuna dipendenza nuova. Dipende da: fondamenta token.",
+      "status": "backlog",
+      "validation": {
+        "state": "unknown",
+        "criteria": "Primitivi Button/Chip/Card/Select/Panel/Meter esportati e tipati in src/components/ui/; cva effettivamente usato (>=1 cva); personColor copre i 10 colori con fallback gray, tipizzato; build verde; npm test verde."
+      },
+      "created_at": "2026-07-03T14:43:14Z",
+      "updated_at": "2026-07-03T14:43:14Z"
+    },
+    {
+      "id": "4e390d38-7ea5-4365-b76c-9fcd1397ea3a",
+      "title": "refactor: rimozione dead code UI",
+      "description": "Pulizia del layer UI. Togliere il file starter Vite morto src/App.css (non importato). Rimuovere le due color-map duplicate (TeamMemberCard colorMap + admin/ShiftCell CELL_COLOR_CLASSES) sostituendole con personColor. Unificare lo spinner duplicato inline (PublicView + AdminEditor) collegando il componente orfano LoadingState.tsx. Unificare i due meccanismi di animation-delay (utilities animate-delay in index.css vs inline style) in uno solo. Dipende da: primitivi + personColor.",
+      "status": "backlog",
+      "validation": {
+        "state": "unknown",
+        "criteria": "File src/App.css non piu presente; nessuna color-map duplicata (solo personColor usato per i colori-persona); nessuno spinner inline duplicato (LoadingState usato in entrambe le viste); un solo meccanismo animation-delay; build verde; npm test verde (logica pura invariata)."
+      },
+      "created_at": "2026-07-03T14:43:14Z",
+      "updated_at": "2026-07-03T14:43:14Z"
+    },
+    {
+      "id": "044a5bbe-cfb4-46f9-9828-273b4476b9f2",
+      "title": "feat(public): ticket servizio ridisegnato",
+      "description": "Ridisegnare ShiftCard/TeamMemberCard/TeamSummary secondo il design Call Sheet: colori-persona addomesticati (pallino+tinta, testo ink scuro, mai fill full-bleed con testo bianco), lineup raggruppata per strumento (Chitarra/Basso/Batteria/Voce/Tastiera) con Chip, numero-giorno mono, meter di completezza (assegnati su totali) discreto. Usa i primitivi (Card/Chip/Meter) e personColor. Mobile-first. Dipende da: primitivi, dead-code cleanup.",
+      "status": "backlog",
+      "validation": {
+        "state": "unknown",
+        "criteria": "Contrasto testo/fondo dei colori-persona >= WCAG AA (campione verificato); ruolo non piu duplicato come badge su ogni pill; nessun fill full-bleed con testo bianco; lineup raggruppata per strumento; meter completezza presente; build verde."
+      },
+      "created_at": "2026-07-03T14:43:14Z",
+      "updated_at": "2026-07-03T14:43:14Z"
+    },
+    {
+      "id": "8861536b-d691-4259-a9ab-3dbc23e0269e",
+      "title": "feat(public): hero Prossimo servizio + stato oggi/passato",
+      "description": "Vista pubblica: mettere in evidenza in cima il PROSSIMO servizio (prima data maggiore o uguale a oggi) come hero del design (tesi: aprire su quando suono). Marcare Oggi con il token live (oro). Attenuare (dim/opacity) le date passate. Header slim sticky con titolo mese. Dipende da: ticket servizio ridisegnato.",
+      "status": "backlog",
+      "validation": {
+        "state": "unknown",
+        "criteria": "Il prossimo servizio (data futura o odierna) e visivamente primario in cima; Oggi marcato col token live oro; date passate attenuate; header mese sticky; build verde."
+      },
+      "created_at": "2026-07-03T14:43:14Z",
+      "updated_at": "2026-07-03T14:43:14Z"
+    },
+    {
+      "id": "7f67e72a-c1d3-4930-a10b-3a4a3fd4e008",
+      "title": "feat(public): personalizzazione Trova me",
+      "description": "Ridisegnare QuickFilter: la selezione di una persona porta i suoi servizi ad avere un nastro oro \"Tu suoni: {ruolo}\" e attenua gli altri membri/servizi; chip \"Filtro: {nome}\" con clear. Il dialog usa i primitivi e i token. Tap target almeno 44px. Dipende da: hero + ticket.",
+      "status": "backlog",
+      "validation": {
+        "state": "unknown",
+        "criteria": "Selezione persona filtra/marca i suoi servizi con nastro \"Tu suoni: {ruolo}\"; altri attenuati; clear ripristina lo stato pieno; dialog accessibile (role=dialog, focus trap, ESC); build verde."
+      },
+      "created_at": "2026-07-03T14:44:39Z",
+      "updated_at": "2026-07-03T14:44:39Z"
+    },
+    {
+      "id": "bf1e0974-c5c8-402d-959b-39e60e59a826",
+      "title": "feat(public): breakpoint responsive",
+      "description": "Introdurre responsivita reale nella vista pubblica: mobile-first con prefissi sm/md/lg che passano a layout multi-colonna su schermi larghi (oggi zero breakpoint, gestito solo via container max-width). Verificare assenza di overflow orizzontale ai vari viewport. Dipende da: ticket/hero/quickfilter.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "Almeno un breakpoint effettivo (sm/md/lg) usato; layout multi-colonna oltre 768px; nessun overflow orizzontale a 320/390/768/1024; tap target almeno 44px; build verde.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-03T14:44:48Z",
+      "updated_at": "2026-07-03T14:44:48Z"
+    },
+    {
+      "id": "a05942a0-9fbb-4633-a8ac-dd4d19d9885a",
+      "title": "feat(admin): restyle griglia",
+      "description": "Ridisegnare ShiftGrid/ShiftCell (desktop-first): colonna Ruolo + header date STICKY durante lo scroll; celle select custom (usa primitivo Select) con pallino+tinta persona e testo scuro; righe zebra; densita compatta; coerenza coi token del design system. Logica pura (shiftsFromSelections ecc.) invariata. Dipende da: primitivi, personColor, cleanup.",
+      "status": "backlog",
+      "validation": {
+        "state": "unknown",
+        "criteria": "Colonna Ruolo e header date restano visibili allo scroll (sticky); celle usano il primitivo Select con pallino+tinta e testo scuro leggibile; zebra + densita compatta; ShiftGrid.test.ts ancora verde; build verde."
+      },
+      "created_at": "2026-07-03T14:45:00Z",
+      "updated_at": "2026-07-03T14:45:00Z"
+    },
+    {
+      "id": "827a9407-74a6-4045-9d37-a2205e79dad0",
+      "title": "feat(admin): warning riepilogati e raggruppati",
+      "description": "Ridisegnare WarningsPanel: invece di molti banner amber impilati (oggi oltre 40 su un mese vuoto), mostrare una barra di riepilogo con conteggi per tipo (Slot vuoto, Doppia assegnazione, Assente ma assegnato) e dettaglio espandibile/collassabile. Usare token semantici (attention rust) non muri amber. Resta non-bloccante per l esportazione. Dipende da: primitivi/token.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "Mese vuoto mostra riepilogo compatto con conteggi per tipo (non decine di banner); espansione mostra il dettaglio per data; resta non-bloccante (esportazione sempre possibile); usa token attention; build verde.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-03T14:45:14Z",
+      "updated_at": "2026-07-03T14:45:14Z"
+    },
+    {
+      "id": "e675f4fb-1b35-43e9-a925-29cd3e7784fb",
+      "title": "feat(admin): restyle assenze + stats + toolbar",
+      "description": "Ridisegnare AbsencePanel (chip toggle compatte al posto della griglia di checkbox nativi), StatsPanel (barra con distribuzione conteggi per persona), MonthPicker e toolbar esporta/importa coerenti coi primitivi (Button/Select/Panel). Logica invariata. Dipende da: primitivi, restyle griglia.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "Assenze come chip toggle; StatsPanel a barra/distribuzione leggibile su desktop; MonthPicker + toolbar usano i primitivi Button/Select; esporta/importa ancora funzionanti; build verde; npm test verde.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-03T14:45:26Z",
+      "updated_at": "2026-07-03T14:45:26Z"
+    },
+    {
+      "id": "f0338027-3524-471c-986a-2ac9b6e2086d",
+      "title": "a11y: audit contrasto/focus/motion/target",
+      "description": "Passata di accessibilita su entrambe le viste: focus-visible su tutti gli elementi interattivi (oggi solo alcuni form admin); prefers-reduced-motion rispettato (disattiva fade/slide); contrasto testo/fondo almeno WCAG AA sui colori-persona e semantici; tap target almeno 44px. Dipende da: tutte le issue di UI.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "focus-visible presente su tutti gli interattivi (pubblica + admin); nessuna animazione con prefers-reduced-motion reduce; campioni contrasto AA verificati; tap target almeno 44px; build verde.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-03T14:45:37Z",
+      "updated_at": "2026-07-03T14:45:37Z"
+    },
+    {
+      "id": "ebeac566-7000-4ed6-988a-5deb6aa985e8",
+      "title": "chore: QA visiva Playwright",
+      "description": "QA visiva finale secondo docs/UI_TESTING.md: npm run dev, screenshot vista pubblica (390/768/1440) e admin (1440) via skill Playwright, confronto con lo stato attuale (baseline), verifica nessuna regressione. Screenshot salvati nello scratchpad, MAI nel repo, cancellati a fine verifica. Dipende da: tutte le issue di UI.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "Screenshot acquisiti ai viewport indicati e confrontati; nessuna regressione visiva rispetto agli obiettivi del design; nessun file png o cartella playwright residua nel repo (git status pulito).",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-03T14:45:48Z",
+      "updated_at": "2026-07-03T14:45:48Z"
+    },
+    {
+      "id": "76d9ec03-2deb-4cf1-9ba9-c07b5c3c1afc",
+      "title": "docs: sezione design system",
+      "description": "Aggiornare docs/ARCHITECTURE.md e AGENTS.md con una sezione sul design system Call Sheet: token (ink/brand/live/semantici/colori-persona), primitivi UI (Button/Chip/Card/Select/Panel/Meter), personColor util, direzione estetica e firma (service ticket). Ultima issue. Dipende da: tutte.",
+      "status": "backlog",
+      "validation": {
+        "criteria": "ARCHITECTURE.md + AGENTS.md descrivono i token reali, i primitivi reali (esistenti in src/components/ui/) e la direzione Call Sheet; coerenti col codice; nessun riferimento a token/componenti inesistenti.",
+        "state": "unknown"
+      },
+      "created_at": "2026-07-03T14:46:04Z",
+      "updated_at": "2026-07-03T14:46:04Z"
     }
   ]
 }
