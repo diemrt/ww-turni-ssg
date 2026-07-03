@@ -1,9 +1,9 @@
 {
-  "validDayOfWeek": ["Friday", "Sunday"],
+  "validDayOfWeek": ["Tuesday", "Sunday"],
   "availableRoles": ["guitar", "bass", "drums", "vocals", "keyboard"],
   "roleSlots": { "guitar": 1, "keyboard": 1, "drums": 1, "bass": 1, "vocals": 5 },
   "availableTeamMembers": [
-    { "name": "Diego", "roles": ["guitar"], "color": "yellow" },
+    { "name": "Diego", "roles": ["guitar", "vocals"], "color": "yellow" },
     { "name": "Samuele", "roles": ["keyboard"], "color": "blue" },
     { "name": "Daniele", "roles": ["drums"], "color": "green" },
     { "name": "Beppe", "roles": ["bass"], "color": "orange" },
