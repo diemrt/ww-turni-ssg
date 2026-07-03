@@ -1,8 +1,9 @@
 # AGENTS.md
 
-Sito statico **mobile-first** in React + Vite + TypeScript per visualizzare i turni del
-worship team, con dati letti a runtime da `public/turni.json` e build in file statici
-pubblicabili su qualsiasi hosting.
+Sito statico in React + Vite + TypeScript per visualizzare i turni del worship team
+(vista pubblica mobile-first, `#/`) e pianificarli (editor admin desktop-first, `#/admin`,
+senza protezione — vedi ARCHITECTURE.md), con dati letti a runtime da `public/config.json`
++ `public/turni.json` e build in file statici pubblicabili su qualsiasi hosting.
 
 # Documenti
 
@@ -72,3 +73,8 @@ disponibili:
 - `.\init.ps1 build` — esegue `npm run build` (`tsc -b && vite build`), generando l'output
   statico in `dist/`. Fallisce se il type-check o il bundling non passano. Da usare come
   verifica in fase di clock-out (prova che il codice compila e che Vite/React girano).
+
+Oltre a `init.ps1`, il progetto ha **Vitest** per la logica pura (editor admin, merge
+config/dati): `npm test` (alias di `vitest run`) esegue i test in `src/**/__tests__/`.
+Da lanciare come verifica aggiuntiva quando si tocca `src/utils/` o
+`src/components/admin/` — non sostituisce `.\init.ps1 build`, lo affianca.
