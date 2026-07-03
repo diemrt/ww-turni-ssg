@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T15:26:39Z",
+  "last_updated": "2026-07-03T15:36:33Z",
   "rules": {
     "single_active_issue": false
   },
@@ -250,13 +250,13 @@
       "id": "7f67e72a-c1d3-4930-a10b-3a4a3fd4e008",
       "title": "feat(public): personalizzazione Trova me",
       "description": "Ridisegnare QuickFilter: la selezione di una persona porta i suoi servizi ad avere un nastro oro \"Tu suoni: {ruolo}\" e attenua gli altri membri/servizi; chip \"Filtro: {nome}\" con clear. Il dialog usa i primitivi e i token. Tap target almeno 44px. Dipende da: hero + ticket.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "state": "unknown",
-        "criteria": "Selezione persona filtra/marca i suoi servizi con nastro \"Tu suoni: {ruolo}\"; altri attenuati; clear ripristina lo stato pieno; dialog accessibile (role=dialog, focus trap, ESC); build verde."
+        "state": "pass",
+        "criteria": "VERIFIED (independent read, feat/design-system): (1) ShiftCard.tsx L52-79: userAssignment = shift.team?.find(m => m.name === highlightName); ribbon renders \"Tu suoni: {roleLabels[userRole]}\" on bg-live (gold #E0A43B, tailwind.config.js L37-39). (2) TeamMemberCard.tsx L34-37: isDimmed -> opacity-50 on non-matching chips; ShiftCard.tsx L62/L70: isDeemphasized -> opacity-70 on non-matching cards (hero exempt); shifts are never removed, emphasis-only approach as allowed by criteria. (3) PublicView.tsx L140: onClick={() => setFilterName(\"\")} resets filterName -> highlightName prop empties -> isFiltering false everywhere, full state restored; clear X present both in QuickFilter pill (L109-117) and PublicView banner (L137-145). (4) QuickFilter.tsx: role=\"dialog\" L131, aria-modal=\"true\" L132; focus moves to closeButtonRef on open (L52); Tab/Shift+Tab trap wraps between first/last focusable in dialog (L61-77); Escape closes (L55-59); backdrop onClick closes (L123-127); previouslyFocused captured (L51) and refocused on cleanup/close (L83). (5) Build: `.\\init.ps1 build` succeeded, tsc -b + vite build, dist/ generated (259.05 kB JS, 25.80 kB CSS). Tests: `npm test` -> Test Files 7 passed (7), Tests 34 passed (34)."
       },
       "created_at": "2026-07-03T14:44:39Z",
-      "updated_at": "2026-07-03T14:44:39Z"
+      "updated_at": "2026-07-03T15:36:33Z"
     },
     {
       "id": "bf1e0974-c5c8-402d-959b-39e60e59a826",

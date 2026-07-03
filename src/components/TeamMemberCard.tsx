@@ -1,4 +1,5 @@
 import { Chip } from "@/components/ui";
+import { cn } from "@/lib/utils";
 import { isPersonColorName } from "@/utils/personColor";
 
 interface TeamMemberCardProps {
@@ -6,6 +7,12 @@ interface TeamMemberCardProps {
   color?: string;
   /** True when this member matches the active QuickFilter selection. */
   isHighlighted?: boolean;
+  /**
+   * True when a QuickFilter name is active and this member is NOT the
+   * match — dims the chip so the highlighted person's own services read as
+   * the focal point of the card.
+   */
+  isDimmed?: boolean;
 }
 
 /**
@@ -15,7 +22,7 @@ interface TeamMemberCardProps {
  * under a single instrument label per role, so repeating it per person
  * would duplicate information.
  */
-export default function TeamMemberCard({ memberName, color = 'gray', isHighlighted = false }: TeamMemberCardProps) {
+export default function TeamMemberCard({ memberName, color = 'gray', isHighlighted = false, isDimmed = false }: TeamMemberCardProps) {
   const personColorName = isPersonColorName(color) ? color : 'gray';
 
   return (
@@ -24,7 +31,10 @@ export default function TeamMemberCard({ memberName, color = 'gray', isHighlight
       label={memberName}
       role="listitem"
       aria-label={memberName}
-      className={isHighlighted ? "ring-2 ring-brand-600 ring-offset-1" : ""}
+      className={cn(
+        isHighlighted && "ring-2 ring-brand-600 ring-offset-1",
+        isDimmed && "opacity-50"
+      )}
     />
   );
 }

@@ -1,9 +1,11 @@
 import { useEffect, useState, useMemo } from "react";
+import { X } from "lucide-react";
 import Header from "@/components/Header";
 import ShiftCard from "@/components/ShiftCard";
 import QuickFilter from "@/components/QuickFilter";
 import EmptyState from "@/components/EmptyState";
 import LoadingState from "@/components/LoadingState";
+import { Button } from "@/components/ui";
 import { mergeConfig, type MergedMonth, type ResolvedShift } from "@/utils/mergeConfig";
 import { getTodayDateString } from "@/utils/dateFormatter";
 import type { AppConfig, MonthData } from "@/types";
@@ -55,37 +57,41 @@ function PublicView() {
     });
   }, [merged]);
 
-  // Get unique member names from available team members
-  const memberNames = useMemo(() => {
+  // Team roster for the QuickFilter dialog (name + person color for the dot),
+  // sorted alphabetically.
+  const filterMembers = useMemo(() => {
     if (!config) return [];
-    return config.availableTeamMembers.map(m => m.name).sort();
+    return [...config.availableTeamMembers]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(m => ({ name: m.name, color: m.color }));
   }, [config]);
 
-  // Filter shifts based on selected name
-  const filteredShifts = useMemo(() => {
-    if (!filterName) return sortedShifts;
+  // QuickFilter is a personalization moment, not a hard filter: every shift
+  // in the month stays visible. Selecting a name only tells ShiftCard whose
+  // services to emphasize (gold "Tu suoni" ribbon) and whose to dim.
+  const shiftsWithSelectedMember = useMemo(() => {
+    if (!filterName) return [];
     return sortedShifts.filter(shift =>
       shift.team?.some(member => member.name === filterName)
     );
   }, [sortedShifts, filterName]);
 
   // "Prossimo servizio" hero: the first (chronologically) shift whose date
-  // is today or in the future, computed from the same filtered list so the
-  // hero stays consistent with an active name filter. Comparison is done on
-  // the "YYYY-MM-DD" strings directly (both shift.date and today are
-  // formatted the same way) to stay timezone-safe. That shift is promoted
-  // to the hero and excluded from the list below so it isn't duplicated.
+  // is today or in the future. Comparison is done on the "YYYY-MM-DD"
+  // strings directly (both shift.date and today are formatted the same
+  // way) to stay timezone-safe. That shift is promoted to the hero and
+  // excluded from the list below so it isn't duplicated.
   const nextShiftIndex = useMemo(() => {
     const today = getTodayDateString();
-    return filteredShifts.findIndex(shift => shift.date >= today);
-  }, [filteredShifts]);
+    return sortedShifts.findIndex(shift => shift.date >= today);
+  }, [sortedShifts]);
 
-  const heroShift = nextShiftIndex >= 0 ? filteredShifts[nextShiftIndex] : null;
+  const heroShift = nextShiftIndex >= 0 ? sortedShifts[nextShiftIndex] : null;
 
   const restShifts = useMemo(() => {
-    if (nextShiftIndex < 0) return filteredShifts;
-    return filteredShifts.filter((_, idx) => idx !== nextShiftIndex);
-  }, [filteredShifts, nextShiftIndex]);
+    if (nextShiftIndex < 0) return sortedShifts;
+    return sortedShifts.filter((_, idx) => idx !== nextShiftIndex);
+  }, [sortedShifts, nextShiftIndex]);
 
   if (loading) {
     return <LoadingState />;
@@ -116,14 +122,27 @@ function PublicView() {
 
         <div id="main-content">
           {filterName && (
-            <div className="mb-6 p-4 bg-slate-100 rounded-lg border border-slate-200 animate-fade-in" role="status" aria-live="polite">
+            <div
+              className="mb-6 flex items-center justify-between gap-3 rounded-lg2 border border-line bg-surface p-4 shadow-card animate-fade-in"
+              role="status"
+              aria-live="polite"
+            >
               <div className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-accent-success animate-pulse" />
-                <p className="text-sm text-slate-700">
-                  Mostrando turni per <span className="font-semibold">{filterName}</span>
-                  {filteredShifts.length === 0 && " - Nessun turno trovato"}
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-live" aria-hidden="true" />
+                <p className="text-sm text-ink-800">
+                  Turni evidenziati per <span className="font-semibold text-ink-950">{filterName}</span>
+                  {shiftsWithSelectedMember.length === 0 && " — nessun turno assegnato in questo periodo"}
                 </p>
               </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setFilterName("")}
+                aria-label="Rimuovi filtro"
+                className="h-9 min-h-[44px] w-9 min-w-[44px] shrink-0 rounded-pill p-0"
+              >
+                <X className="h-4 w-4" aria-hidden="true" />
+              </Button>
             </div>
           )}
 
@@ -143,7 +162,7 @@ function PublicView() {
             </div>
           )}
 
-          {!heroShift && filteredShifts.length > 0 && (
+          {!heroShift && sortedShifts.length > 0 && (
             <p className="mb-6 text-sm italic text-ink-400">
               Nessun servizio in programma
             </p>
@@ -168,20 +187,13 @@ function PublicView() {
             ))}
           </div>
 
-          {filteredShifts.length === 0 && !filterName && (
+          {sortedShifts.length === 0 && (
             <EmptyState />
-          )}
-
-          {filteredShifts.length === 0 && filterName && (
-            <EmptyState
-              title="Nessun turno trovato"
-              message={`${filterName} non ha turni assegnati in questo periodo`}
-            />
           )}
         </div>
       </main>
 
-      <QuickFilter onFilterChange={setFilterName} memberNames={memberNames} />
+      <QuickFilter onFilterChange={setFilterName} members={filterMembers} />
     </div>
   );
 }
