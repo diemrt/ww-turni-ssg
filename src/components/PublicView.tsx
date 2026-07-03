@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import ShiftCard from "@/components/ShiftCard";
 import QuickFilter from "@/components/QuickFilter";
 import EmptyState from "@/components/EmptyState";
+import LoadingState from "@/components/LoadingState";
 import { mergeConfig, type MergedMonth, type ResolvedShift } from "@/utils/mergeConfig";
 import type { AppConfig, MonthData } from "@/types";
 
@@ -68,14 +69,7 @@ function PublicView() {
   }, [sortedShifts, filterName]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block w-8 h-8 border-4 border-slate-700 border-t-transparent rounded-full animate-spin mb-4" />
-          <p className="text-zinc-600">Caricamento...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (error || !merged || !config) {

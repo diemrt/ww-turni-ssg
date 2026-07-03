@@ -1,6 +1,6 @@
 {
   "project": "MyProject",
-  "last_updated": "2026-07-03T15:03:32Z",
+  "last_updated": "2026-07-03T15:09:46Z",
   "rules": {
     "single_active_issue": false
   },
@@ -214,13 +214,13 @@
       "id": "4e390d38-7ea5-4365-b76c-9fcd1397ea3a",
       "title": "refactor: rimozione dead code UI",
       "description": "Pulizia del layer UI. Togliere il file starter Vite morto src/App.css (non importato). Rimuovere le due color-map duplicate (TeamMemberCard colorMap + admin/ShiftCell CELL_COLOR_CLASSES) sostituendole con personColor. Unificare lo spinner duplicato inline (PublicView + AdminEditor) collegando il componente orfano LoadingState.tsx. Unificare i due meccanismi di animation-delay (utilities animate-delay in index.css vs inline style) in uno solo. Dipende da: primitivi + personColor.",
-      "status": "backlog",
+      "status": "done",
       "validation": {
-        "state": "unknown",
-        "criteria": "File src/App.css non piu presente; nessuna color-map duplicata (solo personColor usato per i colori-persona); nessuno spinner inline duplicato (LoadingState usato in entrambe le viste); un solo meccanismo animation-delay; build verde; npm test verde (logica pura invariata)."
+        "state": "pass",
+        "criteria": "Verified independently: src/App.css deleted, no reference to it in src/ or index.html (grep clean). No colorMap/CELL_COLOR_CLASSES duplicates in src (grep clean); personColor() used in TeamMemberCard.tsx, admin/ShiftCell.tsx (and ui/Chip.tsx). LoadingState.tsx (spinner via animate-spin) imported+rendered in both PublicView.tsx:72 and admin/AdminEditor.tsx:250; no other inline animate-spin block found. animate-delay- class: zero usages in src; index.css has no .animate-delay-* utility block (only .sr-only + focus\\:not-sr-only remain); single remaining mechanism is inline style={{ animationDelay }} in PublicView.tsx:116 and ShiftCard.tsx:97. Build: `.\\init.ps1 build` succeeded (tsc -b && vite build, dist/ generated, 3.88s). Tests: `npm test` -> vitest run: 7 files passed, 34/34 tests passed."
       },
       "created_at": "2026-07-03T14:43:14Z",
-      "updated_at": "2026-07-03T14:43:14Z"
+      "updated_at": "2026-07-03T15:09:46Z"
     },
     {
       "id": "044a5bbe-cfb4-46f9-9828-273b4476b9f2",

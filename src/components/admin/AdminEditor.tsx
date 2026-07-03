@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import LoadingState from "@/components/LoadingState";
 import MonthPicker from "@/components/admin/MonthPicker";
 import ShiftGrid, { shiftsFromSelections, selectionsFromShifts, buildGridRows } from "@/components/admin/ShiftGrid";
 import AbsencePanel from "@/components/admin/AbsencePanel";
@@ -246,14 +247,7 @@ function AdminEditor() {
   );
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block w-8 h-8 border-4 border-slate-700 border-t-transparent rounded-full animate-spin mb-4" />
-          <p className="text-zinc-600">Caricamento...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (error || !config) {

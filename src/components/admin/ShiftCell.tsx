@@ -1,24 +1,6 @@
 import type { ChangeEvent } from "react";
+import { personColor } from "@/utils/personColor";
 import type { TeamMember } from "@/types";
-
-/**
- * Cell background classes per team-member color (see tailwind.config.js
- * `team-*` palette + src/components/TeamMemberCard.tsx's colorMap, which this
- * mirrors at lower opacity so the dropdown text stays legible in a compact
- * grid cell).
- */
-const CELL_COLOR_CLASSES: Record<string, string> = {
-  yellow: "bg-team-yellow/50",
-  blue: "bg-team-blue/50",
-  green: "bg-team-green/50",
-  red: "bg-team-red/50",
-  orange: "bg-team-orange/50",
-  pink: "bg-team-pink/50",
-  purple: "bg-team-purple/50",
-  cyan: "bg-team-cyan/50",
-  brown: "bg-team-brown/50",
-  gray: "bg-team-gray/50",
-};
 
 const EMPTY_CELL_CLASS = "bg-white";
 
@@ -43,7 +25,7 @@ interface ShiftCellProps {
  */
 function ShiftCell({ people, value, absentNames, onChange, label }: ShiftCellProps) {
   const selectedMember = people.find((person) => person.name === value);
-  const colorClass = selectedMember ? (CELL_COLOR_CLASSES[selectedMember.color] ?? CELL_COLOR_CLASSES.gray) : EMPTY_CELL_CLASS;
+  const colorClass = selectedMember ? personColor(selectedMember.color).tint : EMPTY_CELL_CLASS;
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     onChange(e.target.value);

@@ -1,20 +1,20 @@
-export default function LoadingState() {
+interface LoadingStateProps {
+  /** Text shown under the spinner. Defaults to the generic loading copy used
+   * by both PublicView and AdminEditor while their config/turni fetch is in
+   * flight. */
+  message?: string;
+}
+
+/**
+ * Full-page centered spinner, shared by PublicView and AdminEditor's loading
+ * state so the markup isn't duplicated across both entry points.
+ */
+export default function LoadingState({ message = "Caricamento..." }: LoadingStateProps) {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="space-y-6">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm animate-pulse">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-zinc-200 rounded-lg" />
-              <div className="h-6 bg-zinc-200 rounded w-32" />
-            </div>
-            <div className="space-y-3">
-              <div className="h-12 bg-zinc-100 rounded-lg" />
-              <div className="h-12 bg-zinc-100 rounded-lg" />
-              <div className="h-12 bg-zinc-100 rounded-lg" />
-            </div>
-          </div>
-        ))}
+    <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="inline-block w-8 h-8 border-4 border-slate-700 border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-zinc-600">{message}</p>
       </div>
     </div>
   );
