@@ -1,346 +1,358 @@
-{
-  "project": "MyProject",
-  "last_updated": "2026-07-03T16:31:12Z",
-  "rules": {
-    "single_active_issue": false
-  },
-  "status_legend": {
-    "backlog": "Work has not begun.",
-    "in_progress": "The issue is the current active task.",
-    "blocked": "Work cannot continue until a documented blocker is resolved.",
-    "done": "The issue has been completed and verified."
-  },
-  "tags": [
-    "feature",
-    "bug",
-    "chore",
-    "documentation",
-    "testing"
-  ],
-  "issues": [
-    {
-      "id": "00a46836-8296-4759-a612-61e70dc03856",
-      "title": "chore: add Vitest test runner",
-      "description": "Aggiungere Vitest per testare la logica pura (nessun runner installato oggi). Installare vitest come devDependency, aggiungere config Vitest, aggiungere script npm 'test'. Includere un test smoke che passa. Non introdurre test UI. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 8). Dipendenze: nessuna. Base per le issue con test successive.",
-      "status": "done",
-      "validation": {
-        "criteria": "Verified: vitest ^4.1.9 in package.json devDependencies; npm test (vitest run) -> 1 test file, 1 test passed (src/utils/__tests__/smoke.test.ts); .\\init.ps1 build -> tsc -b && vite build succeeded, dist/ generated.",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:38:16Z"
-    },
-    {
-      "id": "e9df2a1c-0a22-4e81-a67e-d06ab5d2a1c7",
-      "title": "feat: split data model (config + turni.json migration + types)",
-      "description": "Separare config stabile dai dati del mese. 1) Creare public config.json con validDayOfWeek, availableRoles, roleSlots {guitar:1,keyboard:1,drums:1,bass:1,vocals:5}, availableTeamMembers (name/roles/color) presi dall'attuale turni.json. 2) Migrare public turni.json al nuovo schema: rimuovere config e il campo color dagli elementi team; aggiungere month (YYYY-MM, es. 2026-06) e absences ({} vuoto); mantenere title e shifts. 3) Aggiornare src/types/index.ts con AppConfig, MonthData, ShiftAssignment, Shift, TeamMember, Role. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 3). Dipendenze: nessuna. La vista pubblica sara' adeguata in issue successiva; qui solo dati+tipi.",
-      "status": "done",
-      "validation": {
-        "criteria": "config.json valido con roleSlots(guitar/keyboard/drums/bass/vocals) e 9 availableTeamMembers; turni.json nuovo schema con month=2026-06, absences={}, team senza color, nessun availableTeamMembers/validDayOfWeek/availableRoles residuo; src/types/index.ts esporta AppConfig e MonthData (+ShiftAssignment/Shift/Role/TeamMember); init.ps1 build OK (tsc -b + vite build succeeded).",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:42:10Z"
-    },
-    {
-      "id": "414f18fd-9fc9-46d9-8ec5-a1f63922b0fc",
-      "title": "feat: util mergeConfig (color per nome) + test",
-      "description": "Creare src/utils/mergeConfig.ts: dato AppConfig e MonthData, per ogni assegnazione risolve il color cercando name in config.availableTeamMembers, restituendo strutture pronte per la vista. Gestire nome assente in config (fallback colore neutro, nessun crash). Test Vitest: colore risolto correttamente; nome mancante gestito. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 5, 3.3). Dipendenze: Vitest, split modello dati.",
-      "status": "done",
-      "validation": {
-        "criteria": "mergeConfig.ts resolves color via availableTeamMembers Map lookup with ?? FALLBACK_COLOR fallback (no throw) for missing names; mergeConfig.test.ts has 3 tests covering resolved color, missing-name fallback (asserts no-throw + FALLBACK_COLOR), and passthrough of title/month/absences; npm test: 10/10 passed (3 files); init.ps1 build: tsc -b + vite build succeeded.",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:47:19Z"
-    },
-    {
-      "id": "64161f71-5159-4256-8460-8c8ed45c1976",
-      "title": "feat: util monthDates (date valide del mese) + test",
-      "description": "Creare src/utils/monthDates.ts: dato month (YYYY-MM) e validDayOfWeek (es. Friday,Sunday), genera l'elenco ordinato delle date del mese che cadono in quei giorni (formato YYYY-MM-DD). Gestire i bordi mese. Fornire util per generare title italiano da month (es. Turni di Giugno 2026). Test Vitest: Giugno 2026 + Friday,Sunday => 05,07,12,14,19,21,26,28. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.1). Dipendenze: Vitest, tipi.",
-      "status": "done",
-      "validation": {
-        "criteria": "Verified: monthDates(\"2026-06\",[\"Friday\",\"Sunday\"]) returns exactly the 8 expected dates in order (test asserts this); monthTitle(\"2026-06\") returns \"Turni di Giugno 2026\"; also covers May boundary, Feb short month, empty array cases. npm test: 2 files, 7/7 passed. init.ps1 build: tsc -b && vite build succeeded, dist/ generated.",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:45:06Z"
-    },
-    {
-      "id": "c3240f3d-5fbe-4475-8ea0-84da20e79eda",
-      "title": "feat: util shiftStats (conteggi + warning) + test",
-      "description": "Creare src/utils/shiftStats.ts: 1) conteggio turni per persona nel mese (derivato). 2) warning non bloccanti: slot vuoti per ruolo/data, stessa persona assegnata due volte nello stesso giorno, persona assente (in absences) ma assegnata. Ritorna strutture usabili dai pannelli. Test Vitest per ciascun tipo di warning e per i conteggi. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.4, 6.5). Dipendenze: Vitest, tipi, roleSlots da config.",
-      "status": "done",
-      "validation": {
-        "criteria": "shiftCounts sums per-person across shifts (verified 2-shift dataset -> Diego=2, plus empty-month case); shiftWarnings detects EMPTY_SLOT (vocals under-filled vs roleSlots), DUPLICATE_SAME_DAY (same name twice same date), and ABSENT_ASSIGNED (name in absences[date] also assigned), plus a clean-dataset negative test. npm test: 4 files, 16 tests passed. .\\init.ps1 build: tsc + vite build succeeded.",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:49:52Z"
-    },
-    {
-      "id": "bad6ae36-35dc-4b32-be22-6b7e29d4c1b0",
-      "title": "feat: util persistence (draft localStorage + export/import) + test",
-      "description": "Creare src/utils/draftStorage.ts (load/save/clear bozza MonthData in localStorage con chiave per mese, es. ww-turni-draft-2026-06) e src/utils/exportImport.ts (serializza MonthData e scarica turni.json via Blob/anchor; parse+valida un turni.json importato ripopolando shifts+absences). Test Vitest: round-trip serialize->parse identita'; draft save->load identita' (mock localStorage). Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.6). Dipendenze: Vitest, tipi.",
-      "status": "done",
-      "validation": {
-        "criteria": "draftStorage.ts: save/load/clear per-month key ww-turni-draft-<month>, silent no-op on missing/corrupt localStorage; exportImport.ts: serializeMonthData (pure JSON.stringify), parseMonthData validates title/month/shifts/absences shape and throws clear Errors on malformed input, exportMonthData does Blob+anchor download. Tests: draftStorage.test.ts (5 tests, mock MemoryStorage, round-trip+corrupt+clear) and exportImport.test.ts (9 tests, serialize->parse round-trip, invalid JSON/missing fields/array throw). npm test: 6 files, 30/30 passed. init.ps1 build: tsc -b + vite build succeeded.",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:53:07Z"
-    },
-    {
-      "id": "0446acad-5a1c-4b53-88ae-26624226841b",
-      "title": "feat: hash routing minimale + dispatch route + admin shell",
-      "description": "Aggiungere src/hooks/useHashRoute.ts che legge window.location.hash e reagisce a hashchange. In App.tsx: hash root o vuoto => vista pubblica; hash admin => editor. Creare src/components/admin/AdminEditor.tsx come shell placeholder (riempita nelle issue successive). Nessuna libreria di routing. Admin non linkato dalla vista pubblica, nessuna protezione (scelta consapevole). Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 4). Dipendenze: tipi.",
-      "status": "done",
-      "validation": {
-        "criteria": "useHashRoute.ts reads window.location.hash + hashchange listener (verified); App.tsx dispatches #/admin -> AdminEditor, root/empty/other -> PublicView (verified); AdminEditor.tsx is a placeholder shell (verified); package.json has no routing lib (react-router/wouter/etc absent); init.ps1 build passed (tsc -b && vite build, dist generated); npm test passed (6 files, 30 tests).",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-02T17:56:25Z"
-    },
-    {
-      "id": "7cf1e909-9fb6-41b9-87fa-366612f55160",
-      "title": "feat: public view refactor (fetch config+turni, merge, render)",
-      "description": "Aggiornare App/vista pubblica: fetch parallelo di config.json e turni.json, unione tramite util mergeConfig (colore per nome), poi render invariato di ShiftCard/TeamMemberCard/TeamSummary. Ordinamento turni per data invariato. Gestire errore se manca uno dei due file (stato d'errore/EmptyState). QuickFilter e stati Loading/Empty invariati. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 5). Dipendenze: split modello dati, mergeConfig, routing.",
-      "status": "done",
-      "validation": {
-        "criteria": "Verified independently: (1) src/components/PublicView.tsx fetches /config.json and /turni.json in parallel via Promise.all (lines 26-34), merges them with mergeConfig from src/utils/mergeConfig.ts (line 38), sorts merged shifts by date via useMemo (lines 49-54), and renders EmptyState error UI if either fetch fails (res.ok check throws, caught and sets error=true, lines 27-34 and 41-45, rendered at line 81-90). (2) public/config.json contains availableTeamMembers with color per member (Diego=yellow, Samuele=blue, etc), no shifts. public/turni.json contains title/month/shifts/absences for June 2026, shift.team entries have only name+role, no inline color field - matches new split schema. (3) Colors are resolved via mergeConfig: colorByName map built from config.availableTeamMembers (mergeConfig.ts lines 39-41), applied to each shift assignment with FALLBACK_COLOR fallback (line 48); confirmed by passing mergeConfig.test.ts (3 tests: resolves known color, falls back for unknown name, preserves title/month/absences). ShiftCard receives already-resolved color from ResolvedShiftAssignment. (4) Ran .\\init.ps1 build: tsc -b && vite build succeeded, dist/ generated (1743 modules transformed, built in 5.21s). Ran npm test: vitest run, 6 test files passed, 30/30 tests passed.",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-03T09:10:32Z"
-    },
-    {
-      "id": "abe6aeb9-6c50-41a1-98c1-fac9021403ec",
-      "title": "feat: admin MonthPicker + colonne date (con rimozione data)",
-      "description": "In AdminEditor: selettore mese+anno che imposta month (YYYY-MM) e title (via util). Generare le colonne-date con monthDates dai validDayOfWeek di config. Ogni colonna ha controllo per rimuovere quella data dalla pianificazione del mese. Desktop-first, scroll orizzontale. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.1). Dipendenze: monthDates, routing/shell, config fetch.",
-      "status": "done",
-      "validation": {
-        "criteria": "VERIFIED by independent review: MonthPicker.tsx (src/components/admin/MonthPicker.tsx) is a month+year selector that emits YYYY-MM via onChange. AdminEditor.tsx (src/components/admin/AdminEditor.tsx) fetches config.json, computes allDates = monthDates(month, config.validDayOfWeek) and title = monthTitle(month). The real public config.json has validDayOfWeek = ['Friday','Sunday'], so selecting month 2026-06 produces dates 2026-06-05, 07, 12, 14, 19, 21, 26, 28 (matching src/utils/__tests__/monthDates.test.ts, which passes), and title = 'Turni di Giugno 2026' (also asserted and passing). Removal logic verified by reading code: dateColumns = useMemo(() => allDates.filter(date => !removedSet.has(date))), where removedSet is derived from removedDatesByMonth[month]; handleRemoveDate appends the clicked date via a functional state update (setRemovedDatesByMonth(prev => ({...prev, [month]: [...(prev[month] ?? []), date]}))). This correctly removes the corresponding column from the grid on click, keyed per-month so switching months does not leak removals. Build verified: init.ps1 build runs tsc -b and vite build successfully with no type errors, dist output generated. Tests verified: npm test (vitest run) - 6 test files, 30 tests, all passed.",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-03T09:16:54Z"
-    },
-    {
-      "id": "49263272-f166-485d-bf87-aeb601cc211c",
-      "title": "feat: admin ShiftGrid + ShiftCell (slot, dropdown filtrato, colore, assenti disabilitati)",
-      "description": "Griglia: righe = per ogni ruolo in availableRoles, roleSlots[role] righe (es. Voce 1..5) con etichette italiane; colonne = date. ShiftCell = dropdown con le persone che hanno quel ruolo (availableTeamMembers.roles include role) + opzione vuoto; sfondo/segno cella col colore persona. Persone assenti nella data (da absences) disabilitate/grigie. Lo stato della griglia costruisce le shifts di MonthData. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.2). Dipendenze: MonthPicker/date, config, tipi.",
-      "status": "done",
-      "validation": {
-        "criteria": "VERIFIED by independent code read (not just comments) + build/test run. (1) righe rispettano roleSlots: ShiftGrid.tsx buildGridRows() loops config.availableRoles and pushes roleSlots[role] rows each; with public/config.json roleSlots {guitar:1,keyboard:1,drums:1,bass:1,vocals:5} this yields 9 rows total, vocals rows labeled 'Voce 1'..'Voce 5' (roleLabels.vocals='Voce' from src/utils/iconMapper.ts), single-slot roles unnumbered. (2) dropdown filtrato: ShiftGrid builds peopleByRole via config.availableTeamMembers.filter(m => m.roles.includes(role)) and passes only that filtered array as ShiftCell's `people` prop; ShiftCell renders options solely from `people` (e.g. Voce rows only ever show Manuela/Natalia/Magdy/David, never Diego/Samuele/Daniele/Beppe). (3) assenti disabilitati: ShiftGrid computes absentNames=new Set(absences[date]) per cell and passes to ShiftCell, which sets `disabled={absentNames.has(person.name)}` on each <option> (labeled '(assente)'). (4) selezione aggiorna shifts: ShiftCell.onChange -> ShiftGrid.onSelectionChange(key,name) -> AdminEditor.handleSelectionChange writes into selectionsByMonth state; shifts is derived via useMemo(shiftsFromSelections(dateColumns, buildGridRows(config), selections)), a pure projection off that state, so every selection change re-derives MonthData.shifts. (5) colore cella corretto: ShiftCell finds selectedMember in the (role-filtered) people list by name, maps member.color through CELL_COLOR_CLASSES (bg-team-<color>/50) which is a strict subset of the team-* palette defined in tailwind.config.js (yellow/blue/green/red/orange/pink/purple/cyan/brown/gray) -- all 9 config.json member colors resolve correctly; empty selection falls back to bg-white. Build: `.\\init.ps1 build` -> tsc -b && vite build succeeded (dist output generated, no type errors). Tests: `npm test` -> 6 test files, 30/30 passed (note: existing tests are util-level only, e.g. src/utils/__tests__/*; no dedicated ShiftGrid/ShiftCell unit tests exist yet, but no regressions and manual logic trace confirms correctness).",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-03T09:23:21Z"
-    },
-    {
-      "id": "3d517fc4-1cfd-4adc-88e6-95012bdf5c0e",
-      "title": "feat: admin AbsencePanel (assenze per data -> absences)",
-      "description": "Pannello assenze: per ogni data del mese, multi-select delle persone assenti; aggiorna absences (mappa date->nomi) in MonthData. Le assenze alimentano il guardrail dei dropdown della griglia e vengono salvate/esportate. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.3). Dipendenze: date generate, ShiftGrid (guardrail condiviso), tipi.",
-      "status": "done",
-      "validation": {
-        "criteria": "VERIFIED by independent code trace: (1) src/components/admin/AbsencePanel.tsx renders one checkbox per (date, roster member); onChange calls onToggle(date, member.name). (2) src/components/admin/AdminEditor.tsx owns `absencesByMonth` state; `absences = absencesByMonth[month] ?? {}` is passed as the SAME object to both <ShiftGrid absences={absences}> (line 199) and <AbsencePanel absences={absences}> (line 210) -- confirmed single source of truth, no parallel absences state. handleAbsenceToggle (line 106-123) adds/removes `name` from `absences[date]` array, pruning the date key entirely when the array empties. (3) src/components/admin/ShiftGrid.tsx builds `absentNames = new Set(absences[date] ?? [])` per date column (line 125) and passes it to ShiftCell as `absentNames` prop. src/components/admin/ShiftCell.tsx renders each <option disabled={absentNames.has(person.name)}> plus an '(assente)' suffix (line 61-64) -- so toggling absence in the panel immediately disables that person's option in the grid for that date. (4) `absences` type is Record<string,string[]>, identical to MonthData.absences in src/types/index.ts (line 34: 'date -> nomi assenti'), so the same shape persists directly into the exported month model with no transform needed. Build: `.\\init.ps1 build` -> tsc -b && vite build succeeded (dist output generated). Tests: `npm test` -> 30/30 passed across 6 files (no dedicated AbsencePanel test file exists, but nothing regressed).",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-03T09:27:54Z"
-    },
-    {
-      "id": "618525a8-27fb-4b1d-a172-425b0c4a9a9e",
-      "title": "feat: admin StatsPanel + WarningsPanel (conteggi live + warning)",
-      "description": "StatsPanel: lista persone con numero turni assegnati nel mese, ricalcolo live (util shiftStats). WarningsPanel: elenco warning non bloccanti (slot vuoti, doppione stesso giorno, assente assegnato) da shiftStats; non impediscono l'export. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.4, 6.5). Dipendenze: shiftStats, ShiftGrid, AbsencePanel.",
-      "status": "done",
-      "validation": {
-        "criteria": "VERIFIED (independent review). (1) Conteggi live: AdminEditor.tsx builds monthData via useMemo([title,month,shifts,absences]) then stats via useMemo(() => shiftStats(config, monthData), [config, monthData]) (lines 141-149) -- shifts is itself derived live from `selections` (the grid's source of truth) via shiftsFromSelections, so any assignment/removal in ShiftGrid or any AbsencePanel toggle changes `shifts`/`absences` -> monthData -> stats recomputes -> StatsPanel/WarningsPanel re-render with new counts, confirmed by reading the full useMemo dependency chain. (2) shiftStats.ts exports shiftStats(config: AppConfig, month: MonthData): {counts: ShiftCount[], warnings: ShiftWarning[]} -- exact signature and return shape match the AdminEditor call site (stats.counts, stats.warnings consumed directly by StatsPanel/WarningsPanel props). (3) All 3 warning kinds present and surfaced: WarningType.EMPTY_SLOT (role under-filled vs config.roleSlots), DUPLICATE_SAME_DAY (same name twice same date), ABSENT_ASSIGNED (assigned while absent) -- all computed in shiftWarnings() and all 3 have entries in WarningsPanel.tsx's WARNING_LABELS map (Slot vuoto / Doppia assegnazione / Assente ma assegnato), each covered by its own passing unit test in shiftStats.test.ts. (4) Non-blocking confirmed: grepped src/components/admin for `disabled`/`stats.warnings`/`warnings.length` -- the only `disabled` usage is ShiftCell.tsx's dropdown option (absentee greying, unrelated to warnings); WarningsPanel only uses warnings.length to switch between an empty-state message and the list, never to disable anything; no gating of ShiftGrid, AbsencePanel, or any export/action control based on stats.warnings anywhere in the codebase. (5) `.\\init.ps1 build` succeeded (tsc -b && vite build, dist/ generated, no errors). `npm test` succeeded: 6 test files, 30 tests passed, including dedicated shiftCounts and shiftWarnings (all 3 kinds + clean-dataset) tests in src/utils/__tests__/shiftStats.test.ts.",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-03T09:32:45Z"
-    },
-    {
-      "id": "d649588c-dadd-412f-9a6b-02138a7af5e7",
-      "title": "feat: AdminEditor wiring (autosave bozza, export, import)",
-      "description": "Collegare i pezzi in AdminEditor: autosave della bozza MonthData in localStorage per mese (util draftStorage); all'apertura, se esiste bozza, proporre Riprendi/Scarta. Bottone Esporta => scarica turni.json (util exportImport). Bottone Importa turni.json => carica file dal disco e ripopola shifts+absences. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.6). Dipendenze: draftStorage/exportImport, ShiftGrid, AbsencePanel, MonthPicker.",
-      "status": "done",
-      "validation": {
-        "criteria": "VERIFIED (independent review): (1) Autosave - AdminEditor.tsx useEffect (line ~180) calls draftStorage.saveDraft(monthData) on every change (skips while a draft prompt is pending or grid is empty); loadDraft(month) computed as pendingDraft (useMemo) surfaces a Riprendi/Scarta banner when a draft exists and no in-memory state yet; Riprendi calls selectionsFromShifts(config, draft.shifts) + sets absences from draft.absences; Scarta calls clearDraft(month). draftStorage.ts persists under key `ww-turni-draft-<month>`, fails silently if localStorage unavailable. (2) Export - handleExport calls exportImport.exportMonthData(monthData), which serializes {title, month, shifts, absences} via JSON.stringify(month,null,2) and triggers a Blob+anchor download named turni.json; shape matches public/turni.json exactly (verified field names/order). (3) Import - handleImportFile reads the file via FileReader, calls importMonthData (= parseMonthData) which validates title/month/shifts/absences and throws descriptive Errors on malformed input (all caught in try/catch, surfaced as importError state, never crashes); on success reverse-maps imported.shifts via ShiftGrid.selectionsFromShifts(config, shifts) into the flat selections map and sets absences, then jumps to imported.month. (4) Round-trip test at src/components/admin/__tests__/ShiftGrid.test.ts asserts shiftsFromSelections(dateColumns, rows, selectionsFromShifts(config, shifts)) deep-equals the original multi-date, multi-role `shifts` array (genuine inverse-function assertion, plus edge cases: first-free-slot fill order, dropped overflow assignment, empty input). Also src/utils/__tests__/exportImport.test.ts covers serialize/parse round-trip and malformed-field error messages. (5) `.\\init.ps1 build` succeeded (tsc -b && vite build, dist/ generated). `npm test` (vitest run): 7 test files, 34/34 tests passed, including the ShiftGrid round-trip test. All 4 acceptance criteria confirmed met.",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-03T09:45:12Z"
-    },
-    {
-      "id": "7646605c-d01b-4a39-99bc-557834f8651a",
-      "title": "docs: update ARCHITECTURE.md and AGENTS.md for new model + admin",
-      "description": "Aggiornare documentazione: ARCHITECTURE.md (split config/turni, rotta admin hash, componenti admin, flusso fetch+merge, Vitest); AGENTS.md se cambia lo stack (Vitest, script test). Documentare la scelta della rotta admin non protetta. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md. Dipendenze: ultima, dopo comportamento stabile.",
-      "status": "done",
-      "validation": {
-        "criteria": "PASS (verifica indipendente). docs/ARCHITECTURE.md: sez.3 documenta lo split config.json (stabile: validDayOfWeek/availableRoles/roleSlots/availableTeamMembers con color) vs turni.json (per mese: title/month/shifts/absences, NIENTE color/roster/giorni validi), con mergeConfig che risolve il color per name (fallback 'gray'); sez.4 documenta #/admin come hash route non protetta 'scelta consapevole'; sez.5/6 elencano i componenti admin reali (AdminEditor, MonthPicker, ShiftGrid, ShiftCell, AbsencePanel, StatsPanel, WarningsPanel) e gli util (dateFormatter, iconMapper, monthDates, mergeConfig, shiftStats, draftStorage, exportImport) - confermato 1:1 con `ls src/components/admin/` e `ls src/utils/`; sez.2 descrive il flusso fetch parallelo + merge della PublicView; sez.8 documenta Vitest (`npm test` -> `vitest run`) con elenco dei file di test, confermato in package.json (script 'test': 'vitest run', dep vitest 4.1.9). Grep mirato su ARCHITECTURE.md e AGENTS.md per riferimenti obsoleti (color/availableTeamMembers/validDayOfWeek/availableRoles descritti come parte di turni.json): NESSUNO trovato - questi campi compaiono solo nel contesto di config.json, coerente con public/turni.json reale (contiene solo title/month/shifts/absences) e public/config.json reale (contiene validDayOfWeek/availableRoles/roleSlots/availableTeamMembers con color). AGENTS.md coerente: menziona Vitest/npm test come verifica aggiuntiva a init.ps1 build, route admin non protetta, nessuna contraddizione. Sanity: `.\\init.ps1 build` OK (tsc -b && vite build, dist/ generato); `npm test` OK (7 file di test, 34 test passati).",
-        "state": "pass"
-      },
-      "created_at": "2026-07-02T17:28:59Z",
-      "updated_at": "2026-07-03T09:51:33Z"
-    },
-    {
-      "id": "2bafd2e4-2aa4-40a7-b2b4-8ebb1319c661",
-      "title": "chore: branch + fondamenta design system (Call Sheet)",
-      "description": "Fondamenta del design system Call Sheet. In tailwind.config.js sostituire i token: neutri ink caldo (ink-950 #17151C, ink-800 #2A2733, ink-600 #4A4652, ink-400 #8B8794, line #E9E6E1, paper #FBFAF9, surface #FFFFFF), brand viola liturgico (brand-600 #5A4B9C, brand-700 #4A3D85, brand-50 #EEEBF6), live/oggi oro (live #E0A43B, live-50 #FBF2DE), semantici (positive #3B8A6B, attention #C4623C, +50). Ridefinire i 10 colori-persona come coppia -500 + -100/-50 (tinta con testo ink scuro), MAI fill pieno con testo bianco. Aggiungere scala type reale (display/title/heading/body/caption/mono-num), scala radius (sm6/md10/lg14/pill), shadow (card/raised/overlay). In index.html sostituire i Google Fonts con Bricolage Grotesque (600-800), Hanken Grotesk (400-600), Space Mono. Rimuovere token morti (accent inutilizzati, text-title, text-body). Solo tema chiaro. Prima issue, base per tutte le altre.",
-      "status": "done",
-      "validation": {
-        "state": "pass",
-        "criteria": "VERIFIED (independent): tailwind.config.js has ink.{950,800,600,400}, line, paper, surface, brand.{50,600,700}, live.{DEFAULT,50}, positive.{DEFAULT,50}, attention.{DEFAULT,50}, and all 10 person-* scales (yellow/blue/green/red/orange/pink/purple/cyan/brown/gray) each with {50,100,500}. fontFamily sans=Hanken Grotesk, display=Bricolage Grotesque, mono=Space Mono. Dead fontSize keys title/body removed from config; grep src for text-title/text-body = 0 hits. accent-success/info/warning legacy aliases still resolve (used in WarningsPanel/PublicView/ShiftCard/TeamSummary; confirmed present in built CSS). index.html Google Fonts link loads Bricolage Grotesque(600;700;800) + Hanken Grotesk(400;500;600;700) + Space Mono(400;700). src/index.css body uses bg-paper text-ink-800, confirmed resolved in dist CSS (rgb(251 250 249)=paper, rgb(42 39 51)=ink-800) plus all 3 font-families present in output. init.ps1 build: tsc -b && vite build succeeded, 1753 modules transformed, built in 6.81s. npm test: 7 test files passed (7), 34 tests passed (34)."
-      },
-      "created_at": "2026-07-03T14:43:14Z",
-      "updated_at": "2026-07-03T14:55:35Z"
-    },
-    {
-      "id": "7058baec-44d8-4583-9396-f236b4130378",
-      "title": "feat: libreria primitivi UI snelli (cva)",
-      "description": "Creare i primitivi riutilizzabili in src/components/ui/ usando class-variance-authority (gia installato, oggi inutilizzato) e cn() (src/lib/utils.ts): Button (variant primary/ghost/danger, size), Chip (pallino colore-persona + label), Card (estende ui/card.tsx esistente, allinea da zinc a ink), Select (wrapper stilizzato del native select), Panel (contenitore sezione con header), Meter (barra completezza x su y). Creare src/utils/personColor.ts come UNICA fonte colore-persona: personColor(color) restituisce dot/tint/ring con fallback gray, che sostituira le due color-map duplicate. Nessuna dipendenza nuova. Dipende da: fondamenta token.",
-      "status": "done",
-      "validation": {
-        "state": "pass",
-        "criteria": "VERIFIED independently (feat/design-system, 2026-07-03). Files present & typed: src/components/ui/{Button,Chip,Select,Panel,Meter,card}.tsx + index.ts barrel re-exporting all six; all typed via React.forwardRef + explicit Props interfaces extending HTML attribute types, no ': any' in src/components/ui. cva: imported+called in Button.tsx (buttonVariants) and Chip.tsx (chipVariants) - 2 usages, satisfies >=1. personColor: src/utils/personColor.ts exports typed PersonColorName union (10 values: yellow/blue/green/red/orange/pink/purple/cyan/brown/gray) and personColor(color): PersonColorClasses with static literal Tailwind strings per color (dot/tint/ring/text), unknown input falls back to PERSON_COLOR_MAP.gray. CSS-emission proof: ran '.\\init.ps1 build' (tsc -b && vite build) -> succeeded, dist/assets/index-*.css produced; grepped dist CSS and confirmed all 10 colors present as both bg-person-<name>-500 and ring-person-<name>-500 (e.g. bg-person-blue-500, ring-person-gray-500), i.e. JIT did not purge them (tailwind.config.js content glob src/**/*.{js,ts,jsx,tsx} covers personColor.ts). Build: green (1753 modules transformed, built in 4.78s). npm test: green - 7 test files passed, 34 tests passed."
-      },
-      "created_at": "2026-07-03T14:43:14Z",
-      "updated_at": "2026-07-03T15:03:32Z"
-    },
-    {
-      "id": "4e390d38-7ea5-4365-b76c-9fcd1397ea3a",
-      "title": "refactor: rimozione dead code UI",
-      "description": "Pulizia del layer UI. Togliere il file starter Vite morto src/App.css (non importato). Rimuovere le due color-map duplicate (TeamMemberCard colorMap + admin/ShiftCell CELL_COLOR_CLASSES) sostituendole con personColor. Unificare lo spinner duplicato inline (PublicView + AdminEditor) collegando il componente orfano LoadingState.tsx. Unificare i due meccanismi di animation-delay (utilities animate-delay in index.css vs inline style) in uno solo. Dipende da: primitivi + personColor.",
-      "status": "done",
-      "validation": {
-        "state": "pass",
-        "criteria": "Verified independently: src/App.css deleted, no reference to it in src/ or index.html (grep clean). No colorMap/CELL_COLOR_CLASSES duplicates in src (grep clean); personColor() used in TeamMemberCard.tsx, admin/ShiftCell.tsx (and ui/Chip.tsx). LoadingState.tsx (spinner via animate-spin) imported+rendered in both PublicView.tsx:72 and admin/AdminEditor.tsx:250; no other inline animate-spin block found. animate-delay- class: zero usages in src; index.css has no .animate-delay-* utility block (only .sr-only + focus\\:not-sr-only remain); single remaining mechanism is inline style={{ animationDelay }} in PublicView.tsx:116 and ShiftCard.tsx:97. Build: `.\\init.ps1 build` succeeded (tsc -b && vite build, dist/ generated, 3.88s). Tests: `npm test` -> vitest run: 7 files passed, 34/34 tests passed."
-      },
-      "created_at": "2026-07-03T14:43:14Z",
-      "updated_at": "2026-07-03T15:09:46Z"
-    },
-    {
-      "id": "044a5bbe-cfb4-46f9-9828-273b4476b9f2",
-      "title": "feat(public): ticket servizio ridisegnato",
-      "description": "Ridisegnare ShiftCard/TeamMemberCard/TeamSummary secondo il design Call Sheet: colori-persona addomesticati (pallino+tinta, testo ink scuro, mai fill full-bleed con testo bianco), lineup raggruppata per strumento (Chitarra/Basso/Batteria/Voce/Tastiera) con Chip, numero-giorno mono, meter di completezza (assegnati su totali) discreto. Usa i primitivi (Card/Chip/Meter) e personColor. Mobile-first. Dipende da: primitivi, dead-code cleanup.",
-      "status": "done",
-      "validation": {
-        "criteria": "VERIFIED PASS (independent, feat/design-system, uncommitted working tree):\n1) Lineup grouped by instrument: ShiftCard.tsx L81-83 builds groupedByRole via ROLE_ORDER.map(role => ({role, members: shift.team.filter(m => m.role === role)})).filter(...); L91-111 renders one role label (Icon + roleLabels[role]) per group, members mapped as chips underneath - role text rendered ONCE per group, not per person.\n2) Role not duplicated per person: TeamMemberCard.tsx renders only <Chip color={personColorName} label={memberName} .../> (dot + name), no role text/badge anywhere in the component (confirmed by full read + grep).\n3) No full-bleed white-on-saturated fill: grep 'bg-team-|text-white' over ShiftCard.tsx/TeamMemberCard.tsx/TeamSummary.tsx = 0 matches. Chip.tsx applies swatch.tint (person-*-50) as bg + fixed text-ink-800, dot is a small 2x2 circle (swatch.dot, person-*-500) - never a full-bleed saturated fill with white text.\n4) Contrast AA: ink-800 = #2A2733 (tailwind.config.js L23-24) on person-*-50 tints (L54-63). Computed WCAG relative-luminance contrast ratios: text-ink-800 on bg-person-yellow-50 (#FDF8EF) = 13.8:1; on bg-person-gray-50 (#F3F4F5) = 13.3:1; on bg-person-cyan-50 (#EDF8FA) = 13.5:1 (spot-checked lightest/mid/darkest-looking tints). All far exceed AA 4.5:1 (and clear AAA 7:1) since all person tints are the very light *-50 shade.\n5) Completeness meter present: ShiftCard.tsx L116-120 renders <Meter value={shift.team.length} max={totalExpected} />, totalExpected = sum(config.roleSlots) (L39-41), gated on totalExpected>0.\n6) Data flow intact: PublicView.tsx unchanged in essentials - fetches config.json/turni.json, mergeConfig, sortedShifts/filteredShifts via useMemo, passes shift/highlightName/availableTeamMembers/roleSlots to ShiftCard (L120-125); QuickFilter/filter logic untouched.\n7) Build: '.\\init.ps1 build' -> 'Build succeeded. Static output generated in dist/.' (tsc -b && vite build, 1762 modules, built in 3.56s). Tests: 'npm test' (vitest run) -> 7 test files passed, 34 tests passed, 0 failed.\nAll 6 functional criteria + build/test gate verified independently by direct file reads and command runs. VERDICT: PASS.",
-        "state": "pass"
-      },
-      "created_at": "2026-07-03T14:43:14Z",
-      "updated_at": "2026-07-03T15:18:24Z"
-    },
-    {
-      "id": "8861536b-d691-4259-a9ab-3dbc23e0269e",
-      "title": "feat(public): hero Prossimo servizio + stato oggi/passato",
-      "description": "Vista pubblica: mettere in evidenza in cima il PROSSIMO servizio (prima data maggiore o uguale a oggi) come hero del design (tesi: aprire su quando suono). Marcare Oggi con il token live (oro). Attenuare (dim/opacity) le date passate. Header slim sticky con titolo mese. Dipende da: ticket servizio ridisegnato.",
-      "status": "done",
-      "validation": {
-        "criteria": "VERIFIED independently 2026-07-03. (1) Hero: PublicView.tsx L78-88 computes nextShiftIndex via filteredShifts.findIndex(shift.date >= today), today from getTodayDateString() (local Y/M/D, not toISOString) - confirmed in dateFormatter.ts L8-14. Hero rendered with variant='hero' (L136-143), excluded from restShifts via filter(idx!==nextShiftIndex) so no duplication. Fallback 'Nessun servizio in programma' when no hero but shifts exist (L146-150) and EmptyState when list empty (L171-180). (2) Today marker: ShiftCard.tsx L67-72 uses bg-live-50, text-live, bg-live tokens for 'Oggi' pill - gold live token confirmed. (3) Past dimming: ShiftCard.tsx L53 applies opacity-70 when isPast (non-hero only, correct since hero is always today/future); ordering stays chronological via sortedShifts sort in PublicView L51-56. (4) Header.tsx: sticky top-0 z-20 (L20), border-line + backdrop-blur (L20), shadow-card added on scroll via isScrolled state (L12,21), font-display heading title (L25-27), slim py-3 (L24). (5) Date-compare robustness confirmed by code read: getTodayDateString builds from now.getFullYear/getMonth/getDate, never toISOString. Manually traced with today=2026-07-03 against public/turni.json dates [05,07,12,14,19,21,26,28]: first date >= today is 2026-07-05, hero resolves correctly to index 0. (6) Build: '.\\init.ps1 build' succeeded (tsc -b && vite build, 1762 modules, dist/ generated, no errors). Tests: 'npm test' -> Test Files 7 passed (7), Tests 34 passed (34).",
-        "state": "pass"
-      },
-      "created_at": "2026-07-03T14:43:14Z",
-      "updated_at": "2026-07-03T15:26:39Z"
-    },
-    {
-      "id": "7f67e72a-c1d3-4930-a10b-3a4a3fd4e008",
-      "title": "feat(public): personalizzazione Trova me",
-      "description": "Ridisegnare QuickFilter: la selezione di una persona porta i suoi servizi ad avere un nastro oro \"Tu suoni: {ruolo}\" e attenua gli altri membri/servizi; chip \"Filtro: {nome}\" con clear. Il dialog usa i primitivi e i token. Tap target almeno 44px. Dipende da: hero + ticket.",
-      "status": "done",
-      "validation": {
-        "state": "pass",
-        "criteria": "VERIFIED (independent read, feat/design-system): (1) ShiftCard.tsx L52-79: userAssignment = shift.team?.find(m => m.name === highlightName); ribbon renders \"Tu suoni: {roleLabels[userRole]}\" on bg-live (gold #E0A43B, tailwind.config.js L37-39). (2) TeamMemberCard.tsx L34-37: isDimmed -> opacity-50 on non-matching chips; ShiftCard.tsx L62/L70: isDeemphasized -> opacity-70 on non-matching cards (hero exempt); shifts are never removed, emphasis-only approach as allowed by criteria. (3) PublicView.tsx L140: onClick={() => setFilterName(\"\")} resets filterName -> highlightName prop empties -> isFiltering false everywhere, full state restored; clear X present both in QuickFilter pill (L109-117) and PublicView banner (L137-145). (4) QuickFilter.tsx: role=\"dialog\" L131, aria-modal=\"true\" L132; focus moves to closeButtonRef on open (L52); Tab/Shift+Tab trap wraps between first/last focusable in dialog (L61-77); Escape closes (L55-59); backdrop onClick closes (L123-127); previouslyFocused captured (L51) and refocused on cleanup/close (L83). (5) Build: `.\\init.ps1 build` succeeded, tsc -b + vite build, dist/ generated (259.05 kB JS, 25.80 kB CSS). Tests: `npm test` -> Test Files 7 passed (7), Tests 34 passed (34)."
-      },
-      "created_at": "2026-07-03T14:44:39Z",
-      "updated_at": "2026-07-03T15:36:33Z"
-    },
-    {
-      "id": "bf1e0974-c5c8-402d-959b-39e60e59a826",
-      "title": "feat(public): breakpoint responsive",
-      "description": "Introdurre responsivita reale nella vista pubblica: mobile-first con prefissi sm/md/lg che passano a layout multi-colonna su schermi larghi (oggi zero breakpoint, gestito solo via container max-width). Verificare assenza di overflow orizzontale ai vari viewport. Dipende da: ticket/hero/quickfilter.",
-      "status": "done",
-      "validation": {
-        "state": "pass",
-        "criteria": "VERIFIED (independent): (1) Real breakpoints present - grep 'md:|lg:|xl:' in PublicView.tsx (lines 115,172) and Header.tsx (line 24): main/header use max-w-2xl md:max-w-4xl xl:max-w-6xl; previously zero. (2) Multi-column beyond 768px: PublicView.tsx:172 shift grid = 'grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3' -> 1 col mobile, 2 col >=768px (md), 3 col >=1280px (xl). (3) No horizontal overflow: containers use max-w-* + mx-auto + px-4 (no fixed px widths wider than viewport); ShiftCard role rows use 'flex flex-col gap-1.5 sm:flex-row' with flex-wrap on chip containers; TeamMemberCard/Chip and TeamSummary badges wrap via flex-wrap; filter banner text uses 'min-w-0 break-words'; QuickFilter dialog uses 'w-72 max-w-[calc(100vw-3rem)]' so it never exceeds viewport at 320/390/768/1024. (4) Tap targets >=44px: QuickFilter trigger button 'min-h-[44px]', filter-active pill 'min-h-[44px]', all icon-only close buttons 'h-9 min-h-[44px] w-9 min-w-[44px]', dialog member rows 'min-h-[44px]'; filter-banner remove button also 'min-h-[44px]'. (5) Build: 'tsc -b && vite build' succeeded (dist/ generated, 259KB JS / 26KB CSS gzip). Tests: vitest run -> 7 test files passed, 34 tests passed. All criteria confirmed by direct file reads and real command output; no edits made to source."
-      },
-      "created_at": "2026-07-03T14:44:48Z",
-      "updated_at": "2026-07-03T15:43:04Z"
-    },
-    {
-      "id": "a05942a0-9fbb-4633-a8ac-dd4d19d9885a",
-      "title": "feat(admin): restyle griglia",
-      "description": "Ridisegnare ShiftGrid/ShiftCell (desktop-first): colonna Ruolo + header date STICKY durante lo scroll; celle select custom (usa primitivo Select) con pallino+tinta persona e testo scuro; righe zebra; densita compatta; coerenza coi token del design system. Logica pura (shiftsFromSelections ecc.) invariata. Dipende da: primitivi, personColor, cleanup.",
-      "status": "done",
-      "validation": {
-        "state": "pass",
-        "criteria": "VERIFIED independently: (1) Sticky - corner th has sticky left-0 top-0 z-30 bg-surface; date header ths have sticky top-0 z-20 bg-surface; Ruolo column body ths have sticky left-0 z-10 plus zebra bg (bg-surface/bg-paper), all opaque hex colors (surface=#FFFFFF, paper=#FBFAF9), correct z-stack corner greater than header greater than rowhead. (2) ShiftCell.tsx imports Select from @/components/ui/Select, renders color dot span (swatch.dot) absolutely positioned over left edge, select bg tinted via swatch.tint+swatch.text (text-ink-800, dark ink), classes merged via cn/twMerge so tint overrides base bg-surface; absent people keep disabled attr plus literal (assente) suffix text; empty cell falls back to bg-surface/text-ink-800. (3) ShiftGrid.tsx alternates zebraClass = rowIndex mod 2 ? bg-paper : bg-surface per row; compact padding px-1.5 py-1 on td, px-3 py-1.5 on row header, border-spacing-0. (4) Pure helpers buildSelectionKey, buildGridRows, shiftsFromSelections, selectionsFromShifts read byte-identical to pre-change logic (only JSX/className lines touched in git diff); src/components/admin/__tests__/ShiftGrid.test.ts has zero diff vs HEAD and was not touched. (5) Build: init.ps1 build -> tsc -b and vite build succeeded, dist output generated (259.74 kB js, 26.62 kB css). Tests: npm test -> 7 test files, 34 tests, all passed (605ms). ShiftGrid.test.ts specifically: 4/4 passed (selectionsFromShifts round-trip, first-free-slot fill, drop-when-no-free-slot, empty-shifts-array)."
-      },
-      "created_at": "2026-07-03T14:45:00Z",
-      "updated_at": "2026-07-03T15:52:06Z"
-    },
-    {
-      "id": "827a9407-74a6-4045-9d37-a2205e79dad0",
-      "title": "feat(admin): warning riepilogati e raggruppati",
-      "description": "Ridisegnare WarningsPanel: invece di molti banner amber impilati (oggi oltre 40 su un mese vuoto), mostrare una barra di riepilogo con conteggi per tipo (Slot vuoto, Doppia assegnazione, Assente ma assegnato) e dettaglio espandibile/collassabile. Usare token semantici (attention rust) non muri amber. Resta non-bloccante per l esportazione. Dipende da: primitivi/token.",
-      "status": "done",
-      "validation": {
-        "criteria": "VERIFIED independently. (1) Summary bar renders 3 Chip components (one per WarningType: Slot vuoto/Doppia assegnazione/Assente ma assegnato) with counts via groups.map, wrapped in role=list -- an empty month dominated by EMPTY_SLOT shows one compact chip row, not 40 stacked banners. (2) Each type group with items.length>0 renders a real <button type=button> with aria-expanded={isExpanded} and aria-controls={panelId}, collapsed by default (useState<Partial<Record<WarningType,boolean>>>({})), reveals a <ul> with per-warning.message (date/role) detail on click. (3) grep amber- in WarningsPanel.tsx = 0 matches; uses bg-attention-50/text-attention/bg-attention throughout; empty state (Nessun warning) uses bg-positive-50/text-positive. (4) Non-blocking confirmed: WarningsPanel only takes warnings prop (read-only), no onExport/disabled wiring; AdminEditor.tsx handleExport button and Importa turni.json label/input have no disabled or warnings-based gating -- export/import always available regardless of stats.warnings. (5) git diff main...feat/design-system -- src/utils/shiftStats.ts is empty (file untouched); AdminEditor.tsx line 245 computes stats via shiftStats(config, monthData) unchanged and line 369 passes <WarningsPanel warnings={stats.warnings} />. (6) .\\init.ps1 build: tsc -b && vite build succeeded, dist/ generated (index.html, css, js bundles), no errors. npm test (vitest run): Test Files 7 passed (7), Tests 34 passed (34), Duration ~628ms.",
-        "state": "pass"
-      },
-      "created_at": "2026-07-03T14:45:14Z",
-      "updated_at": "2026-07-03T15:59:14Z"
-    },
-    {
-      "id": "e675f4fb-1b35-43e9-a925-29cd3e7784fb",
-      "title": "feat(admin): restyle assenze + stats + toolbar",
-      "description": "Ridisegnare AbsencePanel (chip toggle compatte al posto della griglia di checkbox nativi), StatsPanel (barra con distribuzione conteggi per persona), MonthPicker e toolbar esporta/importa coerenti coi primitivi (Button/Select/Panel). Logica invariata. Dipende da: primitivi, restyle griglia.",
-      "status": "done",
-      "validation": {
-        "state": "pass",
-        "criteria": "VERIFIED independently: (1) AbsencePanel.tsx L65-87: real <button type=button aria-pressed={isAbsent}> chips per member/date, onClick={() => onToggle(date, member.name)} - same onToggle(date,name) contract, min-h-32px, focus-visible ring, person dot via personColor + Check icon when pressed. (2) StatsPanel.tsx L30-55: rows sorted desc by count (localeCompare tiebreak), one row per roster member using Meter primitive (bar width prop. to max count via aria-valuenow/valuemax), count shown via Meter's own font-mono label. (3) MonthPicker.tsx L62-68: month select uses Select primitive from ui/Select; year input hand-styled (plain number input, no Select equivalent needed). Toolbar in AdminEditor.tsx: Esporta uses <Button variant=primary>, Riprendi/Scarta use <Button variant=primary/ghost>; Importa is a <label> wrapping the hidden file input (must stay a label to trigger native file picker) hand-styled to visually match Button ghost/md (does not literally import buttonVariants but mirrors its classes) - minor stylistic deviation, non-blocking. (4) CRITICAL: git diff main -- AdminEditor.tsx confirms handleExport (calls exportMonthData(monthData), unchanged) and handleImportFile (FileReader/reader.onload/onerror, importMonthData, unchanged) bodies untouched by this diff - only JSX/className churn. Hidden <input type=file accept=.json,application/json onChange={handleImportFile}> preserved. (5) No raw amber/zinc/gray/slate found in AbsencePanel/StatsPanel/MonthPicker/AdminEditor (grep confirmed); tokens used: attention (absent chip), positive/brand-600 (Meter fill), live (draft banner), ink-*/line/surface/paper throughout; person dots via personColor(member.color) in both AbsencePanel and StatsPanel. (6) Build: '.\\init.ps1 build' -> 'Build succeeded. Static output generated in dist/.' (tsc -b && vite build, 1762 modules, no errors). Tests: 'npm test' -> vitest run: Test Files 7 passed (7), Tests 34 passed (34)."
-      },
-      "created_at": "2026-07-03T14:45:26Z",
-      "updated_at": "2026-07-03T16:06:56Z"
-    },
-    {
-      "id": "f0338027-3524-471c-986a-2ac9b6e2086d",
-      "title": "a11y: audit contrasto/focus/motion/target",
-      "description": "Passata di accessibilita su entrambe le viste: focus-visible su tutti gli elementi interattivi (oggi solo alcuni form admin); prefers-reduced-motion rispettato (disattiva fade/slide); contrasto testo/fondo almeno WCAG AA sui colori-persona e semantici; tap target almeno 44px. Dipende da: tutte le issue di UI.",
-      "status": "done",
-      "validation": {
-        "state": "pass",
-        "criteria": "Independently verified on feat/design-system. (1) FOCUS: src/index.css:32-35 has a global :where(a,button,select,input,textarea,[tabindex]):focus-visible{outline:2px solid brand-600;outline-offset:2px} fallback. Spot-checked 4 previously-unstyled controls, all now carry explicit focus-visible ring/outline: QuickFilter.tsx:165 member row button (role=option) has focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2; AdminEditor.tsx:320 date-remove x button has focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1; WarningsPanel.tsx:94 expander button has the same ring; PublicView.tsx:118 skip-link has focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2. (2) REDUCED MOTION: src/index.css:45-62 @media (prefers-reduced-motion: reduce) neutralizes animation/transition durations app-wide AND additionally forces .animate-fade-in/.animate-fade-up/.animate-slide-in { animation:none !important; opacity:1 !important; transform:none !important; } so content is not left invisible when the keyframes (opacity:0 start) are cut short. Confirmed present exactly as required. (3) CONTRAST: grepped all -50 tint usages (live-50/attention-50/positive-50) across ShiftCard.tsx, TeamSummary.tsx, WarningsPanel.tsx, AdminEditor.tsx, AbsencePanel.tsx -- all small-text labels on those tints now use text-ink-800; the raw text-live/text-attention/text-positive classes remain only on icons (aria-hidden, 3:1 graphical threshold, not 4.5:1 text threshold). Computed WCAG contrast from tailwind.config.js hex values (relative luminance formula): ink-800 #2A2733 on live-50 #FBF2DE = 13.1:1 (pass AA 4.5:1, also passes AAA 7:1); ink-800 #2A2733 on attention-50 #F7E9E2 = 12.3:1 (pass AA/AAA). A third sample, ink-800 on positive-50 #E7F1EC, computed at 12.7:1, also pass. (4) TAP TARGETS: QuickFilter.tsx -- trigger button min-h-[44px] (line 95), clear-filter pill button min-h-[44px] w-9 min-w-[44px] (line 114), dialog close button min-h-[44px] min-w-[44px] (line 145), each member row button min-h-[44px] w-full (line 165). Confirmed all >=44px. (5) BUILD/TEST: .\\init.ps1 build succeeded (tsc -b && vite build, built in 3.56s, dist/ generated, no errors). \npm test (vitest run) => Test Files 7 passed (7), Tests 34 passed (34), 0 failed. All criteria met."
-      },
-      "created_at": "2026-07-03T14:45:37Z",
-      "updated_at": "2026-07-03T16:19:04Z"
-    },
-    {
-      "id": "ebeac566-7000-4ed6-988a-5deb6aa985e8",
-      "title": "chore: QA visiva Playwright",
-      "description": "QA visiva finale secondo docs/UI_TESTING.md: npm run dev, screenshot vista pubblica (390/768/1440) e admin (1440) via skill Playwright, confronto con lo stato attuale (baseline), verifica nessuna regressione. Screenshot salvati nello scratchpad, MAI nel repo, cancellati a fine verifica. Dipende da: tutte le issue di UI.",
-      "status": "done",
-      "validation": {
-        "state": "pass",
-        "criteria": "PASS. Screenshot acquisiti via Playwright CLI (chromium headless) su dev server :5199 ai 4 viewport: pubblica 390 (1 colonna), pubblica 768, pubblica 1440 (hero full-width + griglia 3 colonne), admin 1440. Confronto con baseline di inizio sessione: nessuna regressione, trasformazione coerente. Pubblica: header sticky, hero Prossimo servizio (DOMENICA 5, meter 6/9), lineup per strumento con chip pallino+tinta testo scuro (contrasto ok, niente white-on-fill), summary ruoli, stato Incompleto, FAB Trova me. Admin: toolbar brand (Esporta primary viola / Importa ghost), colonna RUOLO + header date sticky, celle Select stilizzate, Assenze a chip toggle, Conteggio turni a barre di distribuzione, Warning ridotti da 40 banner a 3 chip riepilogo + gruppo collassabile. Screenshot salvati solo in scratchpad e cancellati; git status non contiene png/playwright/test-results (solo issues.json)."
-      },
-      "created_at": "2026-07-03T14:45:48Z",
-      "updated_at": "2026-07-03T16:25:31Z"
-    },
-    {
-      "id": "76d9ec03-2deb-4cf1-9ba9-c07b5c3c1afc",
-      "title": "docs: sezione design system",
-      "description": "Aggiornare docs/ARCHITECTURE.md e AGENTS.md con una sezione sul design system Call Sheet: token (ink/brand/live/semantici/colori-persona), primitivi UI (Button/Chip/Card/Select/Panel/Meter), personColor util, direzione estetica e firma (service ticket). Ultima issue. Dipende da: tutte.",
-      "status": "done",
-      "validation": {
-        "state": "pass",
-        "criteria": "Verifica indipendente OK. Token cross-checked 1:1 contro tailwind.config.js: ink 950/800/600/400, line, paper, surface, brand 50/600/700, live DEFAULT/50, positive DEFAULT/50, attention DEFAULT/50, person-<10 nomi>-{50,100,500}, alias legacy accent-*/team-* (tutti presenti, nessuna deviazione). font-display/sans/mono, text-display/heading/caption/mono-num, rounded-sm2/md2/lg2/pill, shadow-card/raised/overlay: tutti presenti in tailwind.config.js. Primitivi cross-checked contro src/components/ui/: Button.tsx (varianti primary/ghost/danger, size sm/md via cva, focus ring brand-600 - confermato), Chip.tsx (prop color risolta via personColor, tone neutral default - confermato), Select.tsx (border line, bg surface, focus ring brand-600, min-h 40px - confermato), Panel.tsx (title/description header opzionale - confermato), Meter.tsx (value/max, role=meter, bg-positive se pieno altrimenti bg-brand-600 - confermato), card.tsx (Card/CardHeader/CardTitle/CardContent, border line, bg surface, shadow-card - confermato). personColor() in src/utils/personColor.ts ha firma esatta personColor(color: string): PersonColorClasses con return {dot, tint, ring, text} come descritto. Pattern verificati nel codice reale: ShiftCard.tsx (hero variant per Prossimo servizio in PublicView.tsx, ribbon Tu suoni, raggruppamento per ruolo, dimming non-filtrato mai nascosto, Meter completezza), ShiftGrid.tsx (sticky su colonna date e colonna ruoli, confermato via grep), WarningsPanel.tsx (Chip riepilogo per tipo + gruppo dettaglio collassabile, confermato), StatsPanel.tsx (riga per persona con dot personColor + Meter proporzionale al max, confermato), src/index.css (fallback focus-visible outline brand-600 su :where(a,button,select,input,textarea,[tabindex]), blocco prefers-reduced-motion che azzera durate e forza le classi animate-* a stato finale - confermato 1:1 con sez. 9.5). Nessun token o componente citato nei docs risulta inesistente nel codice. git diff limitato a docs/ARCHITECTURE.md, AGENTS.md, issues.json (nessuna modifica a src/): confermato. .\\init.ps1 build -> verde (tsc -b + vite build, 1762 moduli, build succeeded)."
-      },
-      "created_at": "2026-07-03T14:46:04Z",
-      "updated_at": "2026-07-03T16:31:12Z"
-    }
-  ]
+﻿{
+    "project":  "MyProject",
+    "last_updated":  "2026-07-03T16:50:59Z",
+    "rules":  {
+                  "single_active_issue":  false
+              },
+    "status_legend":  {
+                          "backlog":  "Work has not begun.",
+                          "in_progress":  "The issue is the current active task.",
+                          "blocked":  "Work cannot continue until a documented blocker is resolved.",
+                          "done":  "The issue has been completed and verified."
+                      },
+    "tags":  [
+                 "feature",
+                 "bug",
+                 "chore",
+                 "documentation",
+                 "testing"
+             ],
+    "issues":  [
+                   {
+                       "id":  "00a46836-8296-4759-a612-61e70dc03856",
+                       "title":  "chore: add Vitest test runner",
+                       "description":  "Aggiungere Vitest per testare la logica pura (nessun runner installato oggi). Installare vitest come devDependency, aggiungere config Vitest, aggiungere script npm \u0027test\u0027. Includere un test smoke che passa. Non introdurre test UI. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 8). Dipendenze: nessuna. Base per le issue con test successive.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "Verified: vitest ^4.1.9 in package.json devDependencies; npm test (vitest run) -\u003e 1 test file, 1 test passed (src/utils/__tests__/smoke.test.ts); .\\init.ps1 build -\u003e tsc -b \u0026\u0026 vite build succeeded, dist/ generated.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-02T17:38:16Z"
+                   },
+                   {
+                       "id":  "e9df2a1c-0a22-4e81-a67e-d06ab5d2a1c7",
+                       "title":  "feat: split data model (config + turni.json migration + types)",
+                       "description":  "Separare config stabile dai dati del mese. 1) Creare public config.json con validDayOfWeek, availableRoles, roleSlots {guitar:1,keyboard:1,drums:1,bass:1,vocals:5}, availableTeamMembers (name/roles/color) presi dall\u0027attuale turni.json. 2) Migrare public turni.json al nuovo schema: rimuovere config e il campo color dagli elementi team; aggiungere month (YYYY-MM, es. 2026-06) e absences ({} vuoto); mantenere title e shifts. 3) Aggiornare src/types/index.ts con AppConfig, MonthData, ShiftAssignment, Shift, TeamMember, Role. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 3). Dipendenze: nessuna. La vista pubblica sara\u0027 adeguata in issue successiva; qui solo dati+tipi.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "config.json valido con roleSlots(guitar/keyboard/drums/bass/vocals) e 9 availableTeamMembers; turni.json nuovo schema con month=2026-06, absences={}, team senza color, nessun availableTeamMembers/validDayOfWeek/availableRoles residuo; src/types/index.ts esporta AppConfig e MonthData (+ShiftAssignment/Shift/Role/TeamMember); init.ps1 build OK (tsc -b + vite build succeeded).",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-02T17:42:10Z"
+                   },
+                   {
+                       "id":  "414f18fd-9fc9-46d9-8ec5-a1f63922b0fc",
+                       "title":  "feat: util mergeConfig (color per nome) + test",
+                       "description":  "Creare src/utils/mergeConfig.ts: dato AppConfig e MonthData, per ogni assegnazione risolve il color cercando name in config.availableTeamMembers, restituendo strutture pronte per la vista. Gestire nome assente in config (fallback colore neutro, nessun crash). Test Vitest: colore risolto correttamente; nome mancante gestito. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 5, 3.3). Dipendenze: Vitest, split modello dati.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "mergeConfig.ts resolves color via availableTeamMembers Map lookup with ?? FALLBACK_COLOR fallback (no throw) for missing names; mergeConfig.test.ts has 3 tests covering resolved color, missing-name fallback (asserts no-throw + FALLBACK_COLOR), and passthrough of title/month/absences; npm test: 10/10 passed (3 files); init.ps1 build: tsc -b + vite build succeeded.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-02T17:47:19Z"
+                   },
+                   {
+                       "id":  "64161f71-5159-4256-8460-8c8ed45c1976",
+                       "title":  "feat: util monthDates (date valide del mese) + test",
+                       "description":  "Creare src/utils/monthDates.ts: dato month (YYYY-MM) e validDayOfWeek (es. Friday,Sunday), genera l\u0027elenco ordinato delle date del mese che cadono in quei giorni (formato YYYY-MM-DD). Gestire i bordi mese. Fornire util per generare title italiano da month (es. Turni di Giugno 2026). Test Vitest: Giugno 2026 + Friday,Sunday =\u003e 05,07,12,14,19,21,26,28. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.1). Dipendenze: Vitest, tipi.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "Verified: monthDates(\"2026-06\",[\"Friday\",\"Sunday\"]) returns exactly the 8 expected dates in order (test asserts this); monthTitle(\"2026-06\") returns \"Turni di Giugno 2026\"; also covers May boundary, Feb short month, empty array cases. npm test: 2 files, 7/7 passed. init.ps1 build: tsc -b \u0026\u0026 vite build succeeded, dist/ generated.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-02T17:45:06Z"
+                   },
+                   {
+                       "id":  "c3240f3d-5fbe-4475-8ea0-84da20e79eda",
+                       "title":  "feat: util shiftStats (conteggi + warning) + test",
+                       "description":  "Creare src/utils/shiftStats.ts: 1) conteggio turni per persona nel mese (derivato). 2) warning non bloccanti: slot vuoti per ruolo/data, stessa persona assegnata due volte nello stesso giorno, persona assente (in absences) ma assegnata. Ritorna strutture usabili dai pannelli. Test Vitest per ciascun tipo di warning e per i conteggi. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.4, 6.5). Dipendenze: Vitest, tipi, roleSlots da config.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "shiftCounts sums per-person across shifts (verified 2-shift dataset -\u003e Diego=2, plus empty-month case); shiftWarnings detects EMPTY_SLOT (vocals under-filled vs roleSlots), DUPLICATE_SAME_DAY (same name twice same date), and ABSENT_ASSIGNED (name in absences[date] also assigned), plus a clean-dataset negative test. npm test: 4 files, 16 tests passed. .\\init.ps1 build: tsc + vite build succeeded.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-02T17:49:52Z"
+                   },
+                   {
+                       "id":  "bad6ae36-35dc-4b32-be22-6b7e29d4c1b0",
+                       "title":  "feat: util persistence (draft localStorage + export/import) + test",
+                       "description":  "Creare src/utils/draftStorage.ts (load/save/clear bozza MonthData in localStorage con chiave per mese, es. ww-turni-draft-2026-06) e src/utils/exportImport.ts (serializza MonthData e scarica turni.json via Blob/anchor; parse+valida un turni.json importato ripopolando shifts+absences). Test Vitest: round-trip serialize-\u003eparse identita\u0027; draft save-\u003eload identita\u0027 (mock localStorage). Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.6). Dipendenze: Vitest, tipi.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "draftStorage.ts: save/load/clear per-month key ww-turni-draft-\u003cmonth\u003e, silent no-op on missing/corrupt localStorage; exportImport.ts: serializeMonthData (pure JSON.stringify), parseMonthData validates title/month/shifts/absences shape and throws clear Errors on malformed input, exportMonthData does Blob+anchor download. Tests: draftStorage.test.ts (5 tests, mock MemoryStorage, round-trip+corrupt+clear) and exportImport.test.ts (9 tests, serialize-\u003eparse round-trip, invalid JSON/missing fields/array throw). npm test: 6 files, 30/30 passed. init.ps1 build: tsc -b + vite build succeeded.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-02T17:53:07Z"
+                   },
+                   {
+                       "id":  "0446acad-5a1c-4b53-88ae-26624226841b",
+                       "title":  "feat: hash routing minimale + dispatch route + admin shell",
+                       "description":  "Aggiungere src/hooks/useHashRoute.ts che legge window.location.hash e reagisce a hashchange. In App.tsx: hash root o vuoto =\u003e vista pubblica; hash admin =\u003e editor. Creare src/components/admin/AdminEditor.tsx come shell placeholder (riempita nelle issue successive). Nessuna libreria di routing. Admin non linkato dalla vista pubblica, nessuna protezione (scelta consapevole). Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 4). Dipendenze: tipi.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "useHashRoute.ts reads window.location.hash + hashchange listener (verified); App.tsx dispatches #/admin -\u003e AdminEditor, root/empty/other -\u003e PublicView (verified); AdminEditor.tsx is a placeholder shell (verified); package.json has no routing lib (react-router/wouter/etc absent); init.ps1 build passed (tsc -b \u0026\u0026 vite build, dist generated); npm test passed (6 files, 30 tests).",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-02T17:56:25Z"
+                   },
+                   {
+                       "id":  "7cf1e909-9fb6-41b9-87fa-366612f55160",
+                       "title":  "feat: public view refactor (fetch config+turni, merge, render)",
+                       "description":  "Aggiornare App/vista pubblica: fetch parallelo di config.json e turni.json, unione tramite util mergeConfig (colore per nome), poi render invariato di ShiftCard/TeamMemberCard/TeamSummary. Ordinamento turni per data invariato. Gestire errore se manca uno dei due file (stato d\u0027errore/EmptyState). QuickFilter e stati Loading/Empty invariati. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 5). Dipendenze: split modello dati, mergeConfig, routing.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "Verified independently: (1) src/components/PublicView.tsx fetches /config.json and /turni.json in parallel via Promise.all (lines 26-34), merges them with mergeConfig from src/utils/mergeConfig.ts (line 38), sorts merged shifts by date via useMemo (lines 49-54), and renders EmptyState error UI if either fetch fails (res.ok check throws, caught and sets error=true, lines 27-34 and 41-45, rendered at line 81-90). (2) public/config.json contains availableTeamMembers with color per member (Diego=yellow, Samuele=blue, etc), no shifts. public/turni.json contains title/month/shifts/absences for June 2026, shift.team entries have only name+role, no inline color field - matches new split schema. (3) Colors are resolved via mergeConfig: colorByName map built from config.availableTeamMembers (mergeConfig.ts lines 39-41), applied to each shift assignment with FALLBACK_COLOR fallback (line 48); confirmed by passing mergeConfig.test.ts (3 tests: resolves known color, falls back for unknown name, preserves title/month/absences). ShiftCard receives already-resolved color from ResolvedShiftAssignment. (4) Ran .\\init.ps1 build: tsc -b \u0026\u0026 vite build succeeded, dist/ generated (1743 modules transformed, built in 5.21s). Ran npm test: vitest run, 6 test files passed, 30/30 tests passed.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-03T09:10:32Z"
+                   },
+                   {
+                       "id":  "abe6aeb9-6c50-41a1-98c1-fac9021403ec",
+                       "title":  "feat: admin MonthPicker + colonne date (con rimozione data)",
+                       "description":  "In AdminEditor: selettore mese+anno che imposta month (YYYY-MM) e title (via util). Generare le colonne-date con monthDates dai validDayOfWeek di config. Ogni colonna ha controllo per rimuovere quella data dalla pianificazione del mese. Desktop-first, scroll orizzontale. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.1). Dipendenze: monthDates, routing/shell, config fetch.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "VERIFIED by independent review: MonthPicker.tsx (src/components/admin/MonthPicker.tsx) is a month+year selector that emits YYYY-MM via onChange. AdminEditor.tsx (src/components/admin/AdminEditor.tsx) fetches config.json, computes allDates = monthDates(month, config.validDayOfWeek) and title = monthTitle(month). The real public config.json has validDayOfWeek = [\u0027Friday\u0027,\u0027Sunday\u0027], so selecting month 2026-06 produces dates 2026-06-05, 07, 12, 14, 19, 21, 26, 28 (matching src/utils/__tests__/monthDates.test.ts, which passes), and title = \u0027Turni di Giugno 2026\u0027 (also asserted and passing). Removal logic verified by reading code: dateColumns = useMemo(() =\u003e allDates.filter(date =\u003e !removedSet.has(date))), where removedSet is derived from removedDatesByMonth[month]; handleRemoveDate appends the clicked date via a functional state update (setRemovedDatesByMonth(prev =\u003e ({...prev, [month]: [...(prev[month] ?? []), date]}))). This correctly removes the corresponding column from the grid on click, keyed per-month so switching months does not leak removals. Build verified: init.ps1 build runs tsc -b and vite build successfully with no type errors, dist output generated. Tests verified: npm test (vitest run) - 6 test files, 30 tests, all passed.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-03T09:16:54Z"
+                   },
+                   {
+                       "id":  "49263272-f166-485d-bf87-aeb601cc211c",
+                       "title":  "feat: admin ShiftGrid + ShiftCell (slot, dropdown filtrato, colore, assenti disabilitati)",
+                       "description":  "Griglia: righe = per ogni ruolo in availableRoles, roleSlots[role] righe (es. Voce 1..5) con etichette italiane; colonne = date. ShiftCell = dropdown con le persone che hanno quel ruolo (availableTeamMembers.roles include role) + opzione vuoto; sfondo/segno cella col colore persona. Persone assenti nella data (da absences) disabilitate/grigie. Lo stato della griglia costruisce le shifts di MonthData. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.2). Dipendenze: MonthPicker/date, config, tipi.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "VERIFIED by independent code read (not just comments) + build/test run. (1) righe rispettano roleSlots: ShiftGrid.tsx buildGridRows() loops config.availableRoles and pushes roleSlots[role] rows each; with public/config.json roleSlots {guitar:1,keyboard:1,drums:1,bass:1,vocals:5} this yields 9 rows total, vocals rows labeled \u0027Voce 1\u0027..\u0027Voce 5\u0027 (roleLabels.vocals=\u0027Voce\u0027 from src/utils/iconMapper.ts), single-slot roles unnumbered. (2) dropdown filtrato: ShiftGrid builds peopleByRole via config.availableTeamMembers.filter(m =\u003e m.roles.includes(role)) and passes only that filtered array as ShiftCell\u0027s `people` prop; ShiftCell renders options solely from `people` (e.g. Voce rows only ever show Manuela/Natalia/Magdy/David, never Diego/Samuele/Daniele/Beppe). (3) assenti disabilitati: ShiftGrid computes absentNames=new Set(absences[date]) per cell and passes to ShiftCell, which sets `disabled={absentNames.has(person.name)}` on each \u003coption\u003e (labeled \u0027(assente)\u0027). (4) selezione aggiorna shifts: ShiftCell.onChange -\u003e ShiftGrid.onSelectionChange(key,name) -\u003e AdminEditor.handleSelectionChange writes into selectionsByMonth state; shifts is derived via useMemo(shiftsFromSelections(dateColumns, buildGridRows(config), selections)), a pure projection off that state, so every selection change re-derives MonthData.shifts. (5) colore cella corretto: ShiftCell finds selectedMember in the (role-filtered) people list by name, maps member.color through CELL_COLOR_CLASSES (bg-team-\u003ccolor\u003e/50) which is a strict subset of the team-* palette defined in tailwind.config.js (yellow/blue/green/red/orange/pink/purple/cyan/brown/gray) -- all 9 config.json member colors resolve correctly; empty selection falls back to bg-white. Build: `.\\init.ps1 build` -\u003e tsc -b \u0026\u0026 vite build succeeded (dist output generated, no type errors). Tests: `npm test` -\u003e 6 test files, 30/30 passed (note: existing tests are util-level only, e.g. src/utils/__tests__/*; no dedicated ShiftGrid/ShiftCell unit tests exist yet, but no regressions and manual logic trace confirms correctness).",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-03T09:23:21Z"
+                   },
+                   {
+                       "id":  "3d517fc4-1cfd-4adc-88e6-95012bdf5c0e",
+                       "title":  "feat: admin AbsencePanel (assenze per data -\u003e absences)",
+                       "description":  "Pannello assenze: per ogni data del mese, multi-select delle persone assenti; aggiorna absences (mappa date-\u003enomi) in MonthData. Le assenze alimentano il guardrail dei dropdown della griglia e vengono salvate/esportate. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.3). Dipendenze: date generate, ShiftGrid (guardrail condiviso), tipi.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "VERIFIED by independent code trace: (1) src/components/admin/AbsencePanel.tsx renders one checkbox per (date, roster member); onChange calls onToggle(date, member.name). (2) src/components/admin/AdminEditor.tsx owns `absencesByMonth` state; `absences = absencesByMonth[month] ?? {}` is passed as the SAME object to both \u003cShiftGrid absences={absences}\u003e (line 199) and \u003cAbsencePanel absences={absences}\u003e (line 210) -- confirmed single source of truth, no parallel absences state. handleAbsenceToggle (line 106-123) adds/removes `name` from `absences[date]` array, pruning the date key entirely when the array empties. (3) src/components/admin/ShiftGrid.tsx builds `absentNames = new Set(absences[date] ?? [])` per date column (line 125) and passes it to ShiftCell as `absentNames` prop. src/components/admin/ShiftCell.tsx renders each \u003coption disabled={absentNames.has(person.name)}\u003e plus an \u0027(assente)\u0027 suffix (line 61-64) -- so toggling absence in the panel immediately disables that person\u0027s option in the grid for that date. (4) `absences` type is Record\u003cstring,string[]\u003e, identical to MonthData.absences in src/types/index.ts (line 34: \u0027date -\u003e nomi assenti\u0027), so the same shape persists directly into the exported month model with no transform needed. Build: `.\\init.ps1 build` -\u003e tsc -b \u0026\u0026 vite build succeeded (dist output generated). Tests: `npm test` -\u003e 30/30 passed across 6 files (no dedicated AbsencePanel test file exists, but nothing regressed).",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-03T09:27:54Z"
+                   },
+                   {
+                       "id":  "618525a8-27fb-4b1d-a172-425b0c4a9a9e",
+                       "title":  "feat: admin StatsPanel + WarningsPanel (conteggi live + warning)",
+                       "description":  "StatsPanel: lista persone con numero turni assegnati nel mese, ricalcolo live (util shiftStats). WarningsPanel: elenco warning non bloccanti (slot vuoti, doppione stesso giorno, assente assegnato) da shiftStats; non impediscono l\u0027export. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.4, 6.5). Dipendenze: shiftStats, ShiftGrid, AbsencePanel.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "VERIFIED (independent review). (1) Conteggi live: AdminEditor.tsx builds monthData via useMemo([title,month,shifts,absences]) then stats via useMemo(() =\u003e shiftStats(config, monthData), [config, monthData]) (lines 141-149) -- shifts is itself derived live from `selections` (the grid\u0027s source of truth) via shiftsFromSelections, so any assignment/removal in ShiftGrid or any AbsencePanel toggle changes `shifts`/`absences` -\u003e monthData -\u003e stats recomputes -\u003e StatsPanel/WarningsPanel re-render with new counts, confirmed by reading the full useMemo dependency chain. (2) shiftStats.ts exports shiftStats(config: AppConfig, month: MonthData): {counts: ShiftCount[], warnings: ShiftWarning[]} -- exact signature and return shape match the AdminEditor call site (stats.counts, stats.warnings consumed directly by StatsPanel/WarningsPanel props). (3) All 3 warning kinds present and surfaced: WarningType.EMPTY_SLOT (role under-filled vs config.roleSlots), DUPLICATE_SAME_DAY (same name twice same date), ABSENT_ASSIGNED (assigned while absent) -- all computed in shiftWarnings() and all 3 have entries in WarningsPanel.tsx\u0027s WARNING_LABELS map (Slot vuoto / Doppia assegnazione / Assente ma assegnato), each covered by its own passing unit test in shiftStats.test.ts. (4) Non-blocking confirmed: grepped src/components/admin for `disabled`/`stats.warnings`/`warnings.length` -- the only `disabled` usage is ShiftCell.tsx\u0027s dropdown option (absentee greying, unrelated to warnings); WarningsPanel only uses warnings.length to switch between an empty-state message and the list, never to disable anything; no gating of ShiftGrid, AbsencePanel, or any export/action control based on stats.warnings anywhere in the codebase. (5) `.\\init.ps1 build` succeeded (tsc -b \u0026\u0026 vite build, dist/ generated, no errors). `npm test` succeeded: 6 test files, 30 tests passed, including dedicated shiftCounts and shiftWarnings (all 3 kinds + clean-dataset) tests in src/utils/__tests__/shiftStats.test.ts.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-03T09:32:45Z"
+                   },
+                   {
+                       "id":  "d649588c-dadd-412f-9a6b-02138a7af5e7",
+                       "title":  "feat: AdminEditor wiring (autosave bozza, export, import)",
+                       "description":  "Collegare i pezzi in AdminEditor: autosave della bozza MonthData in localStorage per mese (util draftStorage); all\u0027apertura, se esiste bozza, proporre Riprendi/Scarta. Bottone Esporta =\u003e scarica turni.json (util exportImport). Bottone Importa turni.json =\u003e carica file dal disco e ripopola shifts+absences. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md (sez. 6.6). Dipendenze: draftStorage/exportImport, ShiftGrid, AbsencePanel, MonthPicker.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "VERIFIED (independent review): (1) Autosave - AdminEditor.tsx useEffect (line ~180) calls draftStorage.saveDraft(monthData) on every change (skips while a draft prompt is pending or grid is empty); loadDraft(month) computed as pendingDraft (useMemo) surfaces a Riprendi/Scarta banner when a draft exists and no in-memory state yet; Riprendi calls selectionsFromShifts(config, draft.shifts) + sets absences from draft.absences; Scarta calls clearDraft(month). draftStorage.ts persists under key `ww-turni-draft-\u003cmonth\u003e`, fails silently if localStorage unavailable. (2) Export - handleExport calls exportImport.exportMonthData(monthData), which serializes {title, month, shifts, absences} via JSON.stringify(month,null,2) and triggers a Blob+anchor download named turni.json; shape matches public/turni.json exactly (verified field names/order). (3) Import - handleImportFile reads the file via FileReader, calls importMonthData (= parseMonthData) which validates title/month/shifts/absences and throws descriptive Errors on malformed input (all caught in try/catch, surfaced as importError state, never crashes); on success reverse-maps imported.shifts via ShiftGrid.selectionsFromShifts(config, shifts) into the flat selections map and sets absences, then jumps to imported.month. (4) Round-trip test at src/components/admin/__tests__/ShiftGrid.test.ts asserts shiftsFromSelections(dateColumns, rows, selectionsFromShifts(config, shifts)) deep-equals the original multi-date, multi-role `shifts` array (genuine inverse-function assertion, plus edge cases: first-free-slot fill order, dropped overflow assignment, empty input). Also src/utils/__tests__/exportImport.test.ts covers serialize/parse round-trip and malformed-field error messages. (5) `.\\init.ps1 build` succeeded (tsc -b \u0026\u0026 vite build, dist/ generated). `npm test` (vitest run): 7 test files, 34/34 tests passed, including the ShiftGrid round-trip test. All 4 acceptance criteria confirmed met.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-03T09:45:12Z"
+                   },
+                   {
+                       "id":  "7646605c-d01b-4a39-99bc-557834f8651a",
+                       "title":  "docs: update ARCHITECTURE.md and AGENTS.md for new model + admin",
+                       "description":  "Aggiornare documentazione: ARCHITECTURE.md (split config/turni, rotta admin hash, componenti admin, flusso fetch+merge, Vitest); AGENTS.md se cambia lo stack (Vitest, script test). Documentare la scelta della rotta admin non protetta. Spec: docs/superpowers/specs/2026-07-02-admin-editor-turni-design.md. Dipendenze: ultima, dopo comportamento stabile.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "PASS (verifica indipendente). docs/ARCHITECTURE.md: sez.3 documenta lo split config.json (stabile: validDayOfWeek/availableRoles/roleSlots/availableTeamMembers con color) vs turni.json (per mese: title/month/shifts/absences, NIENTE color/roster/giorni validi), con mergeConfig che risolve il color per name (fallback \u0027gray\u0027); sez.4 documenta #/admin come hash route non protetta \u0027scelta consapevole\u0027; sez.5/6 elencano i componenti admin reali (AdminEditor, MonthPicker, ShiftGrid, ShiftCell, AbsencePanel, StatsPanel, WarningsPanel) e gli util (dateFormatter, iconMapper, monthDates, mergeConfig, shiftStats, draftStorage, exportImport) - confermato 1:1 con `ls src/components/admin/` e `ls src/utils/`; sez.2 descrive il flusso fetch parallelo + merge della PublicView; sez.8 documenta Vitest (`npm test` -\u003e `vitest run`) con elenco dei file di test, confermato in package.json (script \u0027test\u0027: \u0027vitest run\u0027, dep vitest 4.1.9). Grep mirato su ARCHITECTURE.md e AGENTS.md per riferimenti obsoleti (color/availableTeamMembers/validDayOfWeek/availableRoles descritti come parte di turni.json): NESSUNO trovato - questi campi compaiono solo nel contesto di config.json, coerente con public/turni.json reale (contiene solo title/month/shifts/absences) e public/config.json reale (contiene validDayOfWeek/availableRoles/roleSlots/availableTeamMembers con color). AGENTS.md coerente: menziona Vitest/npm test come verifica aggiuntiva a init.ps1 build, route admin non protetta, nessuna contraddizione. Sanity: `.\\init.ps1 build` OK (tsc -b \u0026\u0026 vite build, dist/ generato); `npm test` OK (7 file di test, 34 test passati).",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-02T17:28:59Z",
+                       "updated_at":  "2026-07-03T09:51:33Z"
+                   },
+                   {
+                       "id":  "2bafd2e4-2aa4-40a7-b2b4-8ebb1319c661",
+                       "title":  "chore: branch + fondamenta design system (Call Sheet)",
+                       "description":  "Fondamenta del design system Call Sheet. In tailwind.config.js sostituire i token: neutri ink caldo (ink-950 #17151C, ink-800 #2A2733, ink-600 #4A4652, ink-400 #8B8794, line #E9E6E1, paper #FBFAF9, surface #FFFFFF), brand viola liturgico (brand-600 #5A4B9C, brand-700 #4A3D85, brand-50 #EEEBF6), live/oggi oro (live #E0A43B, live-50 #FBF2DE), semantici (positive #3B8A6B, attention #C4623C, +50). Ridefinire i 10 colori-persona come coppia -500 + -100/-50 (tinta con testo ink scuro), MAI fill pieno con testo bianco. Aggiungere scala type reale (display/title/heading/body/caption/mono-num), scala radius (sm6/md10/lg14/pill), shadow (card/raised/overlay). In index.html sostituire i Google Fonts con Bricolage Grotesque (600-800), Hanken Grotesk (400-600), Space Mono. Rimuovere token morti (accent inutilizzati, text-title, text-body). Solo tema chiaro. Prima issue, base per tutte le altre.",
+                       "status":  "done",
+                       "validation":  {
+                                          "state":  "pass",
+                                          "criteria":  "VERIFIED (independent): tailwind.config.js has ink.{950,800,600,400}, line, paper, surface, brand.{50,600,700}, live.{DEFAULT,50}, positive.{DEFAULT,50}, attention.{DEFAULT,50}, and all 10 person-* scales (yellow/blue/green/red/orange/pink/purple/cyan/brown/gray) each with {50,100,500}. fontFamily sans=Hanken Grotesk, display=Bricolage Grotesque, mono=Space Mono. Dead fontSize keys title/body removed from config; grep src for text-title/text-body = 0 hits. accent-success/info/warning legacy aliases still resolve (used in WarningsPanel/PublicView/ShiftCard/TeamSummary; confirmed present in built CSS). index.html Google Fonts link loads Bricolage Grotesque(600;700;800) + Hanken Grotesk(400;500;600;700) + Space Mono(400;700). src/index.css body uses bg-paper text-ink-800, confirmed resolved in dist CSS (rgb(251 250 249)=paper, rgb(42 39 51)=ink-800) plus all 3 font-families present in output. init.ps1 build: tsc -b \u0026\u0026 vite build succeeded, 1753 modules transformed, built in 6.81s. npm test: 7 test files passed (7), 34 tests passed (34)."
+                                      },
+                       "created_at":  "2026-07-03T14:43:14Z",
+                       "updated_at":  "2026-07-03T14:55:35Z"
+                   },
+                   {
+                       "id":  "7058baec-44d8-4583-9396-f236b4130378",
+                       "title":  "feat: libreria primitivi UI snelli (cva)",
+                       "description":  "Creare i primitivi riutilizzabili in src/components/ui/ usando class-variance-authority (gia installato, oggi inutilizzato) e cn() (src/lib/utils.ts): Button (variant primary/ghost/danger, size), Chip (pallino colore-persona + label), Card (estende ui/card.tsx esistente, allinea da zinc a ink), Select (wrapper stilizzato del native select), Panel (contenitore sezione con header), Meter (barra completezza x su y). Creare src/utils/personColor.ts come UNICA fonte colore-persona: personColor(color) restituisce dot/tint/ring con fallback gray, che sostituira le due color-map duplicate. Nessuna dipendenza nuova. Dipende da: fondamenta token.",
+                       "status":  "done",
+                       "validation":  {
+                                          "state":  "pass",
+                                          "criteria":  "VERIFIED independently (feat/design-system, 2026-07-03). Files present \u0026 typed: src/components/ui/{Button,Chip,Select,Panel,Meter,card}.tsx + index.ts barrel re-exporting all six; all typed via React.forwardRef + explicit Props interfaces extending HTML attribute types, no \u0027: any\u0027 in src/components/ui. cva: imported+called in Button.tsx (buttonVariants) and Chip.tsx (chipVariants) - 2 usages, satisfies \u003e=1. personColor: src/utils/personColor.ts exports typed PersonColorName union (10 values: yellow/blue/green/red/orange/pink/purple/cyan/brown/gray) and personColor(color): PersonColorClasses with static literal Tailwind strings per color (dot/tint/ring/text), unknown input falls back to PERSON_COLOR_MAP.gray. CSS-emission proof: ran \u0027.\\init.ps1 build\u0027 (tsc -b \u0026\u0026 vite build) -\u003e succeeded, dist/assets/index-*.css produced; grepped dist CSS and confirmed all 10 colors present as both bg-person-\u003cname\u003e-500 and ring-person-\u003cname\u003e-500 (e.g. bg-person-blue-500, ring-person-gray-500), i.e. JIT did not purge them (tailwind.config.js content glob src/**/*.{js,ts,jsx,tsx} covers personColor.ts). Build: green (1753 modules transformed, built in 4.78s). npm test: green - 7 test files passed, 34 tests passed."
+                                      },
+                       "created_at":  "2026-07-03T14:43:14Z",
+                       "updated_at":  "2026-07-03T15:03:32Z"
+                   },
+                   {
+                       "id":  "4e390d38-7ea5-4365-b76c-9fcd1397ea3a",
+                       "title":  "refactor: rimozione dead code UI",
+                       "description":  "Pulizia del layer UI. Togliere il file starter Vite morto src/App.css (non importato). Rimuovere le due color-map duplicate (TeamMemberCard colorMap + admin/ShiftCell CELL_COLOR_CLASSES) sostituendole con personColor. Unificare lo spinner duplicato inline (PublicView + AdminEditor) collegando il componente orfano LoadingState.tsx. Unificare i due meccanismi di animation-delay (utilities animate-delay in index.css vs inline style) in uno solo. Dipende da: primitivi + personColor.",
+                       "status":  "done",
+                       "validation":  {
+                                          "state":  "pass",
+                                          "criteria":  "Verified independently: src/App.css deleted, no reference to it in src/ or index.html (grep clean). No colorMap/CELL_COLOR_CLASSES duplicates in src (grep clean); personColor() used in TeamMemberCard.tsx, admin/ShiftCell.tsx (and ui/Chip.tsx). LoadingState.tsx (spinner via animate-spin) imported+rendered in both PublicView.tsx:72 and admin/AdminEditor.tsx:250; no other inline animate-spin block found. animate-delay- class: zero usages in src; index.css has no .animate-delay-* utility block (only .sr-only + focus\\:not-sr-only remain); single remaining mechanism is inline style={{ animationDelay }} in PublicView.tsx:116 and ShiftCard.tsx:97. Build: `.\\init.ps1 build` succeeded (tsc -b \u0026\u0026 vite build, dist/ generated, 3.88s). Tests: `npm test` -\u003e vitest run: 7 files passed, 34/34 tests passed."
+                                      },
+                       "created_at":  "2026-07-03T14:43:14Z",
+                       "updated_at":  "2026-07-03T15:09:46Z"
+                   },
+                   {
+                       "id":  "044a5bbe-cfb4-46f9-9828-273b4476b9f2",
+                       "title":  "feat(public): ticket servizio ridisegnato",
+                       "description":  "Ridisegnare ShiftCard/TeamMemberCard/TeamSummary secondo il design Call Sheet: colori-persona addomesticati (pallino+tinta, testo ink scuro, mai fill full-bleed con testo bianco), lineup raggruppata per strumento (Chitarra/Basso/Batteria/Voce/Tastiera) con Chip, numero-giorno mono, meter di completezza (assegnati su totali) discreto. Usa i primitivi (Card/Chip/Meter) e personColor. Mobile-first. Dipende da: primitivi, dead-code cleanup.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "VERIFIED PASS (independent, feat/design-system, uncommitted working tree):\n1) Lineup grouped by instrument: ShiftCard.tsx L81-83 builds groupedByRole via ROLE_ORDER.map(role =\u003e ({role, members: shift.team.filter(m =\u003e m.role === role)})).filter(...); L91-111 renders one role label (Icon + roleLabels[role]) per group, members mapped as chips underneath - role text rendered ONCE per group, not per person.\n2) Role not duplicated per person: TeamMemberCard.tsx renders only \u003cChip color={personColorName} label={memberName} .../\u003e (dot + name), no role text/badge anywhere in the component (confirmed by full read + grep).\n3) No full-bleed white-on-saturated fill: grep \u0027bg-team-|text-white\u0027 over ShiftCard.tsx/TeamMemberCard.tsx/TeamSummary.tsx = 0 matches. Chip.tsx applies swatch.tint (person-*-50) as bg + fixed text-ink-800, dot is a small 2x2 circle (swatch.dot, person-*-500) - never a full-bleed saturated fill with white text.\n4) Contrast AA: ink-800 = #2A2733 (tailwind.config.js L23-24) on person-*-50 tints (L54-63). Computed WCAG relative-luminance contrast ratios: text-ink-800 on bg-person-yellow-50 (#FDF8EF) = 13.8:1; on bg-person-gray-50 (#F3F4F5) = 13.3:1; on bg-person-cyan-50 (#EDF8FA) = 13.5:1 (spot-checked lightest/mid/darkest-looking tints). All far exceed AA 4.5:1 (and clear AAA 7:1) since all person tints are the very light *-50 shade.\n5) Completeness meter present: ShiftCard.tsx L116-120 renders \u003cMeter value={shift.team.length} max={totalExpected} /\u003e, totalExpected = sum(config.roleSlots) (L39-41), gated on totalExpected\u003e0.\n6) Data flow intact: PublicView.tsx unchanged in essentials - fetches config.json/turni.json, mergeConfig, sortedShifts/filteredShifts via useMemo, passes shift/highlightName/availableTeamMembers/roleSlots to ShiftCard (L120-125); QuickFilter/filter logic untouched.\n7) Build: \u0027.\\init.ps1 build\u0027 -\u003e \u0027Build succeeded. Static output generated in dist/.\u0027 (tsc -b \u0026\u0026 vite build, 1762 modules, built in 3.56s). Tests: \u0027npm test\u0027 (vitest run) -\u003e 7 test files passed, 34 tests passed, 0 failed.\nAll 6 functional criteria + build/test gate verified independently by direct file reads and command runs. VERDICT: PASS.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-03T14:43:14Z",
+                       "updated_at":  "2026-07-03T15:18:24Z"
+                   },
+                   {
+                       "id":  "8861536b-d691-4259-a9ab-3dbc23e0269e",
+                       "title":  "feat(public): hero Prossimo servizio + stato oggi/passato",
+                       "description":  "Vista pubblica: mettere in evidenza in cima il PROSSIMO servizio (prima data maggiore o uguale a oggi) come hero del design (tesi: aprire su quando suono). Marcare Oggi con il token live (oro). Attenuare (dim/opacity) le date passate. Header slim sticky con titolo mese. Dipende da: ticket servizio ridisegnato.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "VERIFIED independently 2026-07-03. (1) Hero: PublicView.tsx L78-88 computes nextShiftIndex via filteredShifts.findIndex(shift.date \u003e= today), today from getTodayDateString() (local Y/M/D, not toISOString) - confirmed in dateFormatter.ts L8-14. Hero rendered with variant=\u0027hero\u0027 (L136-143), excluded from restShifts via filter(idx!==nextShiftIndex) so no duplication. Fallback \u0027Nessun servizio in programma\u0027 when no hero but shifts exist (L146-150) and EmptyState when list empty (L171-180). (2) Today marker: ShiftCard.tsx L67-72 uses bg-live-50, text-live, bg-live tokens for \u0027Oggi\u0027 pill - gold live token confirmed. (3) Past dimming: ShiftCard.tsx L53 applies opacity-70 when isPast (non-hero only, correct since hero is always today/future); ordering stays chronological via sortedShifts sort in PublicView L51-56. (4) Header.tsx: sticky top-0 z-20 (L20), border-line + backdrop-blur (L20), shadow-card added on scroll via isScrolled state (L12,21), font-display heading title (L25-27), slim py-3 (L24). (5) Date-compare robustness confirmed by code read: getTodayDateString builds from now.getFullYear/getMonth/getDate, never toISOString. Manually traced with today=2026-07-03 against public/turni.json dates [05,07,12,14,19,21,26,28]: first date \u003e= today is 2026-07-05, hero resolves correctly to index 0. (6) Build: \u0027.\\init.ps1 build\u0027 succeeded (tsc -b \u0026\u0026 vite build, 1762 modules, dist/ generated, no errors). Tests: \u0027npm test\u0027 -\u003e Test Files 7 passed (7), Tests 34 passed (34).",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-03T14:43:14Z",
+                       "updated_at":  "2026-07-03T15:26:39Z"
+                   },
+                   {
+                       "id":  "7f67e72a-c1d3-4930-a10b-3a4a3fd4e008",
+                       "title":  "feat(public): personalizzazione Trova me",
+                       "description":  "Ridisegnare QuickFilter: la selezione di una persona porta i suoi servizi ad avere un nastro oro \"Tu suoni: {ruolo}\" e attenua gli altri membri/servizi; chip \"Filtro: {nome}\" con clear. Il dialog usa i primitivi e i token. Tap target almeno 44px. Dipende da: hero + ticket.",
+                       "status":  "done",
+                       "validation":  {
+                                          "state":  "pass",
+                                          "criteria":  "VERIFIED (independent read, feat/design-system): (1) ShiftCard.tsx L52-79: userAssignment = shift.team?.find(m =\u003e m.name === highlightName); ribbon renders \"Tu suoni: {roleLabels[userRole]}\" on bg-live (gold #E0A43B, tailwind.config.js L37-39). (2) TeamMemberCard.tsx L34-37: isDimmed -\u003e opacity-50 on non-matching chips; ShiftCard.tsx L62/L70: isDeemphasized -\u003e opacity-70 on non-matching cards (hero exempt); shifts are never removed, emphasis-only approach as allowed by criteria. (3) PublicView.tsx L140: onClick={() =\u003e setFilterName(\"\")} resets filterName -\u003e highlightName prop empties -\u003e isFiltering false everywhere, full state restored; clear X present both in QuickFilter pill (L109-117) and PublicView banner (L137-145). (4) QuickFilter.tsx: role=\"dialog\" L131, aria-modal=\"true\" L132; focus moves to closeButtonRef on open (L52); Tab/Shift+Tab trap wraps between first/last focusable in dialog (L61-77); Escape closes (L55-59); backdrop onClick closes (L123-127); previouslyFocused captured (L51) and refocused on cleanup/close (L83). (5) Build: `.\\init.ps1 build` succeeded, tsc -b + vite build, dist/ generated (259.05 kB JS, 25.80 kB CSS). Tests: `npm test` -\u003e Test Files 7 passed (7), Tests 34 passed (34)."
+                                      },
+                       "created_at":  "2026-07-03T14:44:39Z",
+                       "updated_at":  "2026-07-03T15:36:33Z"
+                   },
+                   {
+                       "id":  "bf1e0974-c5c8-402d-959b-39e60e59a826",
+                       "title":  "feat(public): breakpoint responsive",
+                       "description":  "Introdurre responsivita reale nella vista pubblica: mobile-first con prefissi sm/md/lg che passano a layout multi-colonna su schermi larghi (oggi zero breakpoint, gestito solo via container max-width). Verificare assenza di overflow orizzontale ai vari viewport. Dipende da: ticket/hero/quickfilter.",
+                       "status":  "done",
+                       "validation":  {
+                                          "state":  "pass",
+                                          "criteria":  "VERIFIED (independent): (1) Real breakpoints present - grep \u0027md:|lg:|xl:\u0027 in PublicView.tsx (lines 115,172) and Header.tsx (line 24): main/header use max-w-2xl md:max-w-4xl xl:max-w-6xl; previously zero. (2) Multi-column beyond 768px: PublicView.tsx:172 shift grid = \u0027grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3\u0027 -\u003e 1 col mobile, 2 col \u003e=768px (md), 3 col \u003e=1280px (xl). (3) No horizontal overflow: containers use max-w-* + mx-auto + px-4 (no fixed px widths wider than viewport); ShiftCard role rows use \u0027flex flex-col gap-1.5 sm:flex-row\u0027 with flex-wrap on chip containers; TeamMemberCard/Chip and TeamSummary badges wrap via flex-wrap; filter banner text uses \u0027min-w-0 break-words\u0027; QuickFilter dialog uses \u0027w-72 max-w-[calc(100vw-3rem)]\u0027 so it never exceeds viewport at 320/390/768/1024. (4) Tap targets \u003e=44px: QuickFilter trigger button \u0027min-h-[44px]\u0027, filter-active pill \u0027min-h-[44px]\u0027, all icon-only close buttons \u0027h-9 min-h-[44px] w-9 min-w-[44px]\u0027, dialog member rows \u0027min-h-[44px]\u0027; filter-banner remove button also \u0027min-h-[44px]\u0027. (5) Build: \u0027tsc -b \u0026\u0026 vite build\u0027 succeeded (dist/ generated, 259KB JS / 26KB CSS gzip). Tests: vitest run -\u003e 7 test files passed, 34 tests passed. All criteria confirmed by direct file reads and real command output; no edits made to source."
+                                      },
+                       "created_at":  "2026-07-03T14:44:48Z",
+                       "updated_at":  "2026-07-03T15:43:04Z"
+                   },
+                   {
+                       "id":  "a05942a0-9fbb-4633-a8ac-dd4d19d9885a",
+                       "title":  "feat(admin): restyle griglia",
+                       "description":  "Ridisegnare ShiftGrid/ShiftCell (desktop-first): colonna Ruolo + header date STICKY durante lo scroll; celle select custom (usa primitivo Select) con pallino+tinta persona e testo scuro; righe zebra; densita compatta; coerenza coi token del design system. Logica pura (shiftsFromSelections ecc.) invariata. Dipende da: primitivi, personColor, cleanup.",
+                       "status":  "done",
+                       "validation":  {
+                                          "state":  "pass",
+                                          "criteria":  "VERIFIED independently: (1) Sticky - corner th has sticky left-0 top-0 z-30 bg-surface; date header ths have sticky top-0 z-20 bg-surface; Ruolo column body ths have sticky left-0 z-10 plus zebra bg (bg-surface/bg-paper), all opaque hex colors (surface=#FFFFFF, paper=#FBFAF9), correct z-stack corner greater than header greater than rowhead. (2) ShiftCell.tsx imports Select from @/components/ui/Select, renders color dot span (swatch.dot) absolutely positioned over left edge, select bg tinted via swatch.tint+swatch.text (text-ink-800, dark ink), classes merged via cn/twMerge so tint overrides base bg-surface; absent people keep disabled attr plus literal (assente) suffix text; empty cell falls back to bg-surface/text-ink-800. (3) ShiftGrid.tsx alternates zebraClass = rowIndex mod 2 ? bg-paper : bg-surface per row; compact padding px-1.5 py-1 on td, px-3 py-1.5 on row header, border-spacing-0. (4) Pure helpers buildSelectionKey, buildGridRows, shiftsFromSelections, selectionsFromShifts read byte-identical to pre-change logic (only JSX/className lines touched in git diff); src/components/admin/__tests__/ShiftGrid.test.ts has zero diff vs HEAD and was not touched. (5) Build: init.ps1 build -\u003e tsc -b and vite build succeeded, dist output generated (259.74 kB js, 26.62 kB css). Tests: npm test -\u003e 7 test files, 34 tests, all passed (605ms). ShiftGrid.test.ts specifically: 4/4 passed (selectionsFromShifts round-trip, first-free-slot fill, drop-when-no-free-slot, empty-shifts-array)."
+                                      },
+                       "created_at":  "2026-07-03T14:45:00Z",
+                       "updated_at":  "2026-07-03T15:52:06Z"
+                   },
+                   {
+                       "id":  "827a9407-74a6-4045-9d37-a2205e79dad0",
+                       "title":  "feat(admin): warning riepilogati e raggruppati",
+                       "description":  "Ridisegnare WarningsPanel: invece di molti banner amber impilati (oggi oltre 40 su un mese vuoto), mostrare una barra di riepilogo con conteggi per tipo (Slot vuoto, Doppia assegnazione, Assente ma assegnato) e dettaglio espandibile/collassabile. Usare token semantici (attention rust) non muri amber. Resta non-bloccante per l esportazione. Dipende da: primitivi/token.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "VERIFIED independently. (1) Summary bar renders 3 Chip components (one per WarningType: Slot vuoto/Doppia assegnazione/Assente ma assegnato) with counts via groups.map, wrapped in role=list -- an empty month dominated by EMPTY_SLOT shows one compact chip row, not 40 stacked banners. (2) Each type group with items.length\u003e0 renders a real \u003cbutton type=button\u003e with aria-expanded={isExpanded} and aria-controls={panelId}, collapsed by default (useState\u003cPartial\u003cRecord\u003cWarningType,boolean\u003e\u003e\u003e({})), reveals a \u003cul\u003e with per-warning.message (date/role) detail on click. (3) grep amber- in WarningsPanel.tsx = 0 matches; uses bg-attention-50/text-attention/bg-attention throughout; empty state (Nessun warning) uses bg-positive-50/text-positive. (4) Non-blocking confirmed: WarningsPanel only takes warnings prop (read-only), no onExport/disabled wiring; AdminEditor.tsx handleExport button and Importa turni.json label/input have no disabled or warnings-based gating -- export/import always available regardless of stats.warnings. (5) git diff main...feat/design-system -- src/utils/shiftStats.ts is empty (file untouched); AdminEditor.tsx line 245 computes stats via shiftStats(config, monthData) unchanged and line 369 passes \u003cWarningsPanel warnings={stats.warnings} /\u003e. (6) .\\init.ps1 build: tsc -b \u0026\u0026 vite build succeeded, dist/ generated (index.html, css, js bundles), no errors. npm test (vitest run): Test Files 7 passed (7), Tests 34 passed (34), Duration ~628ms.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-03T14:45:14Z",
+                       "updated_at":  "2026-07-03T15:59:14Z"
+                   },
+                   {
+                       "id":  "e675f4fb-1b35-43e9-a925-29cd3e7784fb",
+                       "title":  "feat(admin): restyle assenze + stats + toolbar",
+                       "description":  "Ridisegnare AbsencePanel (chip toggle compatte al posto della griglia di checkbox nativi), StatsPanel (barra con distribuzione conteggi per persona), MonthPicker e toolbar esporta/importa coerenti coi primitivi (Button/Select/Panel). Logica invariata. Dipende da: primitivi, restyle griglia.",
+                       "status":  "done",
+                       "validation":  {
+                                          "state":  "pass",
+                                          "criteria":  "VERIFIED independently: (1) AbsencePanel.tsx L65-87: real \u003cbutton type=button aria-pressed={isAbsent}\u003e chips per member/date, onClick={() =\u003e onToggle(date, member.name)} - same onToggle(date,name) contract, min-h-32px, focus-visible ring, person dot via personColor + Check icon when pressed. (2) StatsPanel.tsx L30-55: rows sorted desc by count (localeCompare tiebreak), one row per roster member using Meter primitive (bar width prop. to max count via aria-valuenow/valuemax), count shown via Meter\u0027s own font-mono label. (3) MonthPicker.tsx L62-68: month select uses Select primitive from ui/Select; year input hand-styled (plain number input, no Select equivalent needed). Toolbar in AdminEditor.tsx: Esporta uses \u003cButton variant=primary\u003e, Riprendi/Scarta use \u003cButton variant=primary/ghost\u003e; Importa is a \u003clabel\u003e wrapping the hidden file input (must stay a label to trigger native file picker) hand-styled to visually match Button ghost/md (does not literally import buttonVariants but mirrors its classes) - minor stylistic deviation, non-blocking. (4) CRITICAL: git diff main -- AdminEditor.tsx confirms handleExport (calls exportMonthData(monthData), unchanged) and handleImportFile (FileReader/reader.onload/onerror, importMonthData, unchanged) bodies untouched by this diff - only JSX/className churn. Hidden \u003cinput type=file accept=.json,application/json onChange={handleImportFile}\u003e preserved. (5) No raw amber/zinc/gray/slate found in AbsencePanel/StatsPanel/MonthPicker/AdminEditor (grep confirmed); tokens used: attention (absent chip), positive/brand-600 (Meter fill), live (draft banner), ink-*/line/surface/paper throughout; person dots via personColor(member.color) in both AbsencePanel and StatsPanel. (6) Build: \u0027.\\init.ps1 build\u0027 -\u003e \u0027Build succeeded. Static output generated in dist/.\u0027 (tsc -b \u0026\u0026 vite build, 1762 modules, no errors). Tests: \u0027npm test\u0027 -\u003e vitest run: Test Files 7 passed (7), Tests 34 passed (34)."
+                                      },
+                       "created_at":  "2026-07-03T14:45:26Z",
+                       "updated_at":  "2026-07-03T16:06:56Z"
+                   },
+                   {
+                       "id":  "f0338027-3524-471c-986a-2ac9b6e2086d",
+                       "title":  "a11y: audit contrasto/focus/motion/target",
+                       "description":  "Passata di accessibilita su entrambe le viste: focus-visible su tutti gli elementi interattivi (oggi solo alcuni form admin); prefers-reduced-motion rispettato (disattiva fade/slide); contrasto testo/fondo almeno WCAG AA sui colori-persona e semantici; tap target almeno 44px. Dipende da: tutte le issue di UI.",
+                       "status":  "done",
+                       "validation":  {
+                                          "state":  "pass",
+                                          "criteria":  "Independently verified on feat/design-system. (1) FOCUS: src/index.css:32-35 has a global :where(a,button,select,input,textarea,[tabindex]):focus-visible{outline:2px solid brand-600;outline-offset:2px} fallback. Spot-checked 4 previously-unstyled controls, all now carry explicit focus-visible ring/outline: QuickFilter.tsx:165 member row button (role=option) has focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2; AdminEditor.tsx:320 date-remove x button has focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1; WarningsPanel.tsx:94 expander button has the same ring; PublicView.tsx:118 skip-link has focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2. (2) REDUCED MOTION: src/index.css:45-62 @media (prefers-reduced-motion: reduce) neutralizes animation/transition durations app-wide AND additionally forces .animate-fade-in/.animate-fade-up/.animate-slide-in { animation:none !important; opacity:1 !important; transform:none !important; } so content is not left invisible when the keyframes (opacity:0 start) are cut short. Confirmed present exactly as required. (3) CONTRAST: grepped all -50 tint usages (live-50/attention-50/positive-50) across ShiftCard.tsx, TeamSummary.tsx, WarningsPanel.tsx, AdminEditor.tsx, AbsencePanel.tsx -- all small-text labels on those tints now use text-ink-800; the raw text-live/text-attention/text-positive classes remain only on icons (aria-hidden, 3:1 graphical threshold, not 4.5:1 text threshold). Computed WCAG contrast from tailwind.config.js hex values (relative luminance formula): ink-800 #2A2733 on live-50 #FBF2DE = 13.1:1 (pass AA 4.5:1, also passes AAA 7:1); ink-800 #2A2733 on attention-50 #F7E9E2 = 12.3:1 (pass AA/AAA). A third sample, ink-800 on positive-50 #E7F1EC, computed at 12.7:1, also pass. (4) TAP TARGETS: QuickFilter.tsx -- trigger button min-h-[44px] (line 95), clear-filter pill button min-h-[44px] w-9 min-w-[44px] (line 114), dialog close button min-h-[44px] min-w-[44px] (line 145), each member row button min-h-[44px] w-full (line 165). Confirmed all \u003e=44px. (5) BUILD/TEST: .\\init.ps1 build succeeded (tsc -b \u0026\u0026 vite build, built in 3.56s, dist/ generated, no errors). \npm test (vitest run) =\u003e Test Files 7 passed (7), Tests 34 passed (34), 0 failed. All criteria met."
+                                      },
+                       "created_at":  "2026-07-03T14:45:37Z",
+                       "updated_at":  "2026-07-03T16:19:04Z"
+                   },
+                   {
+                       "id":  "ebeac566-7000-4ed6-988a-5deb6aa985e8",
+                       "title":  "chore: QA visiva Playwright",
+                       "description":  "QA visiva finale secondo docs/UI_TESTING.md: npm run dev, screenshot vista pubblica (390/768/1440) e admin (1440) via skill Playwright, confronto con lo stato attuale (baseline), verifica nessuna regressione. Screenshot salvati nello scratchpad, MAI nel repo, cancellati a fine verifica. Dipende da: tutte le issue di UI.",
+                       "status":  "done",
+                       "validation":  {
+                                          "state":  "pass",
+                                          "criteria":  "PASS. Screenshot acquisiti via Playwright CLI (chromium headless) su dev server :5199 ai 4 viewport: pubblica 390 (1 colonna), pubblica 768, pubblica 1440 (hero full-width + griglia 3 colonne), admin 1440. Confronto con baseline di inizio sessione: nessuna regressione, trasformazione coerente. Pubblica: header sticky, hero Prossimo servizio (DOMENICA 5, meter 6/9), lineup per strumento con chip pallino+tinta testo scuro (contrasto ok, niente white-on-fill), summary ruoli, stato Incompleto, FAB Trova me. Admin: toolbar brand (Esporta primary viola / Importa ghost), colonna RUOLO + header date sticky, celle Select stilizzate, Assenze a chip toggle, Conteggio turni a barre di distribuzione, Warning ridotti da 40 banner a 3 chip riepilogo + gruppo collassabile. Screenshot salvati solo in scratchpad e cancellati; git status non contiene png/playwright/test-results (solo issues.json)."
+                                      },
+                       "created_at":  "2026-07-03T14:45:48Z",
+                       "updated_at":  "2026-07-03T16:25:31Z"
+                   },
+                   {
+                       "id":  "76d9ec03-2deb-4cf1-9ba9-c07b5c3c1afc",
+                       "title":  "docs: sezione design system",
+                       "description":  "Aggiornare docs/ARCHITECTURE.md e AGENTS.md con una sezione sul design system Call Sheet: token (ink/brand/live/semantici/colori-persona), primitivi UI (Button/Chip/Card/Select/Panel/Meter), personColor util, direzione estetica e firma (service ticket). Ultima issue. Dipende da: tutte.",
+                       "status":  "done",
+                       "validation":  {
+                                          "state":  "pass",
+                                          "criteria":  "Verifica indipendente OK. Token cross-checked 1:1 contro tailwind.config.js: ink 950/800/600/400, line, paper, surface, brand 50/600/700, live DEFAULT/50, positive DEFAULT/50, attention DEFAULT/50, person-\u003c10 nomi\u003e-{50,100,500}, alias legacy accent-*/team-* (tutti presenti, nessuna deviazione). font-display/sans/mono, text-display/heading/caption/mono-num, rounded-sm2/md2/lg2/pill, shadow-card/raised/overlay: tutti presenti in tailwind.config.js. Primitivi cross-checked contro src/components/ui/: Button.tsx (varianti primary/ghost/danger, size sm/md via cva, focus ring brand-600 - confermato), Chip.tsx (prop color risolta via personColor, tone neutral default - confermato), Select.tsx (border line, bg surface, focus ring brand-600, min-h 40px - confermato), Panel.tsx (title/description header opzionale - confermato), Meter.tsx (value/max, role=meter, bg-positive se pieno altrimenti bg-brand-600 - confermato), card.tsx (Card/CardHeader/CardTitle/CardContent, border line, bg surface, shadow-card - confermato). personColor() in src/utils/personColor.ts ha firma esatta personColor(color: string): PersonColorClasses con return {dot, tint, ring, text} come descritto. Pattern verificati nel codice reale: ShiftCard.tsx (hero variant per Prossimo servizio in PublicView.tsx, ribbon Tu suoni, raggruppamento per ruolo, dimming non-filtrato mai nascosto, Meter completezza), ShiftGrid.tsx (sticky su colonna date e colonna ruoli, confermato via grep), WarningsPanel.tsx (Chip riepilogo per tipo + gruppo dettaglio collassabile, confermato), StatsPanel.tsx (riga per persona con dot personColor + Meter proporzionale al max, confermato), src/index.css (fallback focus-visible outline brand-600 su :where(a,button,select,input,textarea,[tabindex]), blocco prefers-reduced-motion che azzera durate e forza le classi animate-* a stato finale - confermato 1:1 con sez. 9.5). Nessun token o componente citato nei docs risulta inesistente nel codice. git diff limitato a docs/ARCHITECTURE.md, AGENTS.md, issues.json (nessuna modifica a src/): confermato. .\\init.ps1 build -\u003e verde (tsc -b + vite build, 1762 moduli, build succeeded)."
+                                      },
+                       "created_at":  "2026-07-03T14:46:04Z",
+                       "updated_at":  "2026-07-03T16:31:12Z"
+                   },
+                   {
+                       "id":  "25b2e477-954d-4a3b-ab3a-624672745c52",
+                       "title":  "feat(public): copertura turno collassabile nella card servizio",
+                       "description":  "Nella card servizio pubblica (ShiftCard.tsx) la lineup (chi e in turno, raggruppato per strumento) e la sezione di copertura (TeamSummary: chip per-ruolo coperto/mancante + testo problemi, e la Meter di completezza/percentuale) hanno lo stesso peso visivo. Manca il colpo d\u0027occhio sull\u0027informazione principale (chi suona). Obiettivo: spostare la copertura (TeamSummary + Meter) in una zona collassabile, chiusa di default, cosi da non distrarre dalla lineup. Il trigger resta una riga di stato a colpo d\u0027occhio (Completo / Incompleto con N mancanti) sempre visibile; l\u0027espansione rivela il dettaglio per-ruolo + la barra di completezza. Riusa il pattern disclosure di admin WarningsPanel.tsx (button con aria-expanded + aria-controls, ChevronRight/ChevronDown, focus-visible ring brand). Stato locale useState per-card, chiuso di default anche sull hero. La lineup resta sempre visibile e primaria. Nessuna modifica alla logica pura ne a TeamSummary/Meter internamente: solo wrapping/disclosure in ShiftCard. Usa token e primitivi del design system Call Sheet, niente colori ad-hoc.",
+                       "status":  "done",
+                       "validation":  {
+                                          "criteria":  "Verified against src/components/ShiftCard.tsx (independent review). 1) Line 34: `const [isCoverageExpanded, setIsCoverageExpanded] = useState(false)`; no isHero override anywhere in the file (isHero only affects cardToneClass/padding) -\u003e closed by default for every variant, matches comment at lines 31-33. 2) Lines 187-221: real `\u003cbutton type=\"button\"\u003e` with `aria-expanded={isCoverageExpanded}` and `aria-controls={coveragePanelId}` (line 191, matches panel `id={coveragePanelId}` at line 224); className includes `min-h-[44px]` (\u003e=44px tap target) and `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1`; native button is keyboard operable; ChevronDown when expanded / ChevronRight when collapsed, both `aria-hidden=\"true\"` (lines 194-198). Idiom matches src/components/admin/WarningsPanel.tsx lines 92-109 (same button/aria-expanded/aria-controls/chevron/focus-visible pattern). 3) Lines 138-151: roleCounts tallied from shift.team; trackedRoles = roles with roleSlots\u003e0; missingCount = sum over tracked roles of max(0, required-current); isCoverageComplete = missingCount===0 \u0026\u0026 !hasOverflow -- math is derived, not hard-coded, and correctly reduces to Completo/Incompleto + count (lines 200-219, singular \u0027mancante\u0027 vs plural \u0027mancanti\u0027 handled). 4) Lines 160-183: groupedByRole lineup renders unconditionally inside CardContent, positioned before and outside the `totalExpected \u003e 0` disclosure block (lines 185-230) -\u003e always visible above the collapsible. 5) Grep for `gray-|amber-|zinc-|#[0-9a-fA-F]{3,6}` in ShiftCard.tsx: no matches -- only design-system tokens used (ink-*, brand-*, positive-*, attention-*, surface, line, etc). 6) Build: `.\\init.ps1 build` -\u003e tsc -b \u0026\u0026 vite build succeeded, \u0027Build succeeded. Static output generated in dist/.\u0027. Tests: `npm test` -\u003e vitest run: \u0027Test Files 7 passed (7)\u0027, \u0027Tests 34 passed (34)\u0027. 7) Trigger row uses `flex w-full min-h-[44px] flex-wrap items-center gap-2`; lineup role rows use `flex-col sm:flex-row` (no fixed widths, only `sm:w-24` role-label column applied above the sm breakpoint); no fixed-width elements found that would force horizontal overflow at 320/390px. All 7 criteria satisfied.",
+                                          "state":  "pass"
+                                      },
+                       "created_at":  "2026-07-03T16:43:39Z",
+                       "updated_at":  "2026-07-03T16:50:59Z"
+                   }
+               ]
 }

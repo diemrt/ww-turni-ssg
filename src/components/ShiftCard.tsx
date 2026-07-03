@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { AlertCircle, CheckCircle2, ChevronDown, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader, Meter } from "@/components/ui";
 import TeamMemberCard from "@/components/TeamMemberCard";
 import TeamSummary from "@/components/TeamSummary";
@@ -26,6 +28,10 @@ const ROLE_ORDER: Role[] = ["guitar", "bass", "drums", "vocals", "keyboard"];
 export default function ShiftCard({ shift, highlightName, availableTeamMembers = [], roleSlots, variant = "default" }: ShiftCardProps) {
   const { dayName, dayNumber } = formatDate(shift.date);
   const isHero = variant === "hero";
+  // Coverage (TeamSummary + Meter) is closed by default for every variant,
+  // including hero — the lineup (who's playing) stays the focal point, and
+  // coverage detail is opt-in via the always-visible status trigger below.
+  const [isCoverageExpanded, setIsCoverageExpanded] = useState(false);
 
   // Helper function to get color from availableTeamMembers
   const getMemberColor = (memberName: string, providedColor?: string): string => {
@@ -126,6 +132,25 @@ export default function ShiftCard({ shift, highlightName, availableTeamMembers =
     .map(role => ({ role, members: shift.team.filter(member => member.role === role) }))
     .filter(group => group.members.length > 0);
 
+  // Collapsed coverage summary — the same role-count math TeamSummary uses,
+  // reduced to a single at-a-glance status line (the always-visible
+  // disclosure trigger). Only tracked roles (roleSlots[role] > 0) count.
+  const roleCounts: Partial<Record<Role, number>> = {};
+  shift.team.forEach(member => {
+    roleCounts[member.role] = (roleCounts[member.role] || 0) + 1;
+  });
+  const trackedRoles = ROLE_ORDER.filter(role => (roleSlots?.[role] ?? 0) > 0);
+  let missingCount = 0;
+  let hasOverflow = false;
+  trackedRoles.forEach(role => {
+    const required = roleSlots?.[role] ?? 0;
+    const current = roleCounts[role] || 0;
+    if (current < required) missingCount += required - current;
+    else if (current > required) hasOverflow = true;
+  });
+  const isCoverageComplete = missingCount === 0 && !hasOverflow;
+  const coveragePanelId = `shift-coverage-${shift.date}`;
+
   return (
     <Card className={`overflow-hidden rounded-lg2 bg-surface ${cardToneClass}`}>
       {ribbon}
@@ -157,11 +182,50 @@ export default function ShiftCard({ shift, highlightName, availableTeamMembers =
           })}
         </div>
 
-        <TeamSummary team={shift.team} roleSlots={roleSlots ?? ({} as Record<Role, number>)} />
-
         {totalExpected > 0 && (
-          <div className="border-t border-line pt-3">
-            <Meter value={shift.team.length} max={totalExpected} />
+          <div className="border-t border-line pt-1">
+            <button
+              type="button"
+              className="flex w-full min-h-[44px] flex-wrap items-center gap-2 rounded-md2 py-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1"
+              aria-expanded={isCoverageExpanded}
+              aria-controls={coveragePanelId}
+              onClick={() => setIsCoverageExpanded(previous => !previous)}
+            >
+              {isCoverageExpanded ? (
+                <ChevronDown className="h-4 w-4 flex-shrink-0 text-ink-600" aria-hidden="true" />
+              ) : (
+                <ChevronRight className="h-4 w-4 flex-shrink-0 text-ink-600" aria-hidden="true" />
+              )}
+
+              {isCoverageComplete ? (
+                <span className="inline-flex items-center gap-1.5 rounded-md2 bg-positive-50 px-2 py-1 text-caption font-display text-ink-800">
+                  <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-positive" aria-hidden="true" />
+                  Completo
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 rounded-md2 bg-attention-50 px-2 py-1 text-caption font-display text-ink-800">
+                  <AlertCircle className="h-3.5 w-3.5 flex-shrink-0 text-attention" aria-hidden="true" />
+                  {missingCount > 0 ? (
+                    <>
+                      Incompleto
+                      <span className="rounded-pill bg-surface px-1.5 py-0.5 font-mono text-caption font-semibold text-ink-800">
+                        {missingCount}
+                      </span>
+                      {missingCount === 1 ? "mancante" : "mancanti"}
+                    </>
+                  ) : (
+                    "Sforato"
+                  )}
+                </span>
+              )}
+            </button>
+
+            {isCoverageExpanded && (
+              <div id={coveragePanelId} className="flex flex-col gap-3 pb-1 pt-1">
+                <TeamSummary team={shift.team} roleSlots={roleSlots ?? ({} as Record<Role, number>)} />
+                <Meter value={shift.team.length} max={totalExpected} />
+              </div>
+            )}
           </div>
         )}
       </CardContent>
