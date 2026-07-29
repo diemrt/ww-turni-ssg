@@ -1,9 +1,123 @@
 {
-  "title": "Turni di Luglio 2026",
-  "month": "2026-07",
+  "title": "Turni di Agosto 2026",
+  "month": "2026-08",
   "shifts": [
     {
-      "date": "2026-07-05",
+      "date": "2026-08-02",
+      "team": [
+        {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Daniele",
+          "role": "drums"
+        },
+        {
+          "name": "Natalia",
+          "role": "vocals"
+        },
+        {
+          "name": "Samuele",
+          "role": "keyboard"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-04",
+      "team": [
+        {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Natalia",
+          "role": "vocals"
+        },
+        {
+          "name": "Samuele",
+          "role": "keyboard"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-09",
+      "team": [
+        {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Daniele",
+          "role": "drums"
+        },
+        {
+          "name": "Natalia",
+          "role": "vocals"
+        },
+        {
+          "name": "David",
+          "role": "vocals"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-11",
+      "team": [
+        {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Natalia",
+          "role": "vocals"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-16",
+      "team": [
+        {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Alberto",
+          "role": "drums"
+        },
+        {
+          "name": "Natalia",
+          "role": "vocals"
+        },
+        {
+          "name": "Samuele",
+          "role": "keyboard"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-18",
+      "team": [
+        {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Alberto",
+          "role": "drums"
+        },
+        {
+          "name": "Manuela",
+          "role": "vocals"
+        },
+        {
+          "name": "Samuele",
+          "role": "keyboard"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-23",
       "team": [
         {
           "name": "Diego",
@@ -14,7 +128,7 @@
           "role": "bass"
         },
         {
-          "name": "Daniele",
+          "name": "Alberto",
           "role": "drums"
         },
         {
@@ -22,58 +136,16 @@
           "role": "vocals"
         },
         {
-          "name": "David",
-          "role": "vocals"
-        },
-        {
           "name": "Samuele",
           "role": "keyboard"
         }
       ]
     },
     {
-      "date": "2026-07-07",
+      "date": "2026-08-25",
       "team": [
         {
-          "name": "Diego",
-          "role": "guitar"
-        },
-        {
-          "name": "Natalia",
-          "role": "vocals"
-        },
-        {
-          "name": "Samuele",
-          "role": "keyboard"
-        }
-      ]
-    },
-    {
-      "date": "2026-07-12",
-      "team": [
-        {
-          "name": "Diego",
-          "role": "guitar"
-        },
-        {
-          "name": "Natalia",
-          "role": "vocals"
-        },
-        {
-          "name": "Magdy",
-          "role": "vocals"
-        },
-        {
-          "name": "Samuele",
-          "role": "keyboard"
-        }
-      ]
-    },
-    {
-      "date": "2026-07-14",
-      "team": [
-        {
-          "name": "Diego",
+          "name": "Alberto",
           "role": "guitar"
         },
         {
@@ -85,63 +157,13 @@
           "role": "vocals"
         },
         {
-          "name": "Magdy",
-          "role": "vocals"
-        }
-      ]
-    },
-    {
-      "date": "2026-07-19",
-      "team": [
-        {
-          "name": "Alberto",
-          "role": "guitar"
-        },
-        {
-          "name": "Daniele",
-          "role": "drums"
-        },
-        {
-          "name": "Natalia",
-          "role": "vocals"
-        },
-        {
-          "name": "David",
-          "role": "vocals"
-        },
-        {
-          "name": "Diego",
-          "role": "vocals"
-        },
-        {
           "name": "Samuele",
           "role": "keyboard"
         }
       ]
     },
     {
-      "date": "2026-07-21",
-      "team": [
-        {
-          "name": "Alberto",
-          "role": "drums"
-        },
-        {
-          "name": "Natalia",
-          "role": "vocals"
-        },
-        {
-          "name": "David",
-          "role": "vocals"
-        },
-        {
-          "name": "Samuele",
-          "role": "keyboard"
-        }
-      ]
-    },
-    {
-      "date": "2026-07-26",
+      "date": "2026-08-30",
       "team": [
         {
           "name": "Alberto",
@@ -156,32 +178,7 @@
           "role": "vocals"
         },
         {
-          "name": "Magdy",
-          "role": "vocals"
-        },
-        {
-          "name": "Diego",
-          "role": "vocals"
-        },
-        {
-          "name": "Samuele",
-          "role": "keyboard"
-        }
-      ]
-    },
-    {
-      "date": "2026-07-28",
-      "team": [
-        {
-          "name": "Diego",
-          "role": "guitar"
-        },
-        {
-          "name": "Alberto",
-          "role": "drums"
-        },
-        {
-          "name": "Manuela",
+          "name": "David",
           "role": "vocals"
         },
         {
@@ -192,44 +189,53 @@
     }
   ],
   "absences": {
-    "2026-07-05": [
-      "Magdy",
-      "Alberto"
-    ],
-    "2026-07-19": [
-      "Magdy",
-      "Manuela",
-      "Beppe"
-    ],
-    "2026-07-07": [
+    "2026-08-09": [
+      "Samuele",
       "Alberto",
-      "Magdy",
-      "Daniele",
       "Manuela",
       "Beppe"
     ],
-    "2026-07-12": [
+    "2026-08-11": [
+      "Samuele",
       "Alberto",
-      "Daniele",
-      "Beppe"
-    ],
-    "2026-07-21": [
-      "Magdy",
-      "Daniele",
       "Manuela",
-      "Diego",
-      "Beppe"
-    ],
-    "2026-07-28": [
-      "Magdy",
       "Daniele",
       "Beppe"
     ],
-    "2026-07-14": [
+    "2026-08-18": [
+      "Natalia",
       "Daniele",
       "Beppe"
     ],
-    "2026-07-26": [
+    "2026-08-23": [
+      "Natalia",
+      "Daniele"
+    ],
+    "2026-08-25": [
+      "Natalia",
+      "Daniele",
+      "Beppe",
+      "Diego"
+    ],
+    "2026-08-30": [
+      "Natalia",
+      "Beppe",
+      "Diego"
+    ],
+    "2026-08-02": [
+      "Alberto",
+      "Manuela",
+      "Beppe"
+    ],
+    "2026-08-04": [
+      "Alberto",
+      "Manuela",
+      "Daniele",
+      "Beppe"
+    ],
+    "2026-08-16": [
+      "Manuela",
+      "Daniele",
       "Beppe"
     ]
   }
