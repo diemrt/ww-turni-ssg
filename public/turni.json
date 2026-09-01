@@ -119,12 +119,12 @@
           "role": "guitar"
         },
         {
-          "name": "Alberto",
-          "role": "drums"
+          "name": "Daniele",
+          "role": "bass"
         },
         {
-          "name": "Diego",
-          "role": "vocals"
+          "name": "Alberto",
+          "role": "drums"
         },
         {
           "name": "Manuela",
@@ -167,6 +167,10 @@
         {
           "name": "Diego",
           "role": "guitar"
+        },
+        {
+          "name": "Daniele",
+          "role": "bass"
         },
         {
           "name": "Alberto",
