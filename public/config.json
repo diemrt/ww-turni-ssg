@@ -5,12 +5,11 @@
   "availableTeamMembers": [
     { "name": "Diego", "roles": ["guitar", "vocals"], "color": "yellow" },
     { "name": "Samuele", "roles": ["keyboard"], "color": "blue" },
-    { "name": "Daniele", "roles": ["drums"], "color": "green" },
+    { "name": "Daniele", "roles": ["drums","bass"], "color": "green" },
     { "name": "Beppe", "roles": ["bass"], "color": "orange" },
     { "name": "Alberto", "roles": ["guitar", "drums"], "color": "brown" },
     { "name": "Manuela", "roles": ["vocals"], "color": "purple" },
     { "name": "Natalia", "roles": ["vocals"], "color": "cyan" },
-    { "name": "Magdy", "roles": ["vocals"], "color": "pink" },
     { "name": "David", "roles": ["vocals"], "color": "gray" }
   ]
 }
