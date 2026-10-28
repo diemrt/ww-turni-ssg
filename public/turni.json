@@ -1,12 +1,116 @@
 {
-  "title": "Turni di Ottobre 2026",
-  "month": "2026-10",
+  "title": "Turni di Novembre 2026",
+  "month": "2026-11",
   "shifts": [
     {
-      "date": "2026-10-04",
+      "date": "2026-11-01",
       "team": [
         {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Daniele",
+          "role": "drums"
+        },
+        {
+          "name": "Manuela",
+          "role": "vocals"
+        },
+        {
+          "name": "Natalia",
+          "role": "vocals"
+        },
+        {
+          "name": "David",
+          "role": "vocals"
+        },
+        {
+          "name": "Samuele",
+          "role": "keyboard"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-03",
+      "team": [
+        {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Daniele",
+          "role": "drums"
+        },
+        {
+          "name": "Manuela",
+          "role": "vocals"
+        },
+        {
+          "name": "David",
+          "role": "vocals"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-08",
+      "team": [
+        {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Daniele",
+          "role": "bass"
+        },
+        {
           "name": "Alberto",
+          "role": "drums"
+        },
+        {
+          "name": "Natalia",
+          "role": "vocals"
+        },
+        {
+          "name": "David",
+          "role": "vocals"
+        },
+        {
+          "name": "Samuele",
+          "role": "keyboard"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-10",
+      "team": [
+        {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Alberto",
+          "role": "drums"
+        },
+        {
+          "name": "Natalia",
+          "role": "vocals"
+        },
+        {
+          "name": "David",
+          "role": "vocals"
+        },
+        {
+          "name": "Samuele",
+          "role": "keyboard"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-15",
+      "team": [
+        {
+          "name": "Diego",
           "role": "guitar"
         },
         {
@@ -26,24 +130,20 @@
           "role": "vocals"
         },
         {
-          "name": "Diego",
-          "role": "vocals"
-        },
-        {
           "name": "Samuele",
           "role": "keyboard"
         }
       ]
     },
     {
-      "date": "2026-10-06",
+      "date": "2026-11-17",
       "team": [
         {
           "name": "Diego",
           "role": "guitar"
         },
         {
-          "name": "Daniele",
+          "name": "Alberto",
           "role": "drums"
         },
         {
@@ -53,11 +153,65 @@
         {
           "name": "David",
           "role": "vocals"
+        },
+        {
+          "name": "Samuele",
+          "role": "keyboard"
         }
       ]
     },
     {
-      "date": "2026-10-11",
+      "date": "2026-11-22",
+      "team": [
+        {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Daniele",
+          "role": "bass"
+        },
+        {
+          "name": "Alberto",
+          "role": "drums"
+        },
+        {
+          "name": "Manuela",
+          "role": "vocals"
+        },
+        {
+          "name": "Natalia",
+          "role": "vocals"
+        },
+        {
+          "name": "David",
+          "role": "vocals"
+        },
+        {
+          "name": "Samuele",
+          "role": "keyboard"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-24",
+      "team": [
+        {
+          "name": "Diego",
+          "role": "guitar"
+        },
+        {
+          "name": "Alberto",
+          "role": "drums"
+        },
+        {
+          "name": "Samuele",
+          "role": "keyboard"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-29",
       "team": [
         {
           "name": "Alberto",
@@ -72,136 +226,15 @@
           "role": "drums"
         },
         {
+          "name": "Diego",
+          "role": "vocals"
+        },
+        {
           "name": "Manuela",
           "role": "vocals"
         },
         {
           "name": "Natalia",
-          "role": "vocals"
-        },
-        {
-          "name": "Samuele",
-          "role": "keyboard"
-        }
-      ]
-    },
-    {
-      "date": "2026-10-13",
-      "team": [
-        {
-          "name": "Diego",
-          "role": "guitar"
-        },
-        {
-          "name": "Alberto",
-          "role": "drums"
-        },
-        {
-          "name": "Natalia",
-          "role": "vocals"
-        },
-        {
-          "name": "David",
-          "role": "vocals"
-        },
-        {
-          "name": "Samuele",
-          "role": "keyboard"
-        }
-      ]
-    },
-    {
-      "date": "2026-10-18",
-      "team": [
-        {
-          "name": "Diego",
-          "role": "guitar"
-        },
-        {
-          "name": "Daniele",
-          "role": "bass"
-        },
-        {
-          "name": "Alberto",
-          "role": "drums"
-        },
-        {
-          "name": "Natalia",
-          "role": "vocals"
-        },
-        {
-          "name": "David",
-          "role": "vocals"
-        },
-        {
-          "name": "Samuele",
-          "role": "keyboard"
-        }
-      ]
-    },
-    {
-      "date": "2026-10-20",
-      "team": [
-        {
-          "name": "Diego",
-          "role": "guitar"
-        },
-        {
-          "name": "Alberto",
-          "role": "drums"
-        },
-        {
-          "name": "Natalia",
-          "role": "vocals"
-        },
-        {
-          "name": "Samuele",
-          "role": "keyboard"
-        }
-      ]
-    },
-    {
-      "date": "2026-10-25",
-      "team": [
-        {
-          "name": "Diego",
-          "role": "guitar"
-        },
-        {
-          "name": "Daniele",
-          "role": "bass"
-        },
-        {
-          "name": "Alberto",
-          "role": "drums"
-        },
-        {
-          "name": "Natalia",
-          "role": "vocals"
-        },
-        {
-          "name": "David",
-          "role": "vocals"
-        },
-        {
-          "name": "Samuele",
-          "role": "keyboard"
-        }
-      ]
-    },
-    {
-      "date": "2026-10-27",
-      "team": [
-        {
-          "name": "Diego",
-          "role": "guitar"
-        },
-        {
-          "name": "Daniele",
-          "role": "drums"
-        },
-        {
-          "name": "Manuela",
           "role": "vocals"
         },
         {
@@ -212,14 +245,28 @@
     }
   ],
   "absences": {
-    "2026-10-06": [
+    "2026-11-01": [
       "Alberto"
     ],
-    "2026-10-27": [
+    "2026-11-03": [
+      "Alberto",
+      "Samuele"
+    ],
+    "2026-11-15": [
       "Alberto"
     ],
-    "2026-10-18": [
-      "Beppe"
+    "2026-11-17": [
+      "Natalia"
+    ],
+    "2026-11-24": [
+      "Natalia",
+      "Manuela"
+    ],
+    "2026-11-08": [
+      "Manuela"
+    ],
+    "2026-11-10": [
+      "Manuela"
     ]
   }
 }
