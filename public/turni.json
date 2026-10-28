@@ -169,10 +169,6 @@
         },
         {
           "name": "Daniele",
-          "role": "bass"
-        },
-        {
-          "name": "Alberto",
           "role": "drums"
         },
         {
@@ -214,7 +210,7 @@
       "date": "2026-11-29",
       "team": [
         {
-          "name": "Alberto",
+          "name": "Diego",
           "role": "guitar"
         },
         {
@@ -222,12 +218,8 @@
           "role": "bass"
         },
         {
-          "name": "Daniele",
+          "name": "Alberto",
           "role": "drums"
-        },
-        {
-          "name": "Diego",
-          "role": "vocals"
         },
         {
           "name": "Manuela",
@@ -267,6 +259,9 @@
     ],
     "2026-11-10": [
       "Manuela"
+    ],
+    "2026-11-22": [
+      "Alberto"
     ]
   }
 }
